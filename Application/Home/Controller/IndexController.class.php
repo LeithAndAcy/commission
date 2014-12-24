@@ -36,7 +36,6 @@ class IndexController extends Controller {
 		}
 		
 	}
-	
 	public function logout(){
 		//退出，清空session
 		session_destroy();
