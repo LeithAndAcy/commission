@@ -1,0 +1,25 @@
+<extend name="Public:basePage" />
+<block name="left_memu">
+	<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
+		<li role="presentation">
+			<a href="__CONTROLLER__/CaculatBusinessAndProfit" target="workflow">业绩利润汇总</a>
+		</li>
+		<li role="presentation">
+			<a href="__CONTROLLER__/SearchBusinessData" target="workflow">业务数据查询</a>
+		</li>
+	</ul>
+</block>
+<block name="content">
+	<iframe name="workflow" frameborder="false" width="99%" allowtransparency="true" height="550px"></iframe>
+</block>
+<block name="script">
+	<script>
+		$(function(){
+			$("[li_function='SearchData']").addClass("active");
+			$('#myTab a').click(function() {
+				$('#myTab a').parent().removeClass("active");
+				$(this).parent().addClass("active");
+			});
+		})
+	</script>
+</block>

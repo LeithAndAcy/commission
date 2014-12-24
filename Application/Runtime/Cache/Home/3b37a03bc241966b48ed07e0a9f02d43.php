@@ -1,0 +1,179 @@
+<?php if (!defined('THINK_PATH')) exit();?><html>
+	<head>
+		<script src="/commission/Public/jquery-1.11.1.min.js"></script>
+		<script src="/commission/Public/bootstrap/js/bootstrap.min.js"></script>
+		<link href="/commission/Public/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+		<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/jquery.dataTables.css">
+		<script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
+	</head>
+	<body>
+		<div class="col-xs-12">
+			<div>
+				<button class="btn btn-info" data-toggle="modal" data-target="#addNew">
+					新增
+				</button>
+			</div>
+			<table id="mainSourceTable" class="display" width="100%" cellspacing="0" style="margin-top: 20px">
+				<thead>
+					<tr>
+						<th>人员编码</th>
+						<th>姓名</th>
+						<th>规格</th>
+						<th>型号</th>
+						<th>回款占比区间</th>
+						<th>回款未达标利润提成比例</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>人员编码1</td>
+						<td>业务员1</td>
+						<td>规格1</td>
+						<td>型号1</td>
+						<td>占比区间?</td>
+						<td>10%</td>
+						<td><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="编辑" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#edit"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="/commission/Public/img/delete.png"> </span></td>
+					</tr>
+					<tr>
+						<td>人员编码1</td>
+						<td>业务员1</td>
+						<td>规格1</td>
+						<td>型号1</td>
+						<td>占比区间?</td>
+						<td>15%</td>
+						<td><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="编辑" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#edit"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="/commission/Public/img/delete.png"> </span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">修改</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">人员编码</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="人员编码" disabled="disabled">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">业务员姓名</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="业务员姓名" disabled="disabled">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">货品规格</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="货品规格" disabled="disabled">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">货品型号</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="货品型号" disabled="disabled">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">回款占比区间</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="回款占比区间" disabled="disabled">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">基本提成比例</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="基本提成比例" disabled="disabled"s>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							取消
+						</button>
+						<button type="button" class="btn btn-primary">
+							确定
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">修改</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">人员编码</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="人员编码">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">业务员姓名</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="业务员姓名">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">货品规格</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="货品规格">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">货品型号</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="货品型号">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">回款占比区间</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="回款占比区间">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">基本提成比例</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="基本提成比例">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							取消
+						</button>
+						<button type="button" class="btn btn-primary">
+							确定
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
+<script>
+	$(function() {
+$("#mainSourceTable").dataTable();
+// $("#mainSourceTable tbody").on("click","tr td span img:even",function() );
+});
+</script>

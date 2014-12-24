@@ -1,0 +1,149 @@
+[ 2014-11-26T18:59:15+08:00 ] ::1 /commission/
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000019s ]
+INFO: [ app_init ] --END-- [ RunTime:0.079090s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.020328s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.020433s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000070s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000185s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.369912s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.369993s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.027376s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.027435s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.019915s ]
+INFO: [ app_end ] --END-- [ RunTime:0.019976s ]
+
+[ 2014-11-26T18:59:23+08:00 ] ::1 /commission/index.php/Home/Index/checkLogin
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000427s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000415s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000462s ]
+SQL: 
+            SELECT column_name,data_type,column_default,is_nullable
+            FROM   information_schema.tables AS t
+            JOIN   information_schema.columns AS c
+            ON     t.table_catalog = c.table_catalog
+            AND    t.table_schema  = c.table_schema
+            AND    t.table_name    = c.table_name
+            WHERE  t.table_name = 'commission_login' [ RunTime:1.174635s ]
+SQL: SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME='commission_login' [ RunTime:0.346727s ]
+NOTIC: [8] Undefined offset: 0 E:\www\commission\ThinkPHP\Library\Think\Db\Driver\Sqlsrv.class.php 第 221 行.
+NOTIC: [8] Undefined offset: 0 E:\www\commission\ThinkPHP\Library\Think\Db\Driver\Sqlsrv.class.php 第 221 行.
+NOTIC: [8] Undefined offset: 0 E:\www\commission\ThinkPHP\Library\Think\Db\Driver\Sqlsrv.class.php 第 221 行.
+SQL: SELECT T1.* FROM (SELECT thinkphp.*, ROW_NUMBER() OVER ( ORDER BY rand()) AS ROW_NUMBER FROM (SELECT  * FROM [commission_login] WHERE [name] = 'admin' AND [pwd] = '21232f297a57a5a743894a0e4a801fc3') AS thinkphp) AS T1 WHERE (T1.ROW_NUMBER BETWEEN 1 AND 1) [ RunTime:0.192157s ]
+
+[ 2014-11-26T18:59:24+08:00 ] ::1 /commission/index.php/Home/Index/checkLogin
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000013s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000410s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000509s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000559s ]
+SQL: 
+            SELECT column_name,data_type,column_default,is_nullable
+            FROM   information_schema.tables AS t
+            JOIN   information_schema.columns AS c
+            ON     t.table_catalog = c.table_catalog
+            AND    t.table_schema  = c.table_schema
+            AND    t.table_name    = c.table_name
+            WHERE  t.table_name = 'commission_login' [ RunTime:0.016008s ]
+SQL: SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME='commission_login' [ RunTime:0.000431s ]
+NOTIC: [8] Undefined offset: 0 E:\www\commission\ThinkPHP\Library\Think\Db\Driver\Sqlsrv.class.php 第 221 行.
+NOTIC: [8] Undefined offset: 0 E:\www\commission\ThinkPHP\Library\Think\Db\Driver\Sqlsrv.class.php 第 221 行.
+NOTIC: [8] Undefined offset: 0 E:\www\commission\ThinkPHP\Library\Think\Db\Driver\Sqlsrv.class.php 第 221 行.
+SQL: SELECT T1.* FROM (SELECT thinkphp.*, ROW_NUMBER() OVER ( ORDER BY rand()) AS ROW_NUMBER FROM (SELECT  * FROM [commission_login] WHERE [name] = 'admin' AND [pwd] = '21232f297a57a5a743894a0e4a801fc3') AS thinkphp) AS T1 WHERE (T1.ROW_NUMBER BETWEEN 1 AND 1) [ RunTime:0.000283s ]
+
+[ 2014-11-26T18:59:24+08:00 ] ::1 /commission/index.php/Home/Index/loadHomePage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000365s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000428s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000485s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000077s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000175s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.041946s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.042022s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000204s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000245s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000435s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000475s ]
+
+[ 2014-11-26T18:59:26+08:00 ] ::1 /commission/index.php/Home/CaculateWage/loadCaculateWagePage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000375s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000466s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000526s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000049s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000109s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.082918s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.083018s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000213s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000252s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000436s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000476s ]
+
+[ 2014-11-26T18:59:27+08:00 ] ::1 /commission/index.php/Home/EditData/loadEditDataPage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000398s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000468s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000539s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000069s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000151s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.028831s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.028931s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000203s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000244s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000479s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000520s ]
+
+[ 2014-11-26T18:59:29+08:00 ] ::1 /commission/index.php/Home/undefined/loadundefinedPage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000015s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000356s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000464s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000524s ]
+ERR: 无法加载控制器:Undefined
+
+[ 2014-11-26T18:59:30+08:00 ] ::1 /commission/index.php/Home/undefined/loadundefinedPage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000025s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000529s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000469s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000537s ]
+ERR: 无法加载控制器:Undefined
+
+[ 2014-11-26T18:59:32+08:00 ] ::1 /commission/index.php/Home/undefined/loadundefinedPage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000015s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000434s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000489s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000567s ]
+ERR: 无法加载控制器:Undefined
+

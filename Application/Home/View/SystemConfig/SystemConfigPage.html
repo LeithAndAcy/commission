@@ -1,0 +1,82 @@
+<extend name="Public:basePage" />
+<block name="content">
+	<div>
+		<div style="position:fixed; top:60px;left:10px;width: 150px;z-index: 100;">
+			<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
+			  <li role="presentation" class="active">
+			  	<a href="#changePWD" id="changePWD-tab" role="tab" data-toggle="tab" aria-controls="changePWD" aria-expanded="true">修改密码</a>
+			  </li>
+			  <li role="presentation">
+			  	<a href="#addUser" role="tab" id="addUser-tab" data-toggle="tab" aria-controls="addUser" aria-expanded="false">添加用户</a>
+			  </li>
+			</ul>
+		</div>
+		
+		<div id="myTabContent" class="tab-content row " style="padding-left:170px;padding-top: 50px">
+			<div role="tabpanel" class="tab-pane fade in active col-xs-12" id="changePWD" aria-labelledby="changePWD-tab">
+       	 		<form id="changePWD_form" class="form-horizontal" role="form" method="post" action="__CONTROLLER__/changePWD">
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">当前密码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="currentPWD" id="currentPWD" type="password" class="form-control validate[required,ajax[ajaxUserCurrentPWD]]" placeholder="请输入当前密码"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">新密码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="newPWD" id="newPWD" type="password" class="form-control validate[required]" placeholder="请输入新密码"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">重复新密码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="newerPWD" id="newerPWD" type="password" class="form-control validate[required,equals[newPWD]]" placeholder="请重复输入新密码"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
+       	 				<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
+       	 			</div>
+       	 		</form>
+      		</div>
+      		<div role="tabpanel" class="tab-pane fade col-xs-12" id="addUser" aria-labelledby="profile-tab">
+				<form id="addUser_form" class="form-horizontal" role="form" method="post" action="__CONTROLLER__/addUser">
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">用户名称:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="newUserName" id="newUserName" type="text" class="form-control validate[required,ajax[ajaxNameCall]]" placeholder="请输入用户账号"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">用户密码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="newUserPWD" id="newUserPWD" type="password" class="form-control validate[required]" placeholder="请输入用户密码"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
+       	 				<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
+       	 			</div>
+       	 		</form>
+	      	</div>
+		</div>
+	</div>
+	
+	
+
+</block>
+<block name="script">
+	<script>
+		$(function(){
+			$("[li_function='SystemConfig']").addClass("active");
+			$("#changePWD_form").validationEngine('attach');
+			$("#addUser_form").validationEngine('attach');
+			//工作区间切换
+			$('#myTab a').click(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show');
+			});
+			
+		})
+	</script>
+</block>
