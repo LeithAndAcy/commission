@@ -41,7 +41,7 @@ class IndexController extends Controller {
 		//退出，清空session
 		session_destroy();
 		// setcookie("REQUEST_URI", '', 0);
-		// exit('<script>window.parent.location.href="' . __ROOT__ . '";</script>');
+		
 	}
 	
 	public function loadHomePage(){
