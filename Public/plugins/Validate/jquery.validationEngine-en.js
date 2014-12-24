@@ -166,6 +166,13 @@
                     // speaks by itself
                     "alertTextLoad": "* 验证中，请稍等！"
                 },
+                 "ajaxSalesmanIdCall": {
+                    "url": "checkSalesmanId",
+                    "extraData": "name=eric",
+                    "alertText": "* 该业务员编码已存在",
+                    "alertTextOk": "* 该业务员编码可用",
+                    "alertTextLoad": "* 验证中，请稍等！"
+                },
 				 "ajaxNameCallPhp": {
 	                    // remote json service location
 	                    "url": "phpajax/ajaxValidateFieldName.php",

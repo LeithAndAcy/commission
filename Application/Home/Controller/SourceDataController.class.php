@@ -185,6 +185,16 @@ class SourceDataController extends Controller {
 		$this -> db_salesman -> addItem($data);
 		$this -> loadSalesmanPage();
 	}
+	public function checkSalesmanId(){
+		$salesman_id = $_GET['fieldValue'];
+		if($this -> db_salesman ->checkDuplicateSalesmanId($salesman_id)){
+			$data = array('add_new_salesman_id',TRUE);
+		}else{
+			$data = array('add_new_salesman_id',FALSE);
+		}
+		$json_data = json_encode($data);
+		echo $json_data;
+	}
 	public function deleteSalesman(){
 		$id = $_POST['delete_id'];
 		$this -> db_salesman -> deleteItem($id);

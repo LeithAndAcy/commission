@@ -28,6 +28,18 @@ class SalesmanModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition) -> limit('1') ->delete();
 	}
+	
+	public function checkDuplicateSalesmanId($salesman_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$res = $this-> where($condition)->find();
+		if($res){
+			return false;  //名字重复，新名字不能用
+		}else{
+			return true; //名字没重复，新名字能用	
+		}
+	}
+	
 	public function getSalesmanNameBySalesmanId($data){
 		
 	}
