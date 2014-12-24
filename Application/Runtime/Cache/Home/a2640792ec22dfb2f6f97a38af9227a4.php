@@ -223,7 +223,7 @@
 				$.post("/commission/index.php/Home/SourceData/deleteNormalProfitRatioById", {
 					"delete_id" : delete_id,
 				}, function(data) {
-
+					window.location.reload();
 				});
 			}
 		});
