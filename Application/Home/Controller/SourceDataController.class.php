@@ -8,6 +8,7 @@ class SourceDataController extends Controller {
 	private $db_special_business_ratio;
 	private $db_normial_profit_ratio;
 	private $db_insurance_fund;
+	private $db_price_float_ratio;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -18,6 +19,7 @@ class SourceDataController extends Controller {
 		$this -> db_special_business_ratio = D("SpecialBusinessRatio");
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
 		$this -> db_insurance_fund = D("InsuranceFund");
+		$this -> db_price_float_ratio = D("PriceFloatRatio");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
@@ -155,6 +157,40 @@ class SourceDataController extends Controller {
 		$this -> db_insurance_fund -> deleteItemById($id);
 	}
 	
+	public function loadPriceFloatPage(){
+		$all_price_float_ratio = $this -> db_price_float_ratio ->getAllPriceFloatRatio();
+		// $strBegin = "货存编码的第";
+		// $strEnd = "位数字";
+		// $flag = 0;
+		// foreach ($all_price_float_ratio as $key => $value) {
+			// $index = strpos($value['condition'], '&');
+			// if($index === false){
+				// $all_price_float_ratio[$key]['condition'] = $strBegin.$all_price_float_ratio[$key]['condition'].$strEnd;
+			// }else{
+				// while($index !== false){
+					// $temp_number = substr($all_price_float_ratio[$key]['condition'], $flag,$index-$flag).",";
+					// $strBegin .= $temp_number;
+					// $flag = $index+1;
+					// $index = strpos($value['condition'], '&',$flag);
+				// }
+				// $temp_number = substr($all_price_float_ratio[$key]['condition'], $flag);
+				// $all_price_float_ratio[$key]['condition'] = $strBegin.$temp_number.$strEnd;
+				// $strBegin = "货存编码的第";
+				// $flag = 0;
+			// }
+		// }
+		$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
+		$this -> display('PriceFloatPage');
+	}
+	public function addPriceFloatRatio(){
+		
+	}
+	public function editPriceFloatRatio(){
+			
+	}
+	public function deletePriceFloatRatio(){
+		
+	}
 	public function loadSalesmanPage(){
 		$all_salesmen = $this-> db_salesman ->getAllSalesmanInfo();
 		foreach ($all_salesmen as $key => $value) {

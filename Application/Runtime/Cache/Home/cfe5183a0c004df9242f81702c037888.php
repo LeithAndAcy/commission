@@ -66,7 +66,7 @@
 			<a href="" target="workflow">资金回笼调整表</a>
 		</li>
 		<li role="presentation">
-			<a href="" target="workflow">上浮低价调整比例表</a>
+			<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">上浮低价调整比例表</a>
 		</li>
 		<li role="presentation">
 			<a href="" target="workflow">已结算提成</a>

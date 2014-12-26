@@ -219,7 +219,7 @@
 				$.post("/commission/index.php/Home/SourceData/deleteNormalBusinessRatioById", {
 					"delete_id" : delete_id,
 				}, function(data) {
-					
+					window.location.reload();
 				});
 			}
 		});
