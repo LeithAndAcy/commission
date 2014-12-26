@@ -191,6 +191,31 @@ class SourceDataController extends Controller {
 	public function deletePriceFloatRatio(){
 		
 	}
+	public function loadFundsBackPage(){
+		$all_funds_back = array(
+			array(
+				'customer_id' => 'customer_id_001',
+				'customer_name' => 'customer_name_001',
+				'funds_back_money' => '资金回笼调整金额一'
+			),
+			array(
+				'customer_id' => 'customer_id_002',
+				'customer_name' => 'customer_name_002',
+				'funds_back_money' => '资金回笼调整金额二'
+			)
+		);
+		$this -> assign('all_funds_back',$all_funds_back);
+		$this -> display('FundsBackPage');
+	}
+	public function addFundsBack(){
+		
+	}
+	public function editFundsBack(){
+		
+	}
+	public function deleteFundsBack(){
+		
+	}
 	public function loadSalesmanPage(){
 		$all_salesmen = $this-> db_salesman ->getAllSalesmanInfo();
 		foreach ($all_salesmen as $key => $value) {
