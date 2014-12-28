@@ -4,8 +4,11 @@
 <script src="/commission/Public/bootstrap/js/bootstrap.min.js"></script>
 <link href="/commission/Public/bootstrap/css/bootstrap.css" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/jquery.dataTables.css">
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTables.bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/dataTables.bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/bootstrap-responsiv.css">
+
 <script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine-en.js"></script>
 <script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine.js"></script>
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Validate/validationEngine.jquery.css">
@@ -13,76 +16,94 @@
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.css">
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.bootstrap.css">
 <script type="text/javascript" src="/commission/Public/plugins/Select2/select2.js"></script>
+<style>
+	.datatable {
+		table-layout: fixed;
+		word-break: break-all;
+		font-size: 13px;
+	}
+	.datatable  th {
+		text-align: center;
+	}
+	.datatable  td {
+		text-align: center;
+	}
+</style>
 	</head>
 	<body>
-		<div class="col-xs-12">
-		<div>
-			<button class="btn btn-info" data-toggle="modal" data-target="#searchModel">复杂搜索</button>
-			<button class="btn btn-success col-sm-offset-1">重新载入当月数据</button>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-12">
+				<button class="btn btn-info" data-toggle="modal" data-target="#searchModel">复杂搜索</button>
+				<button class="btn btn-success col-sm-offset-1">重新载入当月数据</button>
+			</div>
 		</div>
-		<table id="mainSourceTable" class="display" width="160%" cellspacing="0" style="margin-top: 20px;overflow-x: auto">
-			<thead>
-				<tr>
-					<th>客户编码</th>
-					<th>客户</th>
-					<th>合同号</th>
-					<th>发货单号</th>
-					<th>业务员编码</th>
-					<th>业务员</th>
-					<th>存货类别</th>
-					<th>存货名称</th>
-					<th>规格</th>
-					<th>型号</th>
-					<th>颜色</th>
-					<th>低价</th>
-					<th>上浮的低价</th>
-					<th>销售数量</th>
-					<th>发货数量（米数）</th>
-					<th>发货金额</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>合同号一</td>
-					<td>销售订单号一</td>
-					<td>发货单号一</td>
-					<td>61</td>
-					<td>2011/04/25</td>
-					<td>$320,800</td>
-					<td>合同号一</td>
-					<td>销售订单号一</td>
-					<td>发货单号一</td>
-					<td>61</td>
-					<td>2011/04/25</td>
-					<td>$320,800</td>
-					<td>合同号一</td>
-					<td>销售订单号一</td>
-					<td>发货单号一</td>
-					<td>61</td>
-					<td><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="Edit" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#myModal"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="/commission/Public/img/delete.png"> </span></td>
-				</tr>
-				<tr>
-					<td>合同号一</td>
-					<td>销售订单号一</td>
-					<td>发货单号一</td>
-					<td>61</td>
-					<td>2011/04/25</td>
-					<td>$320,800</td>
-					<td>合同号一</td>
-					<td>销售订单号一</td>
-					<td>发货单号一</td>
-					<td>61</td>
-					<td>2011/04/25</td>
-					<td>$320,800</td>
-					<td>合同号一</td>
-					<td>销售订单号一</td>
-					<td>发货单号一</td>
-					<td>61</td>
-					<td><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="Edit" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#myModal"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="/commission/Public/img/delete.png"> </span></td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="row" style="margin-top:15px;">
+			<div class="col-md-12">
+			<table id="mainSourceTable" class="table table-striped table-bordered table-hover datatable" width="160%" cellspacing="0" style="margin-top: 20px;overflow-x: auto">
+				<thead>
+					<tr>
+						<th>客户编码</th>
+						<th>客户</th>
+						<th>合同号</th>
+						<th>发货单号</th>
+						<th>业务员编码</th>
+						<th>业务员</th>
+						<th>存货类别</th>
+						<th>存货名称</th>
+						<th>规格</th>
+						<th>型号</th>
+						<th>颜色</th>
+						<th>低价</th>
+						<th>上浮的低价</th>
+						<th>销售数量</th>
+						<th>发货数量（米数）</th>
+						<th>发货金额</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>合同号一</td>
+						<td>销售订单号一</td>
+						<td>发货单号一</td>
+						<td>61</td>
+						<td>2011/04/25</td>
+						<td>$320,800</td>
+						<td>合同号一</td>
+						<td>销售订单号一</td>
+						<td>发货单号一</td>
+						<td>61</td>
+						<td>2011/04/25</td>
+						<td>$320,800</td>
+						<td>合同号一</td>
+						<td>销售订单号一</td>
+						<td>发货单号一</td>
+						<td>61</td>
+						<td><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="Edit" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#myModal"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="/commission/Public/img/delete.png"> </span></td>
+					</tr>
+					<tr>
+						<td>合同号一</td>
+						<td>销售订单号一</td>
+						<td>发货单号一</td>
+						<td>61</td>
+						<td>2011/04/25</td>
+						<td>$320,800</td>
+						<td>合同号一</td>
+						<td>销售订单号一</td>
+						<td>发货单号一</td>
+						<td>61</td>
+						<td>2011/04/25</td>
+						<td>$320,800</td>
+						<td>合同号一</td>
+						<td>销售订单号一</td>
+						<td>发货单号一</td>
+						<td>61</td>
+						<td><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="Edit" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#myModal"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="/commission/Public/img/delete.png"> </span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -191,6 +212,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 	</body>
 </html>
