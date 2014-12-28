@@ -216,6 +216,21 @@ class SourceDataController extends Controller {
 	public function deleteFundsBack(){
 		
 	}
+	public function loadHumanWagePage(){
+		$all_human_wage = array(
+			array(
+				'customer_id' => 'customer_id_001',
+				'customer_name' => 'customer_name_001',
+				'funds_back_money' => '资金回笼调整金额一'
+			),
+			array(
+				'customer_id' => 'customer_id_002',
+				'customer_name' => 'customer_name_002',
+				'funds_back_money' => '资金回笼调整金额二'
+			)
+		);
+		$this -> display('HumanWagePage');
+	}
 	public function loadSalesmanPage(){
 		$all_salesmen = $this-> db_salesman ->getAllSalesmanInfo();
 		foreach ($all_salesmen as $key => $value) {
