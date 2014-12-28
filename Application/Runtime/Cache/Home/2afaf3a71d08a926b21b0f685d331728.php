@@ -44,7 +44,7 @@
     	</div>
         <div class="container-fluid">
         	<div>
-        		<div style="position:fixed; top:60px;left:10px;width: 170px;z-index: 100;">
+        		<div style="position:fixed; top:60px;left:10px;width: 200px;z-index: 100;">
         			
 	<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 		<li role="presentation">
@@ -56,7 +56,7 @@
 	</ul>
 
         		</div>
-        		<div id="container" class="row" style="padding-left:190px;padding-top: 5px">
+        		<div id="container" class="row" style="padding-left:220px;padding-top: 5px">
         			
 	<iframe name="workflow" frameborder="false" width="99%" allowtransparency="true" height="550px"></iframe>
 
