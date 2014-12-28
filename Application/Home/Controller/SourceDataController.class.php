@@ -235,6 +235,16 @@ class SourceDataController extends Controller {
 		$this -> assign("all_human_wage",$all_human_wage);
 		$this -> display('HumanWagePage');
 	}
+	public function addHumanWagePage(){
+		
+	}
+	public function editHumanWagePage(){
+		
+	}
+	public function deleteHumanWagePage(){
+		
+	}
+	
 	public function loadSalesmanPage(){
 		$all_salesmen = $this-> db_salesman ->getAllSalesmanInfo();
 		foreach ($all_salesmen as $key => $value) {

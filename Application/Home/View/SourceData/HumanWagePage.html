@@ -71,7 +71,7 @@
 						</button>
 						<h4 class="modal-title" id="myModalLabel">修改</h4>
 					</div>
-					<form id="edit_form" class="form-horizontal" role="form" action="editNormalBusinessRatio" method="post">
+					<form id="edit_form" class="form-horizontal" role="form" action="editHumanWagePage" method="post">
 						<div class="modal-body">
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
@@ -167,7 +167,7 @@
 						</button>
 						<h4 class="modal-title" id="myModalLabel">新增</h4>
 					</div>
-					<form id="add_new_form"  class="form-horizontal" role="form" method="post" action="addNewNormalBusinessRatio">
+					<form id="add_new_form"  class="form-horizontal" role="form" method="post" action="addHumanWagePage">
 						<div class="modal-body">
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
@@ -290,7 +290,7 @@
 			var temp = confirm("确认删除该条信息吗？");
 			if(temp){
 				var delete_id = $(this).parent().parent().attr('normal_business_ratio_id');
-				$.post("__CONTROLLER__/deleteNormalBusinessRatioById", {
+				$.post("__CONTROLLER__/deleteHumanWagePage", {
 					"delete_id" : delete_id,
 				}, function(data) {
 					window.location.reload();
