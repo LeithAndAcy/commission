@@ -219,16 +219,20 @@ class SourceDataController extends Controller {
 	public function loadHumanWagePage(){
 		$all_human_wage = array(
 			array(
-				'customer_id' => 'customer_id_001',
-				'customer_name' => 'customer_name_001',
-				'funds_back_money' => '资金回笼调整金额一'
+				'salesman_id' => '员工编码一',
+				'name' => '员工姓名',
+				'real_wage' => '实发工资',
+				'should_wage' => '应发工资',
+				'freight' => '运费',
+				'trencher' => '木盘非',
+				'blocking' => '挤压物资费',
+				'cutting' => '裁剪费',
+				'reimbursement' => '报销费',
+				'gurantee' => '担保',
+				'deduction' => '上月扣款',
 			),
-			array(
-				'customer_id' => 'customer_id_002',
-				'customer_name' => 'customer_name_002',
-				'funds_back_money' => '资金回笼调整金额二'
-			)
 		);
+		$this -> assign("all_human_wage",$all_human_wage);
 		$this -> display('HumanWagePage');
 	}
 	public function loadSalesmanPage(){

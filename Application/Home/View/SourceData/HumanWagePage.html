@@ -33,7 +33,8 @@
 						<th>运费</th>
 						<th>木盘费</th>
 						<th>积压物资费</th>
-						<th>裁剪费报销费</th>
+						<th>裁剪费</th>
+						<th>报销费</th>
 						<th>担保</th>
 						<th>上月扣款</th>
 						<th>操作</th>
@@ -44,11 +45,15 @@
 						<tr>
 							<td id="{$vo.id}_salesman_id">{$vo.salesman_id}</td>
 							<td id="{$vo.id}_name">{$vo.name}</td>
-							<td id="{$vo.id}_real_wage">{$vo.classification}</td>
-							<td id="{$vo.id}_should_wage">{$vo.specification}</td>
-							<td id="{$vo.id}_freight">{$vo.specification}</td>
-							<td id="{$vo.id}_trencher">{$vo.model}</td>
-							<td id="{$vo.id}_ratio">{$vo.ratio}%</td>
+							<td id="{$vo.id}_real_wage">{$vo.real_wage}</td>
+							<td id="{$vo.id}_should_wage">{$vo.should_wage}</td>
+							<td id="{$vo.id}_freight">{$vo.freight}</td>
+							<td id="{$vo.id}_trencher">{$vo.trencher}</td>
+							<td id="{$vo.id}_blocking">{$vo.blocking}</td>
+							<td id="{$vo.id}_cutting">{$vo.cutting}</td>
+							<td id="{$vo.id}_reimbursement">{$vo.reimbursement}</td>
+							<td id="{$vo.id}_gurantee">{$vo.gurantee}</td>
+							<td id="{$vo.id}_deduction">{$vo.deduction}</td>
 							<td normal_business_ratio_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#edit"> </span>
 								<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span>
 							</td>
@@ -81,28 +86,66 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">货品分类</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_classification" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品规格</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_specification" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品型号</label>
-								<div class="col-sm-6">
-									<input type="text" id="edit_model" class="form-control" disabled="disabled"/>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">基本提成比例</label>
+								<label for="inputEmail3" class="col-sm-4 control-label">实发工资</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
 									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
-									<span class="input-group-addon">%</span>
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">应发工资</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">运费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">木盘费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">积压物资费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">裁剪费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">报销费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">担保</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">上月扣款</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
 								</div>
 							</div>
 							<input type="text" id="edit_id" name="edit_id" class="hidden" />
@@ -127,60 +170,80 @@
 					<form id="add_new_form"  class="form-horizontal" role="form" method="post" action="addNewNormalBusinessRatio">
 						<div class="modal-body">
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">业务员姓名</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="salesman_list" name="add_new_salesman_name">
-										<option></option>
-										<optgroup label="上海员工">
-											<volist name="shanghai_salesmen" id="vo">
-												<option salesman_id="{$vo.salesman_id}" value="{$vo.name}">{$vo.name}</option>
-											</volist>
-										</optgroup>
-
-										<optgroup label="昆山员工">
-											<volist name="kunshan_salesmen" id="vo">
-												<option salesman_id="{$vo.salesman_id}" value="{$vo.name}">{$vo.name}</option>
-											</volist>
-										</optgroup>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]"   name="add_new_salesman_id"  id="add_new_salesman_id" placeholder="人员编码">
+									<input type="text" class="form-control" id="edit_salesman_id" placeholder="人员编码" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">货品分类</label>
+								<label class="col-sm-4 control-label">业务员姓名</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_classification" placeholder="货品分类">
+									<input type="text" class="form-control" id="edit_salesman_name"  disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">货品规格</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_specification" placeholder="货品规格">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品型号</label>
-								<div class="col-sm-6">
-									<select id="all_model" name="add_new_model" class="form-control select2 validate[required]">
-										<option>型号1</option>
-										<option>林2</option>
-										<option>型号3</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">基本提成比例</label>
+								<label for="inputEmail3" class="col-sm-4 control-label">实发工资</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
-									<input type="text" class="form-control validate[required,[custom[number]]" name="add_new_ratio" placeholder="在此输入" >
-									<span class="input-group-addon">%</span>
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
 								</div>
 							</div>
-
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-4 control-label">应发工资</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">运费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">木盘费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">积压物资费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">裁剪费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">报销费</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">担保</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">上月扣款</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
+									<input type="text" name="edit_ratio" class="form-control validate[required,[custom[number]]" id="edit_ratio">
+									<span class="input-group-addon">元</span>
+								</div>
+							</div>
 						</div>
 						<div class="modal-footer">
 							<input type="button" class="btn btn-default" data-dismiss="modal" value="取消"/>
