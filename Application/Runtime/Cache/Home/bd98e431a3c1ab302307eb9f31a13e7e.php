@@ -1,19 +1,18 @@
 <?php if (!defined('THINK_PATH')) exit();?><html>
 	<head>
-		<script src="/commission/Public/jquery-1.11.1.min.js"></script>
-		<script src="/commission/Public/bootstrap/js/bootstrap.min.js"></script>
-		<link href="/commission/Public/bootstrap/css/bootstrap.css" rel="stylesheet">
+			<script src="/commission/Public/jquery-1.11.1.min.js"></script>
+<script src="/commission/Public/bootstrap/js/bootstrap.min.js"></script>
+<link href="/commission/Public/bootstrap/css/bootstrap.css" rel="stylesheet">
 
-		<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/jquery.dataTables.css">
-		<script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/jquery.dataTables.css">
+<script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine.js"></script>
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Validate/validationEngine.jquery.css">
 
-		<script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine-en.js"></script>
-		<script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine.js"></script>
-		<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Validate/validationEngine.jquery.css">
-
-		<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.css">
-		<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.bootstrap.css">
-		<script type="text/javascript" src="/commission/Public/plugins/Select2/select2.js"></script>
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.css">
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.bootstrap.css">
+<script type="text/javascript" src="/commission/Public/plugins/Select2/select2.js"></script>
 	</head>
 	<body>
 		<div class="col-xs-12">

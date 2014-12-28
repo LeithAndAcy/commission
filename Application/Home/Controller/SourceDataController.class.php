@@ -244,7 +244,40 @@ class SourceDataController extends Controller {
 	public function deleteHumanWagePage(){
 		
 	}
-	
+	public function loadIncidentalFeePage(){
+		$all_incidental_fee = array(
+			array(
+				'contact_id' => '合同号',
+				'freight' => '运费',
+				'trencherg' => '木盘非',
+				'blocking' => '挤压物资费',
+				'cutting' => '裁剪费',
+				'reimbursement' => '报销费',
+			),
+		);
+		$this -> assign("all_incidental_fee",$all_incidental_fee);
+		$this -> display('IncidentalFeePage');
+	}
+	public function loadTaxPage(){
+		$all_tax_ratio = array(
+			array(
+				'low_limit' => '1000',
+				'high_limit' => '2000',
+				'ratio' => '20',
+			),
+		);
+		$this -> assign("all_tax_ratio",$all_tax_ratio);
+		$this ->display('taxPage');
+	}
+	public function editTaxRatio(){
+		
+	}
+	public function addTaxRatio(){
+		
+	}
+	public function deleteTaxRatioById(){
+		
+	}
 	public function loadSalesmanPage(){
 		$all_salesmen = $this-> db_salesman ->getAllSalesmanInfo();
 		foreach ($all_salesmen as $key => $value) {

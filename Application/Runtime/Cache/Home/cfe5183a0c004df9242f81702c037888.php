@@ -92,10 +92,10 @@
 							<a href="loadHumanWagePage" target="workflow">人事工资表</a>
 						</li>
 						<li role="presentation">
-							<a href="" target="workflow">杂费表</a>
+							<a href="loadIncidentalFeePage" target="workflow">杂费表</a>
 						</li>
 						<li role="presentation">
-							<a href="" target="workflow">个税基础表</a>
+							<a href="loadTaxPage" target="workflow">个税基础表</a>
 						</li>
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadSalesmanPage" target="workflow">人员工资基本信息表</a>
