@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<include file="Public:commonInclude"/>
+	</head>
+	<body>
+		<div class="col-xs-12">
+			<table id="payrollTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0">
+				<thead>
+					<tr>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
+						<th>费用</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>业务员编码1</td>
+						<td>leithlin</td>
+						<td>5000</td>
+					</tr>
+					<tr>
+						<td>业务员编码2</td>
+						<td>张三</td>
+						<td>200</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
+<script>
+	$(function() {
+		$("#payrollTable").dataTable();
+	}); 
+</script>
+

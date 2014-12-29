@@ -12,8 +12,20 @@ class CaculateWageController extends Controller {
 	
     public function loadCaculateWagePage(){
     	$this -> display('CaculateWagePage');
-		
 	}
 	
+	public function LoadPayrollPage(){
+		$this -> display('PayrollPage');
+	}
+	
+	public function LoadShanghaiSalaryPage(){
+		$this -> display('ShanghaiSalaryPage');
+	}
+	public function LoadKunshanSalaryPage(){
+		$this -> display('KunshanSalaryPage');
+	}
+	public function LoadIncidentalFeePage(){
+		$this -> display('IncidentalFeePage');
+	}
 }
 ?>
