@@ -25,6 +25,14 @@ class BusinessPercentController extends Controller {
 	public function CaculateSpecialProfit(){
 		$this -> display('SpecialProfitPage');
 	}
-	
+	public function SettlementContact(){
+		$this -> display('SettlementContactPage');
+	}
+	public function SettledCommission(){
+		$this -> display('SettledCommissionPage');
+	}
+	public function CommissionBuisness(){
+		$this -> display('CommissionBusinessPage');
+	}
 }
 ?>
