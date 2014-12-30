@@ -111,8 +111,8 @@ class SourceDataController extends Controller {
 		$data = array();
 		$data['salesman_id'] = $_POST['add_new_salesman_id'];
 		$data['specification'] = $_POST['add_new_specification'];
-		$data['model'] = $_POST['add_new_model'];
-		$data['ratio'] = $_POST['add_new_ratio'];
+		// $data['model'] = $_POST['add_new_model'];
+		// $data['ratio'] = $_POST['add_new_ratio'];
 		$data['low_limit'] = $_POST['add_new_low_limit'];
 		$data['high_limit'] = $_POST['add_new_high_limit'];
 		$this -> db_normial_profit_ratio -> addNormalProfitRatio($data);
