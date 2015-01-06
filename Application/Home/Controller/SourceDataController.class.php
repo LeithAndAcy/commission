@@ -7,6 +7,7 @@ class SourceDataController extends Controller {
 	private $db_normal_business_ratio;
 	private $db_special_business_ratio;
 	private $db_normial_profit_ratio;
+	private $db_special_profit_ratio;
 	private $db_insurance_fund;
 	private $db_price_float_ratio;
 	function _initialize() {
@@ -20,6 +21,7 @@ class SourceDataController extends Controller {
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
+		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
@@ -33,11 +35,9 @@ class SourceDataController extends Controller {
 		$all_normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
 		$res = $this -> _addSalesmanName($all_normal_business_ratio);
 		$all_normal_business_ratio = $res['data'];
-		$shanghai_salesmen = $res['shanghai'];
-		$kunshan_salesmen = $res['kunshan'];
+		$all_salesman = $res['salesman'];
 		$this -> assign("all_normal_business_ratio",$all_normal_business_ratio);
-		$this -> assign("shanghai_salesmen",$shanghai_salesmen);
-		$this -> assign("kunshan_salesmen",$kunshan_salesmen);
+		$this -> assign("all_salesman",$all_salesman);
 		$this -> display('NormalBusinessPage');
 	}
 	public function addNewNormalBusinessRatio(){
@@ -45,10 +45,9 @@ class SourceDataController extends Controller {
 		$data['salesman_id'] = $_POST['add_new_salesman_id'];
 		$data['classification'] = $_POST['add_new_classification'];
 		$data['specification'] = $_POST['add_new_specification'];
-		$data['model'] = $_POST['add_new_model'];
 		$data['ratio'] = $_POST['add_new_ratio'];
-		
 		$this -> db_normal_business_ratio -> addNormalBusinessRatio($data);
+		$this -> loadNormalBusinessPage();
 	}
 	public function editNormalBusinessRatio(){
 		$id = $_POST['edit_id'];
@@ -64,11 +63,9 @@ class SourceDataController extends Controller {
 		$all_special_business_ratio = $this -> db_special_business_ratio -> getAllSpecialBusinessRatio();
 		$res = $this -> _addSalesmanName($all_special_business_ratio);
 		$all_special_business_ratio = $res['data'];
-		$shanghai_salesmen = $res['shanghai'];
-		$kunshan_salesmen = $res['kunshan'];
+		$all_salesman = $res['salesman'];
 		$this -> assign("all_special_business_ratio",$all_special_business_ratio);
-		$this -> assign("shanghai_salesmen",$shanghai_salesmen);
-		$this -> assign("kunshan_salesmen",$kunshan_salesmen);
+		$this -> assign("all_salesman",$all_salesman);
 		$this -> display('SpecialBusinessPage');
 	}
 	public function editSpecialBusinessRatio(){
@@ -87,18 +84,20 @@ class SourceDataController extends Controller {
 		$data['low_limit'] = $_POST['add_new_low_limit'];
 		$data['high_limit'] = $_POST['add_new_high_limit'];
 		$data['ratio'] = $_POST['add_new_ratio'];
+		$data['classification'] = $_POST['add_new_classification'];
 		$this -> db_special_business_ratio -> addSpecialBusinessRatio($data);
-		$this -> loadNormalBusinessPage();
+		$temp = $this -> loadSpecialBusinessPage();
+		if($temp == FALSE){
+			$this -> error("回款区间有重复，请重新输入!!",'/commission/index.php/Home/SourceData/loadSpecialBusinessPage',3);
+		}
 	}
 	public function loadNormalProfitPage(){
 		$all_normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$res = $this -> _addSalesmanName($all_normal_profit_ratio);
 		$all_normal_profit_ratio = $res['data'];
-		$shanghai_salesmen = $res['shanghai'];
-		$kunshan_salesmen = $res['kunshan'];
+		$all_salesman = $res['salesman'];
 		$this -> assign("all_normal_profit_ratio",$all_normal_profit_ratio);
-		$this -> assign("shanghai_salesmen",$shanghai_salesmen);
-		$this -> assign("kunshan_salesmen",$kunshan_salesmen);
+		$this -> assign("all_salesman",$all_salesman);
 		$this -> display('NormalProfitPage');
 	}
 	public function editNormalProfitRatio(){
@@ -110,11 +109,7 @@ class SourceDataController extends Controller {
 	public function addNewNormalProfitRatio(){
 		$data = array();
 		$data['salesman_id'] = $_POST['add_new_salesman_id'];
-		$data['specification'] = $_POST['add_new_specification'];
-		// $data['model'] = $_POST['add_new_model'];
-		// $data['ratio'] = $_POST['add_new_ratio'];
-		$data['low_limit'] = $_POST['add_new_low_limit'];
-		$data['high_limit'] = $_POST['add_new_high_limit'];
+		$data['ratio'] = $_POST['add_new_ratio'];
 		$this -> db_normial_profit_ratio -> addNormalProfitRatio($data);
 		$this -> loadNormalProfitPage();
 	}
@@ -123,17 +118,41 @@ class SourceDataController extends Controller {
 		$this -> db_normial_profit_ratio -> deleteNormalProfitRatioById($id);
 	}
 	public function loadSpecialProfitPage(){
+		$all_special_profit_ratio = $this -> db_special_profit_ratio ->getAllItems();
+		$res = $this -> _addSalesmanName($all_special_profit_ratio);
+		$all_special_profit_ratio = $res['data'];
+		$all_salesman = $res['salesman'];
+		$this -> assign("all_special_profit_ratio",$all_special_profit_ratio);
+		$this -> assign("all_salesman",$all_salesman);
 		$this -> display('SpecialProfitPage');
+	}
+	public function addNewSpecialProfitRatio(){
+		$data = array();
+		$data['salesman_id'] = $_POST['add_new_salesman_id'];
+		$data['low_limit'] = $_POST['add_new_low_limit'];
+		$data['high_limit'] = $_POST['add_new_high_limit'];
+		$data['ratio'] = $_POST['add_new_ratio'];
+		$temp = $this ->db_special_profit_ratio -> addItem($data);
+		if($temp == FALSE){
+			$this -> error("回款区间有重复，请重新输入!!",'/commission/index.php/Home/SourceData/loadSpecialProfitPage',3);
+		}
+	}
+	public function editSpecialProfitRatio(){
+		$id = $_POST['edit_id'];
+		$ratio = $_POST['edit_ratio'];
+		$this -> db_special_profit_ratio -> editItem($id,$ratio);
+		$this -> loadSpecialProfitPage();
+	}
+	public function deleteSpecialProfitRatioById(){
+		$id = $_POST['delete_id'];
+		$this -> db_special_profit_ratio -> deleteItemById($id);
 	}
 	public function loadInsuranceAndFundPage(){
 		$all_insurance_fund = $this -> db_insurance_fund -> getAllInsuranceFund();
 		$res = $this -> _addSalesmanName($all_insurance_fund);
 		$all_insurance_fund = $res['data'];
-		$shanghai_salesmen = $res['shanghai'];
-		$kunshan_salesmen = $res['kunshan'];
+		$all_salesman = $res['salesman'];
 		$this -> assign("all_insurance_fund",$all_insurance_fund);
-		$this -> assign("shanghai_salesmen",$shanghai_salesmen);
-		$this -> assign("kunshan_salesmen",$kunshan_salesmen);
 		$this -> display('InsuranceAndFundPage');
 	}
 	public function editInsuranceFund(){
@@ -159,27 +178,7 @@ class SourceDataController extends Controller {
 	
 	public function loadPriceFloatPage(){
 		$all_price_float_ratio = $this -> db_price_float_ratio ->getAllPriceFloatRatio();
-		// $strBegin = "货存编码的第";
-		// $strEnd = "位数字";
-		// $flag = 0;
-		// foreach ($all_price_float_ratio as $key => $value) {
-			// $index = strpos($value['condition'], '&');
-			// if($index === false){
-				// $all_price_float_ratio[$key]['condition'] = $strBegin.$all_price_float_ratio[$key]['condition'].$strEnd;
-			// }else{
-				// while($index !== false){
-					// $temp_number = substr($all_price_float_ratio[$key]['condition'], $flag,$index-$flag).",";
-					// $strBegin .= $temp_number;
-					// $flag = $index+1;
-					// $index = strpos($value['condition'], '&',$flag);
-				// }
-				// $temp_number = substr($all_price_float_ratio[$key]['condition'], $flag);
-				// $all_price_float_ratio[$key]['condition'] = $strBegin.$temp_number.$strEnd;
-				// $strBegin = "货存编码的第";
-				// $flag = 0;
-			// }
-		// }
-		$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
+		//$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
 		$this -> display('PriceFloatPage');
 	}
 	public function addPriceFloatRatio(){
@@ -267,7 +266,7 @@ class SourceDataController extends Controller {
 			),
 		);
 		$this -> assign("all_tax_ratio",$all_tax_ratio);
-		$this ->display('taxPage');
+		$this ->display('TaxPage');
 	}
 	public function editTaxRatio(){
 		
@@ -280,13 +279,6 @@ class SourceDataController extends Controller {
 	}
 	public function loadSalesmanPage(){
 		$all_salesmen = $this-> db_salesman ->getAllSalesmanInfo();
-		foreach ($all_salesmen as $key => $value) {
-			if($value['status'] == SHANGHAI){
-				$all_salesmen[$key]['status'] = "上海";
-			}elseif($value['status'] == KUNSHAN){
-				$all_salesmen[$key]['status'] = "昆山";
-			}
-		}
 		$this -> assign("all_salesmen",$all_salesmen);
 		$this -> display('SalesmanPage');
 	}
@@ -308,6 +300,7 @@ class SourceDataController extends Controller {
 		$this -> db_salesman -> addItem($data);
 		$this -> loadSalesmanPage();
 	}
+	
 	public function checkSalesmanId(){
 		$salesman_id = $_GET['fieldValue'];
 		if($this -> db_salesman ->checkDuplicateSalesmanId($salesman_id)){
@@ -329,24 +322,13 @@ class SourceDataController extends Controller {
 			foreach ($all_salesmen as $kk => $vv) {
 				if($value['salesman_id'] == $vv['salesman_id']){
 					$array_data[$key]['name'] = $vv['name'];
-					$flag = TRUE;
 					break;
 				}
 			}
 		}
-		$shanghai_salesmen = array();
-		$kunshan_salesmen = array();
-		foreach ($all_salesmen as $key => $value) {
-			if($value['status'] == SHANGHAI){
-				$shanghai_salesmen[$key] = $value;
-			}elseif($value['status'] == KUNSHAN){
-				$kunshan_salesmen[$key] = $value;
-			}
-		}
 		$res = array();
 		$res['data'] = $array_data;
-		$res['shanghai'] = $shanghai_salesmen;
-		$res['kunshan'] = $kunshan_salesmen;
+		$res['salesman'] = $all_salesmen;
 		return $res;
 	}
 	

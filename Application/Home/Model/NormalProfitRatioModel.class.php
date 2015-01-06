@@ -14,7 +14,7 @@ class NormalProfitRatioModel extends Model {
 	
 	public function addNormalProfitRatio($data){
 		$data['ratio'] *= 0.01;
-		// $this -> add($data);
+		$this -> add($data);
 	}
 	public function edtiNormalProfitRatio($id,$ratio){
 		$condition = array();
@@ -25,7 +25,7 @@ class NormalProfitRatioModel extends Model {
 	public function deleteNormalProfitRatioById($id){
 		$condition = array();
 		$condition['id'] = $id;
-		// $this -> where($condition) -> delete();
+		$this -> where($condition) -> delete();
 	}
 }
 ?>

@@ -1,10 +1,9 @@
 <?php
 namespace Home\Model;
 use Think\Model;
-class SpecialBusinessRatioModel extends Model {
+class SpecialProfitRatioModel extends Model {
 	
-	public function getAllSpecialBusinessRatio(){
-		
+	public function getAllItems(){
 		$res = $this->select();
 		foreach ($res as $key => $value) {
 			$res[$key]['ratio'] *= 100;
@@ -12,7 +11,7 @@ class SpecialBusinessRatioModel extends Model {
 		return $res;
 	}
 	
-	public function addSpecialBusinessRatio($data){
+	public function addItem($data){
 		$data['ratio'] *= 0.01;
 		$condition['salesman_id'] = $data['salesman_id'];
 		$temp = $this -> where($condtion)->select();
@@ -24,12 +23,12 @@ class SpecialBusinessRatioModel extends Model {
 		}
 		$this -> add($data);
 	}
-	public function edtiSpecialBusinessRatio($id,$ratio){
+	public function editItem($id,$ratio){
 		$condition = array();
 		$condition['id'] = $id;
 		$this -> where($condition) -> setField('ratio',$ratio*0.01);
 	}
-	public function deleteSpecialBusinessRatioById($id){
+	public function deleteItemById($id){
 		$condition = array();
 		$condition['id'] = $id;
 		$this -> where($condition) -> delete();

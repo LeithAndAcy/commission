@@ -14,7 +14,7 @@ class NormalBusinessRatioModel extends Model {
 	
 	public function addNormalBusinessRatio($data){
 		$data['ratio'] *= 0.01;
-		// $this -> add($data);
+		$this -> add($data);
 	}
 	public function edtiNormalBusinessRatio($id,$ratio){
 		$condition = array();
@@ -24,7 +24,7 @@ class NormalBusinessRatioModel extends Model {
 	public function deleteNormalBusinessRatioById($id){
 		$condition = array();
 		$condition['id'] = $id;
-		// $this -> where($condition) -> delete();
+		$this -> where($condition) -> delete();
 	}
 }
 ?>

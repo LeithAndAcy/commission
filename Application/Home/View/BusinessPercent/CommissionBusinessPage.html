@@ -14,9 +14,11 @@
 						<th>底价</th>
 						<th>上浮底价</th>
 						<th>底价调整金额</th>
+						<th>利润提成调整比例</th>
+						<th>业务提成调整比例</th>
 						<th>基本业绩提成比例</th>
 						<th>回款达标业绩提成比例</th>
-						<th>业务提成调整比例</th>
+						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -27,26 +29,82 @@
 						<td>最终实际底价4</td>
 						<td>底价5</td>
 						<td>上浮底价</td>
-						<td>底价调整金额</td>
-						<td>基本业绩提成比例</td>
-						<td>回款达标业绩提成比例</td>
-						<td>业务提成调整比例</td>
+						<td>0</td>
+						<td>1%</td>
+						<td>2%</td>
+						<td>3%</td>
+						<td>4%</td>
+						<td normal_business_ratio_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span>
+							<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span>
+						</td>
 					</tr>
 					<tr>
-						<td>合同号6</td>
-						<td>业务员7</td>
-						<td>发货数量8</td>
-						<td>最终实际底价9</td>
-						<td>底价10</td>
+						<td>合同号1</td>
+						<td>业务员2</td>
+						<td>发货数量3</td>
+						<td>最终实际底价4</td>
+						<td>底价5</td>
 						<td>上浮底价</td>
-						<td>底价调整金额</td>
-						<td>基本业绩提成比例</td>
-						<td>回款达标业绩提成比例</td>
-						<td>业务提成调整比例</td>
+						<td>0</td>
+						<td>1%</td>
+						<td>2%</td>
+						<td>3%</td>
+						<td>4%</td>
+						<td normal_business_ratio_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span>
+							<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+		<div class="modal fade" id="editDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">修改</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="inputEmail3" class="col-sm-6 control-label">业务提成调整比例</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="businessRatio" placeholder="业务提成调整比例">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputEmail3" class="col-sm-6 control-label">利润提成调整比例</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="businessRatio" placeholder="利润提成调整比例">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputEmail3" class="col-sm-6 control-label">调整底价金额</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="businessRatio" placeholder="调整底价金额">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputEmail3" class="col-sm-6 control-label">固定比例</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="businessRatio" placeholder="固定比例" readonly="readonly">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">
+						取消
+					</button>
+					<button type="button" class="btn btn-primary">
+						确定
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	</body>
 </html>
 <script>

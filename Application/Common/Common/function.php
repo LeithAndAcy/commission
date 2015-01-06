@@ -1,7 +1,5 @@
 <?php
 // define data
-const SHANGHAI = 1;
-const KUNSHAN = 0;
 
 function _checkLogin()
 	{

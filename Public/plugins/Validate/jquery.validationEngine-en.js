@@ -157,13 +157,9 @@
                     "alertTextLoad": "* Validating, please wait"
                 },
                 "ajaxNameCall": {
-                    // remote json service location
                     "url": "checkUserName",
-                    // error
                     "alertText": "* 该用户名已存在",
-                    // if you provide an "alertTextOk", it will show as a green prompt when the field validates
                     "alertTextOk": "* 该用户名可用",
-                    // speaks by itself
                     "alertTextLoad": "* 验证中，请稍等！"
                 },
                  "ajaxSalesmanIdCall": {
@@ -173,7 +169,7 @@
                     "alertTextOk": "* 该业务员编码可用",
                     "alertTextLoad": "* 验证中，请稍等！"
                 },
-				 "ajaxNameCallPhp": {
+                "ajaxNameCallPhp": {
 	                    // remote json service location
 	                    "url": "phpajax/ajaxValidateFieldName.php",
 	                    // error
