@@ -2,7 +2,7 @@
 	<head>
 		<include file="Public:commonInclude"/>
 		<script src="__PUBLIC__/plugins/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/bootstrap-datetimepicker-master/css/datetimepicker.css" />
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" />
 		<style>
 			.datetimepicker,.glyphicon{
 				cursor:pointer;
@@ -190,7 +190,8 @@
 				todayBtn : true,
 				minView : 2,
 				todayBtn : 1,
-				pickerPosition: 'bottom-left',
+				todayHighlight: 1,
+				pickerPosition: 'bottom-right',
 				language:'cn',
 			});
 			$(".glyphicon-remove").click(function(){

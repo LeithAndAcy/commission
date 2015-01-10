@@ -29,4 +29,11 @@
 	.dataTables_wrapper{
 		margin-top:15px;
 	}
-</style>
+	</style>
+<script>
+	$(function(){
+		$(".datatable tbody").on("dblclick","tr",function() {
+			$(this).children("td:last()").children("span:eq(0)").children("img").click();
+		});
+	})
+</script>
