@@ -11,7 +11,7 @@
 				<div class="panel-body">
 					<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 						<li role="presentation">
-							<a href="__CONTROLLER__/loadSettleSummaryPage" target="workflow">汇总结算表</a>
+							<a href="__CONTROLLER__/loadSettleSummaryPage" target="workflow">待结算合同</a>
 						</li>
 						<li role="presentation">
 							<a href="__CONTROLLER__/loadNormalBusinessPage" target="workflow">基本业绩提成比例表</a>
@@ -59,6 +59,9 @@
 						<li role="presentation">
 							<a href="__CONTROLLER__/loadInsuranceAndFundPage" target="workflow">社保及公积金表</a>
 						</li>
+						<li role="presentation">
+							<a href="__CONTROLLER__/loadCustomerPage" target="workflow">客户信息表</a>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -67,7 +70,7 @@
 
 </block>
 <block name="content">
-	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="600px"></iframe>
+	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="900px"></iframe>
 </block>
 <block name="script">
 	<script>

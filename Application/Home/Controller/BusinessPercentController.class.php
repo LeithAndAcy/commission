@@ -12,19 +12,6 @@ class BusinessPercentController extends Controller {
     	$this -> display('BusinessPercentPage');
 		
 	}
-	
-	public function CaculateNormalBusiness(){
-		$this -> display('NormalBusinessPage');
-	}
-	public function CaculateSpecialBusiness(){
-		$this -> display('SpecialBusinessPage');
-	}
-	public function CaculateNormalProfit(){
-		$this -> display('NormalProfitPage');
-	}
-	public function CaculateSpecialProfit(){
-		$this -> display('SpecialProfitPage');
-	}
 	public function SettlementContact(){
 		$this -> display('SettlementContactPage');
 	}

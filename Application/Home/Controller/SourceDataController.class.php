@@ -10,6 +10,8 @@ class SourceDataController extends Controller {
 	private $db_special_profit_ratio;
 	private $db_insurance_fund;
 	private $db_price_float_ratio;
+	private $db_load_history;
+	private $db_customer;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -22,13 +24,38 @@ class SourceDataController extends Controller {
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
+		$this -> db_load_history = D("LoadHistory");
+		$this -> db_customer = D("Customer");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
 	}
 	
+	public function loadData(){
+		$begin_date = $_POST['begin_date'];
+		$end_date = $_POST['end_date'];
+		$last_end_date = $this -> db_load_history -> getLastEndDate();
+		$today = date("Y-m-d");
+		if($begin_date == "" || $end_date == ""){
+			$this -> error("起始日期或者结束日期为空");
+		}elseif($begin_date > $end_date){
+			$this -> error("起始日期大于结束日期");
+		}elseif($begin_date <= $last_end_date){
+			$this -> error("起始日期范围非法");
+		}elseif($end_date == $today){
+			$this -> error("结束日期最大只能为昨天");
+		}
+		
+		$db_U8 = D("U8");
+		$db_U8 -> test();
+		exit;
+		$this -> display('ConflictPage');
+		
+	}
+	
 	public function loadSettleSummaryPage(){
-		//取值，赋值给模板变量
+		$load_history = $this -> db_load_history -> getLastThreeHistory();
+		$this -> assign('load_history',$load_history);
 		$this -> display('SettleSummaryPage');
 	}
 	public function loadNormalBusinessPage(){
@@ -178,17 +205,35 @@ class SourceDataController extends Controller {
 	
 	public function loadPriceFloatPage(){
 		$all_price_float_ratio = $this -> db_price_float_ratio ->getAllPriceFloatRatio();
-		//$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
+		$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
 		$this -> display('PriceFloatPage');
 	}
 	public function addPriceFloatRatio(){
-		
+		$data['classification_id'] = $_POST['add_new_classification_id'];
+		$data['name'] = $_POST['add_new_name'];
+		$data['low_price'] = $_POST['add_new_low_price'];
+		$data['high_price'] = $_POST['add_new_high_price'];
+		$data['low_length'] = $_POST['add_new_low_length'];
+		$data['high_length'] = $_POST['add_new_high_length'];
+		$data['ratio'] = $_POST['add_new_ratio'];
+		$this -> db_price_float_ratio -> addItem($data);
+		$this -> loadPriceFloatPage();
 	}
 	public function editPriceFloatRatio(){
-			
+		$id = $_POST['edit_id'];
+		$data['classification_id'] = $_POST['edit_classification_id'];
+		$data['name'] = $_POST['edit_name'];
+		$data['low_price'] = $_POST['edit_low_price'];
+		$data['high_price'] = $_POST['edit_high_price'];
+		$data['low_length'] = $_POST['edit_low_length'];
+		$data['high_length'] = $_POST['edit_high_length'];
+		$data['ratio'] = $_POST['edit_ratio'];
+		$this -> db_price_float_ratio ->editItem($id,$data);
+		$this -> loadPriceFloatPage();
 	}
 	public function deletePriceFloatRatio(){
-		
+		$delete_id = $_POST['delete_id'];
+		$this -> db_price_float_ratio -> deleteItemById($delete_id);
 	}
 	public function loadFundsBackPage(){
 		$all_funds_back = array(
@@ -277,6 +322,28 @@ class SourceDataController extends Controller {
 	public function deleteTaxRatioById(){
 		
 	}
+	public function loadCustomerPage(){
+		$all_customer = $this -> db_customer ->getAllCustomer();
+		$this -> assign("all_customer",$all_customer);
+		$this -> display('CustomerPage');
+	}
+	public function editCustomer(){
+		$id = $_POST['edit_id'];
+		$data['customer_id'] = $_POST['edit_customer_id'];
+		$data['customer_name'] = $_POST['edit_customer_name'];
+		$this -> db_customer ->editItem($id,$data);
+		$this -> loadCustomerPage();
+ 	}
+	public function addCustomer(){
+		$data['customer_id'] = $_POST['add_new_customer_id'];
+		$data['customer_name'] = $_POST['add_new_customer_name'];
+		$this -> db_customer -> addItem($data);
+		$this -> loadCustomerPage();
+	}
+	public function deleteCustomer(){
+		$id = $_POST['delete_id'];
+		$this -> db_customer -> deleteItem($id);
+	}
 	public function loadSalesmanPage(){
 		$all_salesmen = $this-> db_salesman ->getAllSalesmanInfo();
 		$this -> assign("all_salesmen",$all_salesmen);
@@ -314,7 +381,6 @@ class SourceDataController extends Controller {
 	public function deleteSalesman(){
 		$id = $_POST['delete_id'];
 		$this -> db_salesman -> deleteItem($id);
-		
 	}
 	private function _addSalesmanName($array_data){
 		$all_salesmen = $this-> db_salesman ->getAllSalesman();

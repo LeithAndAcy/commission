@@ -13,17 +13,18 @@ class PriceFloatRatioModel extends Model {
 	
 	public function addItem($data){
 		$data['ratio'] *= 0.01;
-		// $this -> add($data);
+		$this -> add($data);
 	}
-	public function edtiPriceFloatRatio($id,$ratio){
+	public function editItem($id,$data){
 		$condition = array();
 		$condition['id'] = $id;
-		$this -> where($condition) -> setField('ratio',$ratio*0.01);
+		$data['ratio'] *= 0.01;
+		$this -> where($condition) -> save($data);
 	}
 	public function deleteItemById($id){
 		$condition = array();
 		$condition['id'] = $id;
-		// $this -> where($condition) -> delete();
+		$this -> where($condition) -> delete();
 	}
 }
 ?>
