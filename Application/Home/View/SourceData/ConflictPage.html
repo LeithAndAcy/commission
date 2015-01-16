@@ -1,25 +1,96 @@
 <html>
 	<head>
 		<include file="Public:commonInclude"/>
+		<style>
+			.table  th {
+				width: 110px
+			}
+			.table  td {
+				width: 110px
+			}
+		</style>
 	</head>
 	<body>
 
 		<table id="conflictTable" class="table table-striped table-bordered table-hover" width="100%" cellspacing="0" style="margin-top: 20px">
 			<thead>
 				<tr>
+					<th>
+						<input type="checkbox" />
+					</th>
 					<th>客户编码</th>
 					<th>客户名称</th>
-					<th>资金回笼调整金额</th>
-					<th>操作</th>
+					<th>合同号</th>
+					<th>业务员编码</th>
+					<th>业务员姓名</th>
+					
+					<th>存货类别编码</th>
+					<th>存货类别</th>
+					<th>存货名称</th>
+					<th>规格型号</th>
+					<th>颜色</th>
+					<th>销售单价</th>
+					<th>底价（元）</th>
+					<th>上浮的底价（元）</th>
+					<th>销售数量（米数）</th>
+					<th>发货数量（米数）</th>
+					<th>销售金额</th>
 				</tr>
 			</thead>
 			<tbody>
-				<volist name="all_funds_back" id="vo">
+				<volist name="edited_contact_detail" id="vo">
 					<tr>
-						<td id="{$vo.id}_customer_id">{$vo.customer_id}</td>
-						<td id="{$vo.id}_customer_name">{$vo.customer_name}</td>
-						<td id="{$vo.id}_funds_back_money">{$vo.funds_back_money}</td>
-						<td funds_back_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#edit"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span></td>
+						<td>
+							<input type="checkbox" />
+						</td>
+						<!-- <td id="{$vo.id}_customer_id">{$vo.customer_id}</td> -->
+						<td>{$vo.customer_id}</td>
+						<td>{$vo.customer_name}</td>
+						<td>{$vo.contact_id}</td>
+						<td>{$vo.salesman_id}</td>
+						<td rowspan="{$vo.count_length}">{$vo.salesman_name}</td>
+						<td colspan="11" style="padding: 0px">
+							<table class="table table-bordered table-striped table-hover">
+								<volist name="vo['contact_detail']" id="voo">
+									<tr>
+										<td>{$voo.sale_classification_id}</td>
+										<td>{$voo.sale_classification}</td>
+										<td>{$voo.sale_inventory_name}</td>
+										<td>{$voo.sale_specification}</td>
+										<td>{$voo.colour}</td>
+										<td>{$voo.sale_price}</td>
+										<td>{$voo.cost_price}</td>
+										<td>{$voo.float_price}</td>
+										<td>{$voo.sale_quantity}</td>
+										<td>{$voo.delivery_quantity}</td>
+										<td>{$voo.delivery_money}</td>
+									</tr>
+								</volist>
+							</table>
+						</td>
+						
+						
+						<!-- <td colspan="11">
+							<table class="table table-striped table-hover">
+								<volist name="vo['contact_detail']" id="voo">
+									<tr>
+										<td>1</td>
+										<td>2</td>
+										<td>3</td>
+										<td>4</td>
+										<td>5</td>
+										<td>6</td>
+										<td>7</td>
+										<td>8</td>
+										<td>9</td>
+										<td>10</td>
+										<td>11</td>
+									</tr>
+								</volist>
+							</table>
+						</td> -->
+						
+						
 					</tr>
 				</volist>
 			</tbody>
@@ -30,7 +101,7 @@
 
 <script>
 	$(function() {
-		$("#allFundsBackTable").dataTable();
+		// $("#conflictTable").dataTable();
 		$("#add_new_form").validationEngine('attach');
 		$("#edit_form").validationEngine('attach');
 		$("#allFundsBackTable tbody").on("click", "tr td span img:even", function() {

@@ -12,6 +12,7 @@ class SourceDataController extends Controller {
 	private $db_price_float_ratio;
 	private $db_load_history;
 	private $db_customer;
+	private $db_U8;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -46,11 +47,14 @@ class SourceDataController extends Controller {
 			$this -> error("结束日期最大只能为昨天");
 		}
 		
-		$db_U8 = D("U8");
-		$db_U8 -> test();
-		exit;
-		$this -> display('ConflictPage');
+		$this -> db_U8 = D("U8");
+		$edited_contact_main = $this -> db_U8 ->getEditedContactMain($begin_date,$end_date);
 		
+		$edited_contact_main = $this -> db_customer -> addCustomerName($edited_contact_main);
+		$edited_contact_detail = $this -> db_U8 ->getContactDetail($edited_contact_main);
+		print_r($edited_contact_detail);
+		$this -> assign("edited_contact_detail",$edited_contact_detail);
+		$this -> display('ConflictPage');
 	}
 	
 	public function loadSettleSummaryPage(){
