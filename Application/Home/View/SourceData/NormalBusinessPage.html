@@ -15,8 +15,8 @@
 					<tr>
 						<th>业务员编码</th>
 						<th>业务员姓名</th>
-						<th>产品编号</th>
-						<th>产品名称</th>
+						<th>存货编号</th>
+						<th>存货名称</th>
 						<th>存货类别</th>
 						<th>规格型号</th>
 						<th>基本业绩提成比例</th>
@@ -27,11 +27,11 @@
 					<volist name="all_normal_business_ratio" id="vo">
 						<tr>
 							<td id="{$vo.id}_salesman_id">{$vo.salesman_id}</td>
-							<td id="{$vo.id}_name">{$vo.name}</td>
-							<td id="{$vo.id}_number">{$vo.number}</td>
+							<td id="{$vo.id}_name">{$vo.salesman_name}</td>
+							<td id="{$vo.id}_number">{$vo.inventory_id}</td>
 							<td>名称</td>
 							<td>类别</td>
-							<td id="{$vo.id}_specification">{$vo.specification}</td>
+							<td>规格型号</td>
 							<td id="{$vo.id}_ratio">{$vo.ratio}%</td>
 							<td normal_business_ratio_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#edit"> </span>
 								<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span>
@@ -68,12 +68,6 @@
 								<label for="inputEmail3" class="col-sm-4 control-label">货品编号</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="edit_number" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">规格型号</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_specification" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
@@ -124,15 +118,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">货品分类</label>
+								<label class="col-sm-4 control-label">货存编号</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_number">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">规格型号</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_specification">
+									<input type="text" class="form-control validate[required]" name="add_new_inventory_id">
 								</div>
 							</div>
 							<div class="form-group">

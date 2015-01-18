@@ -19,11 +19,9 @@ class U8Model extends Model {
 	}
 	public function getContactDetail($contact_main){
 		//so_soDetail 根据订单号取订单明细的数量，存货编码，单价，成本价，存货编码，数量？
-		//$this -> trueTableName = "SO_SODetails";
 		$condition = array();
 		foreach ($contact_main as $key => $value) {
 			$temp = $value['cSOCode'];
-			//$res[$key] = $this -> where($condition)->getField('cSOCode,iQuantity,cInvCode,fSaleCost,icostquantity,cInvName,foutquantity');
 			$res = $this -> query("select cSOCode,iQuantity as sale_quantity,cInvCode as inventory_id,iTaxUnitPrice as sale_price,iQuotedPrice as cost_price,iFHQuantity as delivery_quantity,iFHMoney as delivery_money from SO_SODetails where cSoCode = '$temp'");
 			$temp_count = count($res,0);
 			foreach ($res as $kk => $vv) {
@@ -38,16 +36,23 @@ class U8Model extends Model {
 			}
 			$contact_main[$key]['count_length'] = $temp_count;
 			$contact_main[$key]['contact_detail'] = $res;
-			
 		}
-		
 		return $contact_main;
 	}
 	public function getInventoryDetail($contact_detail){
-		//Inventory Table
-		$this -> trueTableName = "Inventory";
-		$condition = array();
+		//Inventory Table  取商品的信息，存货类别编码，存货名称，规格型号，颜色
+		// $this -> trueTableName = "Inventory";
+		
+		foreach ($contact_detail as $key => $value) {
+			$temp_contact_detail = $value['contact_detail'];
+			foreach ($temp_contact_detail as $kk => $vv) {
+				$temp_inventory_id = $vv['inventory_id'];
+			}
+			$res = $this -> query("select cInvCCode as classification_id,cInvName as inventory_name,cInvCCode as classification,cInvStd as specification form Inventory where cInvCode='$temp_inventory_id'");
+			print_r($res);exit;
+		}
 		
 	}
+	
 }
 ?>

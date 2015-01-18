@@ -43,7 +43,7 @@ class SourceDataController extends Controller {
 			$this -> error("起始日期大于结束日期");
 		}elseif($begin_date <= $last_end_date){
 			$this -> error("起始日期范围非法");
-		}elseif($end_date == $today){
+		}elseif($end_date >= $today){
 			$this -> error("结束日期最大只能为昨天");
 		}
 		
@@ -51,12 +51,31 @@ class SourceDataController extends Controller {
 		$edited_contact_main = $this -> db_U8 ->getEditedContactMain($begin_date,$end_date);
 		
 		$edited_contact_main = $this -> db_customer -> addCustomerName($edited_contact_main);
-		$edited_contact_detail = $this -> db_U8 ->getContactDetail($edited_contact_main);
+		$temp_edited_contact_mian = $this -> _addSalesmanName($edited_contact_main);
+		$edited_contact_main = $temp_edited_contact_mian['data'];
 		print_r($edited_contact_detail);
+		$edited_contact_detail = $this -> db_U8 ->getContactDetail($edited_contact_main);
+	//  去合同明细，等字段确认再做。
+	//	$edited_contact_inventory_detail = $this -> db_U8 ->getInventoryDetail($edited_contact_detail);
 		$this -> assign("edited_contact_detail",$edited_contact_detail);
 		$this -> display('ConflictPage');
 	}
 	
+	public function processData(){
+		//删除可能修改过的。
+		$check_list = $_POST['check_list'];
+		$arr_check_list = explode(",",$check_list);
+		$temp_count = count($arr_check_list,0);
+		unset($arr_check_list[$temp_count-1]);
+		foreach ($arr_check_list as $key => $value) {
+			//去commission 表中删除修改过的。
+		}
+		
+	}
+	
+	private function _processData($temp){
+		
+	}
 	public function loadSettleSummaryPage(){
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
 		$this -> assign('load_history',$load_history);
@@ -74,8 +93,7 @@ class SourceDataController extends Controller {
 	public function addNewNormalBusinessRatio(){
 		$data = array();
 		$data['salesman_id'] = $_POST['add_new_salesman_id'];
-		$data['classification'] = $_POST['add_new_classification'];
-		$data['specification'] = $_POST['add_new_specification'];
+		$data['inventory_id'] = $_POST['add_new_inventory_id'];
 		$data['ratio'] = $_POST['add_new_ratio'];
 		$this -> db_normal_business_ratio -> addNormalBusinessRatio($data);
 		$this -> loadNormalBusinessPage();
@@ -391,7 +409,7 @@ class SourceDataController extends Controller {
 		foreach ($array_data as $key => $value) {
 			foreach ($all_salesmen as $kk => $vv) {
 				if($value['salesman_id'] == $vv['salesman_id']){
-					$array_data[$key]['name'] = $vv['name'];
+					$array_data[$key]['salesman_name'] = $vv['salesman_name'];
 					break;
 				}
 			}
