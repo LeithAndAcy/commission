@@ -13,9 +13,11 @@ class LoadHistoryModel extends Model {
 		return $res;
 	}
 	
-	public function addItem($data){
-		print_r($data);
-		// $this -> add($data);
+	public function addItem($begin_date,$end_date){
+		$data = array();
+		$data['begin_date'] = $begin_date;
+		$data['end_date'] =  $end_date;
+		$this -> add($data);
 	}
 }
 ?>

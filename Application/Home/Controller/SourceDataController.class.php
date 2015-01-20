@@ -13,6 +13,9 @@ class SourceDataController extends Controller {
 	private $db_load_history;
 	private $db_customer;
 	private $db_U8;
+	private $db_contact_main;
+	private $db_contact_detail;
+	private $db_constomer_funds;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -27,6 +30,9 @@ class SourceDataController extends Controller {
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
 		$this -> db_load_history = D("LoadHistory");
 		$this -> db_customer = D("Customer");
+		$this -> db_contact_main = D("ContactMain");
+		$this -> db_contact_detail = D("ContactDetail");
+		$this -> db_constomer_funds = D("CustomerFunds");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
@@ -49,37 +55,93 @@ class SourceDataController extends Controller {
 		
 		$this -> db_U8 = D("U8");
 		$edited_contact_main = $this -> db_U8 ->getEditedContactMain($begin_date,$end_date);
-		
-		$edited_contact_main = $this -> db_customer -> addCustomerName($edited_contact_main);
-		$temp_edited_contact_mian = $this -> _addSalesmanName($edited_contact_main);
-		$edited_contact_main = $temp_edited_contact_mian['data'];
-		print_r($edited_contact_detail);
-		$edited_contact_detail = $this -> db_U8 ->getContactDetail($edited_contact_main);
-	//  去合同明细，等字段确认再做。
-	//	$edited_contact_inventory_detail = $this -> db_U8 ->getInventoryDetail($edited_contact_detail);
-		$this -> assign("edited_contact_detail",$edited_contact_detail);
-		$this -> display('ConflictPage');
+		if(count($edited_contact_main) == 0){
+			$this -> _processData($begin_date,$end_date);
+		}else{
+			$edited_contact_main = $this -> db_customer -> addCustomerName($edited_contact_main);
+			$temp_edited_contact_mian = $this -> _addSalesmanName($edited_contact_main);
+			$edited_contact_main = $temp_edited_contact_mian['data'];
+		//	print_r($edited_contact_detail);
+			$edited_contact_detail = $this -> db_U8 ->getContactDetail($edited_contact_main);
+		//  去合同明细，等字段确认再做。
+		//	$edited_contact_inventory_detail = $this -> db_U8 ->getInventoryDetail($edited_contact_detail);
+			$this -> assign("edited_contact_detail",$edited_contact_detail);
+			$this -> assign("begin_date",$begin_date);
+			$this -> assign("end_date",$end_date);
+			$this -> display('ConflictPage');
+		}
 	}
 	
 	public function processData(){
 		//删除可能修改过的。
 		$check_list = $_POST['check_list'];
+		$begin_date = $_POST['begin_date'];
+		$end_date = $_POST['end_date'];
 		$arr_check_list = explode(",",$check_list);
 		$temp_count = count($arr_check_list,0);
 		unset($arr_check_list[$temp_count-1]);
-		foreach ($arr_check_list as $key => $value) {
-			//去commission 表中删除修改过的。
-		}
-		
+		//删除可能重复的数据。
+		$this -> db_contact_main -> deleteItems($arr_check_list);
+		$this -> db_contact_detail -> deleteItems($arr_check_list);
+		$this -> _processData($begin_date, $end_date);
 	}
 	
-	private function _processData($temp){
-		
+	private function _processData($begin_date,$end_date){
+		//去所有符合条件的数据插入commission的表中  contact_main  contact_detail   customer_fund  load_history
+		$this -> db_U8 = D("U8");
+		$all_contact_main = $this -> db_U8 -> getAllContactMain($begin_date,$end_date);
+		// 插入 contact_main
+		$this -> db_contact_main -> addContactMain($all_contact_main);
+		//插入contact_detail  
+		$all_contact_detail = $this -> db_U8 -> getContactDetail($all_contact_main);
+		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
+		// 取得客户回款金额
+		$customer_funds =  $this -> db_U8 ->getCustomerFunds($begin_date,$end_date);
+		$this -> db_constomer_funds -> updateItems($customer_funds);
+		// 插入load_history
+		$this -> db_load_history -> addItem($begin_date,$end_date);
+		$this -> loadSettleSummaryPage();
 	}
 	public function loadSettleSummaryPage(){
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
+		$settlement_contact = $this -> db_contact_main -> getSettlementContact();
+		$settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);
+		$settlement_contact = $this -> _addSalesmanName($settlement_contact);
+		$settlement_contact = $settlement_contact['data'];
+		
+		$settlement_contact_detail = $this -> db_contact_detail -> getContactDetail($settlement_contact);
+		$this -> assign('settlement_contact_detail',$settlement_contact_detail);
 		$this -> assign('load_history',$load_history);
 		$this -> display('SettleSummaryPage');
+	}
+	public function ratioAdjust(){
+		print_r("ratio adjust function!!");
+	}
+	public function getSettlementRatio(){
+		$contact_main = $this -> db_contact_main -> getSettlementContact();
+		$contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
+		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
+		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
+		$arr_ratio = array();
+		foreach ($contact_detail as $key => $value) {
+			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
+			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
+			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
+			foreach ($normal_business_ratio as $kk => $vv) {
+				if($value['salesman_id'] == $vv['salesman_id'] && $value['inventory_id'] == $vv['inventory_id']){
+					$arr_ratio[$key]['normal_business_ratio'] = $vv['ratio'];
+					break;
+				}
+			}
+			foreach ($normal_profit_ratio as $kkk => $vvv) {
+				if($value['salesman_id'] == $vvv['salesman_id']){
+					$arr_ratio[$key]['normal_profit_ratio'] = $vvv['ratio'];
+					break;
+				}
+			}
+		}
+		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
+		$this -> loadSettleSummaryPage();
 	}
 	public function loadNormalBusinessPage(){
 		$all_normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
@@ -232,7 +294,7 @@ class SourceDataController extends Controller {
 	}
 	public function addPriceFloatRatio(){
 		$data['classification_id'] = $_POST['add_new_classification_id'];
-		$data['name'] = $_POST['add_new_name'];
+		$data['classification_name'] = $_POST['add_new_name'];
 		$data['low_price'] = $_POST['add_new_low_price'];
 		$data['high_price'] = $_POST['add_new_high_price'];
 		$data['low_length'] = $_POST['add_new_low_length'];
@@ -244,7 +306,7 @@ class SourceDataController extends Controller {
 	public function editPriceFloatRatio(){
 		$id = $_POST['edit_id'];
 		$data['classification_id'] = $_POST['edit_classification_id'];
-		$data['name'] = $_POST['edit_name'];
+		$data['classification_name'] = $_POST['edit_name'];
 		$data['low_price'] = $_POST['edit_low_price'];
 		$data['high_price'] = $_POST['edit_high_price'];
 		$data['low_length'] = $_POST['edit_low_length'];

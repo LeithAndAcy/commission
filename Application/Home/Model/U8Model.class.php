@@ -14,7 +14,7 @@ class U8Model extends Model {
 	protected $trueTableName;
 	public function getEditedContactMain($begin_date,$end_date){
 		// so_somain 取订单号，合同号，客户编码，业务员编码
-		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where dmoddate between '$begin_date' and '$end_date'");
+		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where dmodifysystime between '$begin_date' and '$end_date'");
 		return $res;
 	}
 	public function getContactDetail($contact_main){
@@ -30,7 +30,6 @@ class U8Model extends Model {
 					if($pos !== FALSE){
 						$aaa=  substr($vvv, 0,$pos+3);
 						$res[$kk][$kkk] = substr($vvv, 0,$pos);
-						
 					}
 				}
 			}
@@ -48,11 +47,20 @@ class U8Model extends Model {
 			foreach ($temp_contact_detail as $kk => $vv) {
 				$temp_inventory_id = $vv['inventory_id'];
 			}
-			$res = $this -> query("select cInvCCode as classification_id,cInvName as inventory_name,cInvCCode as classification,cInvStd as specification form Inventory where cInvCode='$temp_inventory_id'");
+			$res = $this -> query("select cInvCCode as classification_id,cInvName as inventory_name,cInvCCode as classification,cInvStd as specification,cInvDefine1 as colour form Inventory where cInvCode='$temp_inventory_id'");
 			print_r($res);exit;
 		}
-		
+	}
+	public function getAllContactMain($begin_date,$end_date){
+		// so_somain 取订单号，合同号，客户编码，业务员编码
+		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where (dmodifysystime between '$begin_date' and '$end_date') OR (dcreatesystime between '$begin_date' and '$end_date')");
+		return $res;
 	}
 	
+	public function getCustomerFunds($begin_date,$end_date){
+		//Ap_Close_bill
+		$res = $this -> query("select cDwCode as customer_id,cPerson as salesman_id,iAmount as funds from Ap_CloseBill where (dVouchDate between '$begin_date' and '$end_date') AND (cVouchType = 48) AND (cCheckMan is not null)");
+		return $res;
+	}
 }
 ?>

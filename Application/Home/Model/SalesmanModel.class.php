@@ -5,7 +5,7 @@ class SalesmanModel extends Model {
 	
 	public function getAllSalesman(){
 		
-		$res = $this->getField('id,salesman_id,name,status');
+		$res = $this->getField('id,salesman_id,salesman_name,status');
 		return $res;
 	}
 	

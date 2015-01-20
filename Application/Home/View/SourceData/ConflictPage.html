@@ -40,7 +40,7 @@
 				<volist name="edited_contact_detail" id="vo" >
 					<tr>
 						<td  rowspan="{$vo.count_length}">
-						<input type="checkbox" class="check_list" id="{$vo.cSOCode}"/>
+						<input type="checkbox" class="check_list" id="{$vo.contact_id}"/>
 						</td>
 						<!-- <td id="{$vo.id}_customer_id">{$vo.customer_id}</td> -->
 						<td  rowspan="{$vo.count_length}">{$vo.customer_id}</td>
@@ -84,6 +84,10 @@
 		<div align="right">
 			<button class="btn btn-primary btn-lg" id="submit">确定</button>
 		</div>
+		<div>
+			<input type="text" style="display: none" id="begin_date" value="{$begin_date}" />
+			<input type="text" style="display: none" id="end_date" value="{$end_date}" />
+		</div>
 	</body>
 </html>
 
@@ -117,6 +121,8 @@
 		});
 		$("#submit").click(function(){
 			var check_list = "";
+			var begin_date = $("#begin_date").val();
+			var end_date = $("#end_date").val();
 			$("input[class='check_list']").each(function() {
 				if (this.checked == true) {
 					temp = $(this).attr("id");
@@ -125,6 +131,8 @@
 			});
 			$.post("__CONTROLLER__/processData",{
 					"check_list":check_list,
+					"begin_date":begin_date,
+					"end_date":end_date,
 				},function(data){
 					
 				});

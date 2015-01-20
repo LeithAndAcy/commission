@@ -26,5 +26,14 @@ class NormalBusinessRatioModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition) -> delete();
 	}
+	
+	// 取出salesman 对应的比例。
+	public function getRatio($salesman_id_list){
+		// $ids = implode(',', $salesman_id_list);
+		// $sql = "select * from commission_normal_business_ratio where salesman_id in (".$ids.")";
+		// $res = $this -> query($sql); 
+		// print_r($sql);
+		// print_r($res);exit;
+	}
 }
 ?>
