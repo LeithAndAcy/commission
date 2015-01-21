@@ -1,0 +1,219 @@
+<html>
+	<head>
+		<include file="Public:commonInclude"/>
+	</head>
+	<body>
+		<div class="col-xs-12">
+			<button class="btn btn-info" data-toggle="modal" data-target="#searchModel">
+				复杂搜索
+			</button>
+			<button class="btn btn-info" id="get_settling_contact">
+				取可结算合同
+			</button>
+			<button class="btn btn-info" id="get_ratio">
+				取数
+			</button>
+		</div>
+
+		<div class="col-xs-12">
+			<table id="settlementContactTable" class="table table-striped table-bordered table-hover datatable" width="300%" cellspacing="0" style="margin-top: 20px;overflow-x: auto">
+				<thead>
+					<tr>
+						<th>合同号</th>
+						<th>客户编码</th>
+						<th>客户名称</th>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
+						
+						<th>销售订单号</th>
+						<th>发货单号</th>
+						
+						<th>存货编码</th>
+						<th>存货类别</th>
+						<th>存货名称</th>
+						<th>规格型号</th>
+						<th>颜色</th>
+						<th>销售单价</th>
+						<th>底价（元）</th>
+						<th>上浮的底价（元）</th>
+						<th>销售数量（米数）</th>
+						<th>发货数量（米数）</th>
+						<th>销售金额(元)</th>
+						
+						<th>基本业绩提成比例</th>
+						<th>达标业绩提成比例</th>
+						<th>基本利润提成比例</th>
+						<th>回款未达标利润提成比例</th>
+						
+						<th>业务提成调整比例</th>
+						<th>利润提成调整比例</th>
+						<th>底价调整金额</th>
+						<th>最终实际底价</th>
+						
+						<th>基本业绩提成</th>
+						<th>回款达标业绩提成</th>
+						<th>基本利润提成</th>
+						<th>回款达标利润提成</th>
+						
+						<th>提成合计</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="settling_contact_detail" id="vo">
+						<tr>
+							<td>{$vo.contact_id}</td>
+							<td>{$vo.customer_id}</td>
+							<td>{$vo.customer_name}</td>
+							<td>{$vo.salesman_id}</td>
+							<td>{$vo.salesman_name}</td>
+							<td>销售订单号</td>
+							<td>发货订单号</td>
+							<th>{$vo.inventory_id}</th>
+							<td>{$vo.classification}</td>
+							<td>{$vo.inventory_name}</td>
+							<td>{$vo.specification}</td>
+							<td>{$vo.colour}</td>
+							<td>{$vo.sale_price}</td>
+							<td>{$vo.cost_price}</td>
+							<td>{$vo.float_price}</td>
+							<td>{$vo.sale_quantity}</td>
+							<td>{$vo.delivery_quantity}</td>
+							<td>{$vo.delivery_money}</td>
+							<td>{$vo.normal_business_ratio}%</td>
+							<td>达标业绩提成比例</td>
+							<td>{$vo.normal_profit_ratio}%</td>
+							<td>回款未达标业绩提成比例</td>
+							<td id="{$vo.contact_id}_business_adjust">{$vo.business_adjust}</td>
+							<td id="{$vo.contact_id}_profit_adjust">{$vo.profit_adjust}</td>
+							<td id="{$vo.contact_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
+							<td>最终底价</td>
+							<td>基本业绩提成</td>
+							<td>回款达标业绩提成</td>
+							<td>基本利润提成</td>
+							<td>回款达标利润提成</td>
+							<td>提成合计</td>
+							<td contact_id="{$vo.contact_id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span></td>
+						</tr>
+					</volist>
+				</tbody>
+			</table>
+		</div>
+		<div class="modal fade" id="searchModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">复杂搜索</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="col-sm-4 control-label">合同号</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="合同号">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">存货类别</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="存货类别">
+								</div>
+							</div>
+							<div class="form-group">
+								<label  class="col-sm-4 control-label">存货编码</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="存货编码">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">规格</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="规格">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">型号</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="型号">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">颜色</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="businessRatio" placeholder="颜色">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							取消
+						</button>
+						<button type="button" class="btn btn-primary">
+							搜索
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="editDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">修改</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-6 control-label">业务提成调整比例</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" id="businessRatio" placeholder="业务提成调整比例">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-6 control-label">利润提成调整比例</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" id="businessRatio" placeholder="利润提成调整比例">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail3" class="col-sm-6 control-label">调整底价金额</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" id="businessRatio" placeholder="调整底价金额">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							取消
+						</button>
+						<button type="button" class="btn btn-primary">
+							确定
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+$(function() {
+	$("#settlementContactTable").dataTable();
+	$("#get_settling_contact").click(function(){
+		$.post("__CONTROLLER__/getSeettlingContact",{},function(data){
+			window.location.reload();
+		});
+	});
+	$("#get_ratio").click(function(){
+		alert("取比例，价钱！");
+	});
+});
+</script>
+

@@ -39,9 +39,17 @@ class SalesmanModel extends Model {
 			return true; //名字没重复，新名字能用	
 		}
 	}
-	
-	public function getSalesmanNameBySalesmanId($data){
-		
+	public function addSalesmanName($array_data){
+		$all_salesmen = $this-> select();
+		foreach ($array_data as $key => $value) {
+			foreach ($all_salesmen as $kk => $vv) {
+				if($value['salesman_id'] == $vv['salesman_id']){
+					$array_data[$key]['salesman_name'] = $vv['salesman_name'];
+					break;
+				}
+			}
+		}
+		return $array_data;
 	}
 	
 }

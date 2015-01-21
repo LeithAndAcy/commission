@@ -15,5 +15,20 @@ class CustomerFundsModel extends Model {
 			}
 		}
 	}
+	public function getTotalCustomerFunds(){
+		$res = $this -> select();
+		foreach ($res as $key => $value) {
+			$res[$key]['total_funds'] = $value['funds'] + $value['benefit'];
+		}
+		return $res;
+	}
+	public function setCustomerFunds($customer_id,$salesman_id,$benefit){
+		$condition = array();
+		$condition['customer_id'] = $customer_id;
+		$condition['salesman_id'] = $salesman_id;
+		$data['funds'] = 0;
+		$data['benefit'] = $benefit;
+		$this -> where($condition)->save($data);
+	}
 }
 ?>

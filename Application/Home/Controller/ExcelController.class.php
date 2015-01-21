@@ -47,6 +47,25 @@ class ExcelController extends Controller {
 		}
 		$this -> success("添加成功！");
 	}
-
+	public function generatePriceFloatRatioExcelFile(){
+		vendor('PHPExcel.PHPExcel');
+		
+	}
+	public function exportToExcel() {
+		$filename = "test.xls";
+		$filedir = "Tmp/";
+		$file = fopen($filedir . $filename, "r");
+		// open the file
+		header('Content-Encoding: none');
+		header("Content-type: application/octet-stream");
+		header("Accept-Ranges: bytes");
+		header("Accept-Length: " . filesize($filedir . $filename));
+		header('Content-Transfer-Encoding: binary');
+		header("Content-Disposition: attachment; filename= " . $filename);
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		echo fread($file, filesize($filedir . $filename));
+		fclose($file);
+	}
 }
 ?>

@@ -61,5 +61,11 @@ class ContactDetailModel extends Model {
 			$this -> where($condition) -> save($data);
 		}
 	}
+	public function getContactTotalMoney($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$total_money = $this -> where($condition) -> sum('delivery_money');
+		return $total_money;
+	}
 }
 ?>
