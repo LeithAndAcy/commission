@@ -48,32 +48,20 @@
         			
 	<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateNormalBusiness" target="workflow">基本业绩提成</a>
+			<a href="loadSettlingContactPage" target="workflow">可结算合同</a>
 		</li>
 		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateSpecialBusiness" target="workflow">达标业绩提成</a>
+			<a href="SettledCommission" target="workflow">已结算合同</a>
 		</li>
 		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateNormalProfit" target="workflow">基本利润提成</a>
-		</li>
-		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateSpecialProfit" target="workflow">未达标利润提成</a>
-		</li>
-		<li role="presentation">
-			<a target="workflow">可结算合同</a>
-		</li>
-		<li role="presentation">
-			<a href="" target="workflow">已结算提成</a>
-		</li>
-		<li role="presentation">
-			<a href="" target="workflow">业务提成表</a>
+			<a href="CommissionBuisness" target="workflow">业务提成表</a>
 		</li>
 	</ul>
 
         		</div>
         		<div id="container" class="row" style="padding-left:220px;padding-top: 5px">
         			
-	<iframe name="workflow" frameborder="false" width="99%" allowtransparency="true" height="740px"></iframe>
+	<iframe name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="900px"></iframe>
 
         		</div>
         	</div>

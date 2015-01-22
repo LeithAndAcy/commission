@@ -28,10 +28,20 @@
 	.datatable  td {
 		text-align: center;
 	}
-</style>
+	.dataTables_wrapper{
+		margin-top:15px;
+	}
+	</style>
+<script>
+	$(function(){
+		$(".datatable tbody").on("dblclick","tr",function() {
+			$(this).children("td:last()").children("span:eq(0)").children("img").click();
+		});
+	})
+</script>
 	</head>
 	<body>
-
+		
 		<div class="col-xs-12">
 			<div>
 				<button class="btn btn-info" data-toggle="modal" data-target="#addNew">
@@ -41,11 +51,12 @@
 			<table id="allNormalBusinessRatioTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0" style="margin-top: 20px">
 				<thead>
 					<tr>
-						<th>人员编码</th>
-						<th>姓名</th>
-						<th>存货分类</th>
-						<th>规格</th>
-						<th>型号</th>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
+						<th>存货编号</th>
+						<th>存货名称</th>
+						<th>存货类别</th>
+						<th>规格型号</th>
 						<th>基本业绩提成比例</th>
 						<th>操作</th>
 					</tr>
@@ -53,10 +64,11 @@
 				<tbody>
 					<?php if(is_array($all_normal_business_ratio)): $i = 0; $__LIST__ = $all_normal_business_ratio;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
 							<td id="<?php echo ($vo["id"]); ?>_salesman_id"><?php echo ($vo["salesman_id"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["name"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_classification"><?php echo ($vo["classification"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_specification"><?php echo ($vo["specification"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_model"><?php echo ($vo["model"]); ?></td>
+							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["salesman_name"]); ?></td>
+							<td id="<?php echo ($vo["id"]); ?>_number"><?php echo ($vo["inventory_id"]); ?></td>
+							<td>名称</td>
+							<td>类别</td>
+							<td>规格型号</td>
 							<td id="<?php echo ($vo["id"]); ?>_ratio"><?php echo ($vo["ratio"]); ?>%</td>
 							<td normal_business_ratio_id="<?php echo ($vo["id"]); ?>"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#edit"> </span>
 								<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="/commission/Public/img/delete.png"> </span>
@@ -89,21 +101,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">货品分类</label>
+								<label for="inputEmail3" class="col-sm-4 control-label">货品编号</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_classification" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品规格</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_specification" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品型号</label>
-								<div class="col-sm-6">
-									<input type="text" id="edit_model" class="form-control" disabled="disabled"/>
+									<input type="text" class="form-control" id="edit_number" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
@@ -139,12 +139,8 @@
 								<div class="col-sm-6">
 									<select class="form-control" id="salesman_list" name="add_new_salesman_name">
 										<option></option>
-										<optgroup label="上海员工">
-											<?php if(is_array($shanghai_salesmen)): $i = 0; $__LIST__ = $shanghai_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-										</optgroup>
-
-										<optgroup label="昆山员工">
-											<?php if(is_array($kunshan_salesmen)): $i = 0; $__LIST__ = $kunshan_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+										<optgroup label="员工">
+											<?php if(is_array($all_salesman)): $i = 0; $__LIST__ = $all_salesman;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["salesman_name"]); ?>"><?php echo ($vo["salesman_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
 										</optgroup>
 									</select>
 								</div>
@@ -152,29 +148,13 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]"   name="add_new_salesman_id"  id="add_new_salesman_id" placeholder="人员编码">
+									<input type="text" class="form-control validate[required]" name="add_new_salesman_id"  id="add_new_salesman_id" readonly="readonly">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">货品分类</label>
+								<label class="col-sm-4 control-label">货存编号</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_classification" placeholder="货品分类">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品规格</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_specification" placeholder="货品规格">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品型号</label>
-								<div class="col-sm-6">
-									<select id="all_model" name="add_new_model" class="form-control select2 validate[required]">
-										<option>型号1</option>
-										<option>林2</option>
-										<option>型号3</option>
-									</select>
+									<input type="text" class="form-control validate[required]" name="add_new_inventory_id">
 								</div>
 							</div>
 							<div class="form-group">
@@ -213,17 +193,15 @@
 			var edit_id = $(this).parent().parent().attr('normal_business_ratio_id');
 			var edit_ratio = $("#"+edit_id+"_ratio").text();
 			edit_ratio = edit_ratio.slice(0,-1);
-			var edit_model = $("#"+edit_id+"_model").text();
 			var edit_specification = $("#"+edit_id+"_specification").text();
-			var edit_classification = $("#"+edit_id+"_classification").text();
+			var edit_number = $("#"+edit_id+"_number").text();
 			var edit_name = $("#"+edit_id+"_name").text();
 			var edit_salesman_id = $("#"+edit_id+"_salesman_id").text();
 			$("#edit_id").val(edit_id);
 			$("#edit_salesman_id").val(edit_salesman_id);
 			$("#edit_salesman_name").val(edit_name);
-			$("#edit_classification").val(edit_classification);
+			$("#edit_number").val(edit_number);
 			$("#edit_specification").val(edit_specification);
-			$("#edit_model").val(edit_model);
 			$("#edit_ratio").val(edit_ratio);
 		});
 		
