@@ -28,17 +28,7 @@
 	.datatable  td {
 		text-align: center;
 	}
-	.dataTables_wrapper{
-		margin-top:15px;
-	}
-	</style>
-<script>
-	$(function(){
-		$(".datatable tbody").on("dblclick","tr",function() {
-			$(this).children("td:last()").children("span:eq(0)").children("img").click();
-		});
-	})
-</script>
+</style>
 	</head>
 	<body>
 		<div class="col-xs-12">
@@ -50,9 +40,8 @@
 			<table id="allSpecialBusinessRatioTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0" style="margin-top: 20px">
 				<thead>
 					<tr>
-						<th>业务员编码</th>
-						<th>业务员姓名</th>
-						<th>存货类别</th>
+						<th>人员编码</th>
+						<th>姓名</th>
 						<th>回款下限</th>
 						<th>回款上限</th>
 						<th>回款达标业绩提成比例</th>
@@ -62,8 +51,7 @@
 				<tbody>
 					<?php if(is_array($all_special_business_ratio)): $i = 0; $__LIST__ = $all_special_business_ratio;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
 							<td id="<?php echo ($vo["id"]); ?>_salesman_id"><?php echo ($vo["salesman_id"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["salesman_name"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_classification"><?php echo ($vo["classification"]); ?></td>
+							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["name"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_low_limit"><?php echo ($vo["low_limit"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_high_limit"><?php echo ($vo["high_limit"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_ratio"><?php echo ($vo["ratio"]); ?>%</td>
@@ -93,12 +81,6 @@
 								<label class="col-sm-4 control-label">姓名</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="edit_salesman_name" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">存货大类</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_classification" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
@@ -140,8 +122,12 @@
 								<div class="col-sm-6">
 									<select class="form-control" id="salesman_list" name="add_new_salesman_name">
 										<option></option>
-										<optgroup label="员工">
-											<?php if(is_array($all_salesman)): $i = 0; $__LIST__ = $all_salesman;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+										<optgroup label="上海员工">
+											<?php if(is_array($shanghai_salesmen)): $i = 0; $__LIST__ = $shanghai_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+										</optgroup>
+
+										<optgroup label="昆山员工">
+											<?php if(is_array($kunshan_salesmen)): $i = 0; $__LIST__ = $kunshan_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
 										</optgroup>
 									</select>
 								</div>
@@ -149,13 +135,7 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" name="add_new_salesman_id" id="add_new_salesman_id" readonly="readonly">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">存货大类</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]"  name="add_new_classification">
+									<input type="text" class="form-control validate[required]"  name="add_new_salesman_id" id="add_new_salesman_id" placeholder="人员编码">
 								</div>
 							</div>
 							<div class="form-group">
@@ -210,11 +190,9 @@
 			var edit_low_limit = $("#" + edit_id + "_low_limit").text();
 			var edit_high_limit = $("#" + edit_id + "_high_limit").text();
 			var edit_name = $("#" + edit_id + "_name").text();
-			var edit_classification = $("#" + edit_id + "_classification").text();
 			var edit_salesman_id = $("#" + edit_id + "_salesman_id").text();
 			var edit_collection_range = edit_low_limit + "元       至     " + edit_high_limit + "元";
 			$("#edit_id").val(edit_id);
-			$("#edit_classification").val(edit_classification);
 			$("#edit_salesman_id").val(edit_salesman_id);
 			$("#edit_salesman_name").val(edit_name);
 			$("#edit_collection_range").val(edit_collection_range);

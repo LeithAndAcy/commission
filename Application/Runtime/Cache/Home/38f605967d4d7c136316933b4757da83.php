@@ -46,25 +46,10 @@
         	<div>
         		<div style="position:fixed; top:60px;left:10px;width: 200px;z-index: 100;">
         			
-	<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
-		<li role="presentation">
-			<a href="LoadPayrollPage" target="workflow">总工资表</a>
-		</li>
-		<li role="presentation">
-			<a href="LoadShanghaiSalaryPage" target="workflow">上海基本工资表</a>
-		</li>
-		<li role="presentation">
-			<a href="LoadKunshanSalaryPage" target="workflow">昆山基本工资表</a>
-		</li>
-		<li role="presentation">
-			<a href="LoadIncidentalFeePage" target="workflow">费用</a>
-		</li>
-	</ul>
-
         		</div>
         		<div id="container" class="row" style="padding-left:220px;padding-top: 5px">
         			
-	<iframe name="workflow" frameborder="false" width="100%" allowtransparency="true" height="600px"></iframe>
+	薪资计算
 
         		</div>
         	</div>
@@ -89,11 +74,7 @@
 </script>
 
 	<script>
-		$(function() {
+		$(function(){
 			$("[li_function='CaculateWage']").addClass("active");
-			$('#myTab a').click(function() {
-				$('#myTab a').parent().removeClass("active");
-				$(this).parent().addClass("active");
-			});
-		});
+		})
 	</script>

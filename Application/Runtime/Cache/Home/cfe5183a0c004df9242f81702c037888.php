@@ -49,15 +49,13 @@
 	<div class="panel-group " role="tablist" aria-multiselectable="true">
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingOne">
-				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 业务表
-					&nbsp;<i class="glyphicon glyphicon-plus"></i> 
-				</a></h4>
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 业务表 </a></h4>
 			</div>
-			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+			<div id="collapseOne" class="panel-collapse collapse " role="tabpanel" aria-labelledby="headingOne">
 				<div class="panel-body">
 					<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadSettleSummaryPage" target="workflow">待结算合同</a>
+							<a href="/commission/index.php/Home/SourceData/loadSettleSummaryPage" target="workflow">汇总结算表</a>
 						</li>
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadNormalBusinessPage" target="workflow">基本业绩提成比例表</a>
@@ -75,17 +73,17 @@
 							<a href="/commission/index.php/Home/SourceData/loadFundsBackPage" target="workflow">资金回笼调整表</a>
 						</li>
 						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">上浮底价调整比例表</a>
+							<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">上浮低价调整比例表</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="panel-group" role="tablist" aria-multiselectable="true">
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingTwo">
-				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> 人事表
-					&nbsp;<i class="glyphicon glyphicon-plus"></i> 
-				</a></h4>
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> 人事表 </a></h4>
 			</div>
 			<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
 				<div class="panel-body">
@@ -105,9 +103,6 @@
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadInsuranceAndFundPage" target="workflow">社保及公积金表</a>
 						</li>
-						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadCustomerPage" target="workflow">客户信息表</a>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -117,7 +112,7 @@
         		</div>
         		<div id="container" class="row" style="padding-left:220px;padding-top: 5px">
         			
-	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="900px"></iframe>
+	<iframe id="workflow" name="workflow" frameborder="false" width="99%" allowtransparency="true" height="600px"></iframe>
 
         		</div>
         	</div>
