@@ -6,7 +6,7 @@ class ExcelController extends Controller {
 	private $db_normal_profit_ratio;
 	private $db_price_float_ratio;
 	function _initialize() {
-		
+		$this -> db_price_float_ratio = D("PriceFloatRatio");
 	}
 
 	public function loadPriceFloatExcel() {
@@ -49,23 +49,59 @@ class ExcelController extends Controller {
 	}
 	public function generatePriceFloatRatioExcelFile(){
 		vendor('PHPExcel.PHPExcel');
+		$float_price_ratio = $this -> db_price_float_ratio ->getAllPriceFloatRatio();
+		$temp_trans = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', );
+		$objPHPExcel = new \PHPExcel();
+
+		$objPHPExcel -> getProperties() -> setCreator("提成管理系统")
+		 -> setLastModifiedBy("提成管理系统") -> setTitle("上浮底价调整比例表") 
+		 -> setSubject("上浮底价调整比例表") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+		 -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
+
+		$objPHPExcel -> setActiveSheetIndex(0);
+
+		$objPHPExcel -> getActiveSheet() -> setTitle('上浮底价调整比例表');
 		
-	}
-	public function exportToExcel() {
-		$filename = "test.xls";
-		$filedir = "Tmp/";
-		$file = fopen($filedir . $filename, "r");
-		// open the file
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('A') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('B') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('C') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('D') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('E') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('F') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('G') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('H') -> setWidth(18);
+		
+		$objPHPExcel -> getActiveSheet() -> getDefaultStyle() -> getFont() -> setSize(12);
+		
+
+		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '存货类别编码') 
+		-> setCellValue('C1', '货存类别名称') -> setCellValue('D1', '底价下限') -> setCellValue('E1', '底价上限') 
+		-> setCellValue('F1', '长度下限') -> setCellValue('G1', '长度上限') -> setCellValue('H1', '浮动比例(%)');
+		foreach ($float_price_ratio as $key => $value) {
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['classification_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('C' . ($key + 2), $value['classification_name']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['low_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['high_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('F' . ($key + 2), $value['low_length']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('G' . ($key + 2), $value['high_length']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('H' . ($key + 2), $value['ratio']);
+		}
+		
+		
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$filename = "上浮底价调整比例表".date('Ymdhis').".xls";
+		$filename = iconv("utf-8", "gb2312", $filename);
+		header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Disposition:inline;filename="'.$filename.'"');
+        header("Content-Transfer-Encoding: binary");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Pragma: no-cache");
 		header('Content-Encoding: none');
-		header("Content-type: application/octet-stream");
-		header("Accept-Ranges: bytes");
-		header("Accept-Length: " . filesize($filedir . $filename));
-		header('Content-Transfer-Encoding: binary');
-		header("Content-Disposition: attachment; filename= " . $filename);
-		header('Pragma: no-cache');
 		header('Expires: 0');
-		echo fread($file, filesize($filedir . $filename));
-		fclose($file);
+		$objWriter -> save('php://output');
 	}
 }
 ?>
