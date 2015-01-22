@@ -36,6 +36,8 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['salesman_name'] = $value['salesman_name'];
 				$contact_detail[$i]['normal_business_ratio'] *= 100;
 				$contact_detail[$i]['normal_profit_ratio'] *= 100;
+				$contact_detail[$i]['business_adjust'] *= 100;
+				$contact_detail[$i]['profit_adjust'] *= 100;
 				$i++;
 			}
 		}
@@ -67,5 +69,14 @@ class ContactDetailModel extends Model {
 		$total_money = $this -> where($condition) -> sum('delivery_money');
 		return $total_money;
 	}
+	public function updateAdjust($contact_id,$inventory_id,$business_adjust,$profit_adjust,$cost_price_adjust){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$condition['inventory_id'] = $inventory_id;
+		$data['business_adjust'] = $business_adjust * 0.01;
+		$data['profit_adjust'] = $profit_adjust * 0.01;
+		$data['cost_price_adjust'] = $cost_price_adjust;
+		$this -> where($condition)->save($data);
+ 	}
 }
 ?>

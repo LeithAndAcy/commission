@@ -73,7 +73,7 @@ class SourceDataController extends Controller {
 	}
 	
 	public function processData(){
-		//删除可能修改过的。
+		//删除可能修改过的。 可能要修改customer_funds
 		$check_list = $_POST['check_list'];
 		$begin_date = $_POST['begin_date'];
 		$end_date = $_POST['end_date'];
@@ -115,13 +115,20 @@ class SourceDataController extends Controller {
 		$this -> display('SettleSummaryPage');
 	}
 	public function ratioAdjust(){
-		print_r("ratio adjust function!!");
+		$contact_id = $_POST['edit_contact_id'];
+		$inventory_id = $_POST['edit_inventory_id'];
+		$business_adjust = $_POST['edit_business_adjust'];
+		$profit_adjust =  $_POST['edit_profit_adjust'];
+		$cost_price_adjust = $_POST['edit_cost_price_adjust'];
+		$this -> db_contact_detail -> updateAdjust($contact_id,$inventory_id,$business_adjust,$profit_adjust,$cost_price_adjust);
+		$this -> loadSettleSummaryPage();
 	}
 	public function getSettlementRatio(){
 		$contact_main = $this -> db_contact_main -> getSettlementContact();
 		$contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
 		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
+		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
@@ -139,9 +146,12 @@ class SourceDataController extends Controller {
 					break;
 				}
 			}
+			//取float_price_ratio;待确定存活类别。
+			foreach ($price_float_ratio as $kkkk => $vvvv) {
+				
+			}
 		}
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
-		$this -> loadSettleSummaryPage();
 	}
 	public function loadNormalBusinessPage(){
 		$all_normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
