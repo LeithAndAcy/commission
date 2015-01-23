@@ -18,10 +18,11 @@ class SpecialProfitRatioModel extends Model {
 		foreach ($temp as $key => $value) {
 			if(($data['low_limit'] >= $value['low_limit'] && $data['low_limit']<=$value['high_limit']) ||
 			 ($data['high_limit'] <= $value['high_limit'] && $data['high_limit'] >= $value['low_limit'])){
-				return FALSE;
+				return false;
 			}
 		}
 		$this -> add($data);
+		return true;
 	}
 	public function editItem($id,$ratio){
 		$condition = array();

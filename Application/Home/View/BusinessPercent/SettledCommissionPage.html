@@ -4,30 +4,85 @@
 	</head>
 	<body>
 		<div class="col-xs-12">
-			<table id="settledCommissionTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0">
+			<table id="settledCommissionTable" class="table table-striped table-bordered table-hover datatable" width="300%" cellspacing="0">
 				<thead>
 					<tr>
 						<th>合同号</th>
-						<th>客户</th>
-						<th>业务员</th>
-						<th>状态</th>
+						<th>客户编码</th>
+						<th>客户名称</th>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
+						
+						<th>销售订单号</th>
+						<th>发货单号</th>
+						
+						<th>存货编码</th>
+						<th>存货类别</th>
+						<th>存货名称</th>
+						<th>规格型号</th>
+						<th>颜色</th>
+						<th>销售单价</th>
+						<th>底价（元）</th>
+						<th>上浮的底价（元）</th>
+						<th>销售数量（米数）</th>
+						<th>发货数量（米数）</th>
+						<th>销售金额(元)</th>
+						
+						<th>基本业绩提成比例</th>
+						<th>达标业绩提成比例</th>
+						<th>基本利润提成比例</th>
+						<th>回款未达标利润提成比例</th>
+						
+						<th>业务提成调整比例</th>
+						<th>利润提成调整比例</th>
+						<th>底价调整金额</th>
+						<th>最终实际底价</th>
+						
+						<th>基本业绩提成</th>
+						<th>回款达标业绩提成</th>
+						<th>基本利润提成</th>
+						<th>回款达标利润提成</th>
+						
+						<th>提成合计</th>
+						<!-- <th>操作</th> -->
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>合同号1</td>
-						<td>客户1</td>
-						<td>业务员1</td>
-						<td>已结算</td>
-					</tr>
-					<tr>
-						<td>合同号2</td>
-						<td>客户2</td>
-						<td>业务员2</td>
-						<td>未结算
-						<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="结算"  alt="结算" src="__PUBLIC__/img/edit.png"> </span>	
-						</td>
-					</tr>
+					<volist name="settling_contact_detail" id="vo">
+						<tr>
+							<td>{$vo.contact_id}</td>
+							<td>{$vo.customer_id}</td>
+							<td>{$vo.customer_name}</td>
+							<td>{$vo.salesman_id}</td>
+							<td>{$vo.salesman_name}</td>
+							<td>销售订单号</td>
+							<td>发货订单号</td>
+							<th>{$vo.inventory_id}</th>
+							<td>{$vo.classification}</td>
+							<td>{$vo.inventory_name}</td>
+							<td>{$vo.specification}</td>
+							<td>{$vo.colour}</td>
+							<td>{$vo.sale_price}</td>
+							<td>{$vo.cost_price}</td>
+							<td>{$vo.float_price}</td>
+							<td>{$vo.sale_quantity}</td>
+							<td>{$vo.delivery_quantity}</td>
+							<td>{$vo.delivery_money}</td>
+							<td>{$vo.normal_business_ratio}%</td>
+							<td>达标业绩提成比例</td>
+							<td>{$vo.normal_profit_ratio}%</td>
+							<td>回款未达标业绩提成比例</td>
+							<td id="{$vo.contact_id}_business_adjust">{$vo.business_adjust}</td>
+							<td id="{$vo.contact_id}_profit_adjust">{$vo.profit_adjust}</td>
+							<td id="{$vo.contact_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
+							<td>最终底价</td>
+							<td>基本业绩提成</td>
+							<td>回款达标业绩提成</td>
+							<td>基本利润提成</td>
+							<td>回款达标利润提成</td>
+							<td>提成合计</td>
+						</tr>
+					</volist>
 				</tbody>
 			</table>
 		</div>
@@ -37,15 +92,7 @@
 	$(function() {
 		$("#settledCommissionTable").dataTable();
 		$("#settledCommissionTable tbody").on("click","tr td span img:even",function() {
-			var temp = confirm("确认结算此合同吗？");
-			// if(temp){
-				// var edit_id = $(this).parent().parent().attr('funds_back_id');
-				// $.post("__CONTROLLER__/deleteFundsBack", {
-					// "delete_id" : edit_id,
-				// }, function(data) {
-					// window.location.reload();
-				// });
-			// }
+			
 		});
 	}); 
 </script>

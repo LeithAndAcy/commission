@@ -43,15 +43,6 @@ class ContactDetailModel extends Model {
 		}
 		return $contact_detail;
 	}
-	// public function getSettlementContactRatio($contact_main){
-		// $condition = array();
-		// $contact_detail = array();
-		// foreach ($contact_main as $key => $value) {
-			// $condition['contact_id'] = $value['contact_id'];
-			// $contact_main[$key]['contact_detail'] = $this -> where($condition)->getField('inventory_id',true);
-		// }
-		// return $contact_main;
-	// }
 	public function updateSettlementRatio($arr_ratio=array()){
 		$condition = array();
 		$data = array();

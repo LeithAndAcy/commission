@@ -37,6 +37,7 @@ class BusinessPercentController extends Controller {
 		$this -> display('SettlingContactPage');
 	}
 	public function getSeettlingContact(){
+		//判断哪些合同可结算
 		$total_customer_funds = $this -> db_constomer_funds ->getTotalCustomerFunds();
 		$condition = array();
 		$contact_main = array();
@@ -67,6 +68,27 @@ class BusinessPercentController extends Controller {
 			}
 		}
 		$this -> loadSettlingContactPage();
+	}
+	public function ratioAdjust(){
+		$contact_id = $_POST['edit_contact_id'];
+		$inventory_id = $_POST['edit_inventory_id'];
+		$business_adjust = $_POST['edit_business_adjust'];
+		$profit_adjust =  $_POST['edit_profit_adjust'];
+		$cost_price_adjust = $_POST['edit_cost_price_adjust'];
+		$this -> db_contact_detail -> updateAdjust($contact_id,$inventory_id,$business_adjust,$profit_adjust,$cost_price_adjust);
+		$this -> loadSettlingContactPage();
+	}
+	public function getSettlingRatioAndPrice(){
+		//依次计算上浮底价，最终实际底价，考虑回款金额，计算达标业绩提成比例，未达标利润提成比例。最后再计算业绩和利润提成金额。
+		exit;
+		$settling_contact =  $this -> db_contact_main ->getSettlingContact();
+		$settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
+		// print_r($settling_contact_detail);exit;
+		foreach ($settling_contact_detail as $key => $value) {
+			$settling_contact_detail[$key]['normal_business'] = $value['normal_business_ratio'] * $value['delivery_money'] * 0.01;
+	
+		}
+		
 	}
 	public function SettledCommission(){
 		$this -> display('SettledCommissionPage');

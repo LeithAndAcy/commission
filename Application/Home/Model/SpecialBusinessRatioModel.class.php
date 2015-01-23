@@ -15,14 +15,16 @@ class SpecialBusinessRatioModel extends Model {
 	public function addSpecialBusinessRatio($data){
 		$data['ratio'] *= 0.01;
 		$condition['salesman_id'] = $data['salesman_id'];
-		$temp = $this -> where($condtion)->select();
+		$condition['classification_id'] = $data['classification_id'];
+		$temp = $this -> where($condition)->select();
 		foreach ($temp as $key => $value) {
 			if(($data['low_limit'] >= $value['low_limit'] && $data['low_limit']<=$value['high_limit']) ||
 			 ($data['high_limit'] <= $value['high_limit'] && $data['high_limit'] >= $value['low_limit'])){
-				return FALSE;
+				return false;
 			}
 		}
 		$this -> add($data);
+		return true;
 	}
 	public function edtiSpecialBusinessRatio($id,$ratio){
 		$condition = array();

@@ -1,16 +1,37 @@
 <extend name="Public:basePage" />
 <block name="left_memu">
 	<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
-		<li role="presentation">
+		<!-- <li role="presentation">
 			<a href="__CONTROLLER__/CaculatBusinessAndProfit" target="workflow">业绩利润汇总</a>
 		</li>
 		<li role="presentation">
 			<a href="__CONTROLLER__/SearchBusinessData" target="workflow">业务数据查询</a>
+		</li> -->
+		<li role="presentation">
+			<a href="__CONTROLLER__/SettledContact" target="workflow">已结算合同</a>
+		</li>
+		<li role="presentation">
+			<a href="__CONTROLLER__/SettledContact" target="workflow">业务提成表</a>
+		</li>
+		<li role="presentation">
+			<a href="__CONTROLLER__/SettledContact" target="workflow">上海基本工资</a>
+		</li>
+		<li role="presentation">
+			<a href="__CONTROLLER__/SettledContact" target="workflow">昆山基本工资</a>
+		</li>
+		<li role="presentation">
+			<a href="__CONTROLLER__/SettledContact" target="workflow">费用表</a>
+		</li>
+		<li role="presentation">
+			<a href="__CONTROLLER__/SettledContact" target="workflow">总工资表</a>
+		</li>
+		<li role="presentation">
+			<a href="__CONTROLLER__/SettledContact" target="workflow">工资表明细表</a>
 		</li>
 	</ul>
 </block>
 <block name="content">
-	<iframe name="workflow" frameborder="false" width="99%" allowtransparency="true" height="550px"></iframe>
+	<iframe name="workflow" frameborder="false" width="100%" allowtransparency="true" height="900px"></iframe>
 </block>
 <block name="script">
 	<script>

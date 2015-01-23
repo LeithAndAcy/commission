@@ -205,11 +205,13 @@ class SourceDataController extends Controller {
 		$data['low_limit'] = $_POST['add_new_low_limit'];
 		$data['high_limit'] = $_POST['add_new_high_limit'];
 		$data['ratio'] = $_POST['add_new_ratio'];
-		$data['classification'] = $_POST['add_new_classification'];
-		$this -> db_special_business_ratio -> addSpecialBusinessRatio($data);
-		$temp = $this -> loadSpecialBusinessPage();
+		$data['classification_id'] = $_POST['add_new_classification_id'];
+		$data['classification_name'] = $_POST['add_new_classification_name'];
+		$temp = $this -> db_special_business_ratio -> addSpecialBusinessRatio($data);
 		if($temp == FALSE){
 			$this -> error("回款区间有重复，请重新输入!!",'/commission/index.php/Home/SourceData/loadSpecialBusinessPage',3);
+		}else{
+			$this -> loadSpecialBusinessPage();
 		}
 	}
 	public function loadNormalProfitPage(){
@@ -256,6 +258,8 @@ class SourceDataController extends Controller {
 		$temp = $this ->db_special_profit_ratio -> addItem($data);
 		if($temp == FALSE){
 			$this -> error("回款区间有重复，请重新输入!!",'/commission/index.php/Home/SourceData/loadSpecialProfitPage',3);
+		}else{
+			$this -> loadSpecialProfitPage();
 		}
 	}
 	public function editSpecialProfitRatio(){

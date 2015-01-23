@@ -24,10 +24,10 @@
 						<th>客户名称</th>
 						<th>业务员编码</th>
 						<th>业务员姓名</th>
-						
+
 						<th>销售订单号</th>
 						<th>发货单号</th>
-						
+
 						<th>存货编码</th>
 						<th>存货类别</th>
 						<th>存货名称</th>
@@ -39,23 +39,23 @@
 						<th>销售数量（米数）</th>
 						<th>发货数量（米数）</th>
 						<th>销售金额(元)</th>
-						
+
 						<th>基本业绩提成比例</th>
 						<th>达标业绩提成比例</th>
 						<th>基本利润提成比例</th>
 						<th>回款未达标利润提成比例</th>
-						
+
 						<th>业务提成调整比例</th>
 						<th>利润提成调整比例</th>
-						<th>底价调整金额</th>
-						<th>最终实际底价</th>
-						
-						<th>基本业绩提成</th>
-						<th>回款达标业绩提成</th>
-						<th>基本利润提成</th>
-						<th>回款达标利润提成</th>
-						
-						<th>提成合计</th>
+						<th>底价调整金额(元)</th>
+						<th>最终实际底价(元)</th>
+
+						<th>基本业绩提成(元)</th>
+						<th>回款达标业绩提成(元)</th>
+						<th>基本利润提成(元)</th>
+						<th>回款达标利润提成(元)</th>
+
+						<th>提成合计(元)</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -84,16 +84,16 @@
 							<td>达标业绩提成比例</td>
 							<td>{$vo.normal_profit_ratio}%</td>
 							<td>回款未达标业绩提成比例</td>
-							<td id="{$vo.contact_id}_business_adjust">{$vo.business_adjust}</td>
-							<td id="{$vo.contact_id}_profit_adjust">{$vo.profit_adjust}</td>
-							<td id="{$vo.contact_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
+							<td id="{$vo.contact_id}_{$vo.inventory_id}_business_adjust">{$vo.business_adjust}%</td>
+							<td id="{$vo.contact_id}_{$vo.inventory_id}_profit_adjust">{$vo.profit_adjust}%</td>
+							<td id="{$vo.contact_id}_{$vo.inventory_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
 							<td>最终底价</td>
 							<td>基本业绩提成</td>
 							<td>回款达标业绩提成</td>
 							<td>基本利润提成</td>
 							<td>回款达标利润提成</td>
 							<td>提成合计</td>
-							<td contact_id="{$vo.contact_id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span></td>
+							<td contact_id="{$vo.contact_id}" inventory_id="{$vo.inventory_id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span></td>
 						</tr>
 					</volist>
 				</tbody>
@@ -168,52 +168,76 @@
 						</button>
 						<h4 class="modal-title" id="myModalLabel">修改</h4>
 					</div>
-					<div class="modal-body">
-						<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" method="post" action="ratioAdjust">
+						<div class="modal-body">
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-6 control-label">业务提成调整比例</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="businessRatio" placeholder="业务提成调整比例">
+								<label class="col-sm-4 control-label">业务提成调整比例</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px" >
+									<input type="text" name="edit_business_adjust" id="edit_business_adjust" class="form-control validate[required,[custom[number]]">
+									<span class="input-group-addon">%</span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-6 control-label">利润提成调整比例</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="businessRatio" placeholder="利润提成调整比例">
+								<label class="col-sm-4 control-label">利润提成调整比例</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px" >
+									<input type="text" name="edit_profit_adjust" id="edit_profit_adjust" class="form-control validate[required,[custom[number]]">
+									<span class="input-group-addon">%</span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-6 control-label">调整底价金额</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="businessRatio" placeholder="调整底价金额">
+								<label class="col-sm-4 control-label">调整底价金额</label>
+								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px" >
+									<input type="text" name="edit_cost_price_adjust" id="edit_cost_price_adjust" class="form-control validate[required,[custom[number]]">
+									<span class="input-group-addon">元</span>
 								</div>
 							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							取消
-						</button>
-						<button type="button" class="btn btn-primary">
-							确定
-						</button>
-					</div>
+							<div class="hidden">
+								<input type="text" name="edit_contact_id"  id="edit_contact_id" value=""/>
+								<input type="text" name="edit_inventory_id" id="edit_inventory_id" value=""/>;
+							</div>
+						</div>
+						<div class="modal-footer">
+							<input type="button" class="btn btn-default" data-dismiss="modal" value="取消"/>
+							<input type="submit" class="btn btn-primary" value="确定"/>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
 	</body>
 </html>
 <script>
-$(function() {
-	$("#settlingContactTable").dataTable();
-	$("#get_settling_contact").click(function(){
-		$.post("__CONTROLLER__/getSeettlingContact",{},function(data){
-			window.location.reload();
+	$(function() {
+		$("#settlingContactTable").dataTable();
+		$("#get_settling_contact").click(function() {
+			$.post("__CONTROLLER__/getSeettlingContact", {}, function(data) {
+				window.location.reload();
+			});
 		});
-	});
-	$("#get_ratio").click(function(){
-		alert("取比例，价钱！");
-	});
-});
+		$("#get_ratio").click(function() {
+			alert("去比例，金额");
+			$.post("__CONTROLLER__/getSettlingRatioAndPrice", {}, function(data) {
+				window.location.reload();
+			});
+		});
+		$("#settlingContactTable tbody").on("click", "tr td span img:even", function() {
+			var contact_id = $(this).parent().parent().attr('contact_id');
+			var inventory_id = $(this).parent().parent().attr('inventory_id');
+			var business_adjust = $("#" + contact_id+"_"+ inventory_id + "_business_adjust").text();
+			var profit_adjust = $("#" + contact_id+"_"+ inventory_id + "_profit_adjust").text();
+			var cost_price_adjust = $("#" + contact_id+"_"+ inventory_id + "_cost_price_adjust").text();
+			
+			business_adjust = business_adjust.slice(0,-1);
+			profit_adjust = profit_adjust.slice(0,-1);
+			
+			$("#edit_business_adjust").val(business_adjust);
+			$("#edit_profit_adjust").val(profit_adjust);
+			$("#edit_cost_price_adjust").val(cost_price_adjust);
+			
+			$("#edit_contact_id").val(contact_id);
+			$("#edit_inventory_id").val(inventory_id);
+			
+		});
+	}); 
 </script>
 
