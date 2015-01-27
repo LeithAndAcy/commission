@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<include file="Public:commonInclude"/>
+	</head>
+	<body>
+		<div class="col-xs-12">
+			<table id="salaryDetailTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0">
+				<thead>
+					<tr>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
+						<th>提成合计</th>
+						<th>社保</th>
+						<th>公积金</th>
+						<th>个税</th>
+						<th>工资(元)</th>
+						<th>月份</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>编码1</td>
+						<td>姓名2</td>
+						<td>1111</td>
+						<td>222</td>
+						<td>公积金</td>
+						<td>个税</td>
+						<td>200000</td>
+						<td>2014-01</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
+<script>
+	$(function() {
+		$("#salaryDetailTable").dataTable();
+		
+		}); 
+</script>
+

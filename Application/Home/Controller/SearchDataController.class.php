@@ -12,11 +12,28 @@ class SearchDataController extends Controller {
     	$this -> display('SearchDataPage');
 		
 	}
-	public function CaculatBusinessAndProfit(){
-		$this -> display('BusinessAndProfitPage');
+	public function searchSettledContact(){
+		$business_percent = A('BusinessPercent');
+		$business_percent -> loadSettledContactPage();
 	}
-	public function SearchBusinessData(){
-		$this -> display('BusinessDataPage');
+	public function searchCommissionBusiness(){
+		$business_percent = A('BusinessPercent');
+		$business_percent -> loadCommissionBuisnessPage();
+	}
+	public function searchShanghaiSalary(){
+		$this -> display('ShanghaiSalaryPage');
+	}
+	public function searchKunshanSalary(){
+		$this -> display('KunshanSalaryPage');
+	}
+	public function searchIncidentalFee(){
+		$this -> display('IncidentalFeePage');
+	}
+	public function searchTotalSalary(){
+		$this -> display('TotalSalaryPage');
+	}
+	public function searchSalaryDetail(){
+		$this -> display('SalaryDetailPage');
 	}
 }
 ?>

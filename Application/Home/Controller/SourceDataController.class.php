@@ -16,6 +16,7 @@ class SourceDataController extends Controller {
 	private $db_contact_main;
 	private $db_contact_detail;
 	private $db_constomer_funds;
+	private $db_length_limit;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -33,6 +34,7 @@ class SourceDataController extends Controller {
 		$this -> db_contact_main = D("ContactMain");
 		$this -> db_contact_detail = D("ContactDetail");
 		$this -> db_constomer_funds = D("CustomerFunds");
+		$this -> db_length_limit = D("LengthLimit");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
@@ -73,7 +75,6 @@ class SourceDataController extends Controller {
 	}
 	
 	public function processData(){
-		//删除可能修改过的。 可能要修改customer_funds
 		$check_list = $_POST['check_list'];
 		$begin_date = $_POST['begin_date'];
 		$end_date = $_POST['end_date'];
@@ -83,7 +84,12 @@ class SourceDataController extends Controller {
 		//删除可能重复的数据。
 		$this -> db_contact_main -> deleteItems($arr_check_list);
 		$this -> db_contact_detail -> deleteItems($arr_check_list);
+		//换新方法，更新数据
+		// foreach ($arr_check_list as $key => $value) {
+// 			
+		// }
 		$this -> _processData($begin_date, $end_date);
+		
 	}
 	
 	private function _processData($begin_date,$end_date){
@@ -100,7 +106,12 @@ class SourceDataController extends Controller {
 		$this -> db_constomer_funds -> updateItems($customer_funds);
 		// 插入load_history
 		$this -> db_load_history -> addItem($begin_date,$end_date);
-		$this -> loadSettleSummaryPage();
+	}
+	public function manualContact(){
+		$contact_id = $_POST['contact_id'];
+		$this -> db_contact_main->setManualContact($contact_id);
+		print_r("汇款怎么处理");exit;
+		//回款怎么处理？
 	}
 	public function loadSettleSummaryPage(){
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
@@ -332,6 +343,29 @@ class SourceDataController extends Controller {
 	public function deletePriceFloatRatio(){
 		$delete_id = $_POST['delete_id'];
 		$this -> db_price_float_ratio -> deleteItemById($delete_id);
+	}
+	public function loadLengthLimitPage(){
+		$all_length_limit = $this -> db_length_limit -> getAllItems();
+		$this -> assign("all_length_limit",$all_length_limit);
+		$this -> display('LengthLimitPage');
+	}
+	public function editLengthLimit(){
+		$id = $_POST['edit_id'];
+		$limit = $_POST['edit_limit'];
+		$this -> db_length_limit -> editItem($id,$limit);
+		$this -> loadLengthLimitPage();
+	}
+	public function addLengthLimit(){
+		$data = array();
+		$data['low_length'] = $_POST['add_new_low_length'];
+		$data['high_length'] = $_POST['add_new_high_length'];
+		$data['limit'] = $_POST['add_new_limit'];
+		$this -> db_length_limit -> addItem($data);
+		$this -> loadLengthLimitPage();
+	}
+	public function deleteLengthLimit(){
+		$id = $_POST['delete_id'];
+		$this -> db_length_limit -> deleteItem($id);
 	}
 	public function loadFundsBackPage(){
 		$all_funds_back = array(

@@ -36,7 +36,7 @@ class BusinessPercentController extends Controller {
 		
 		$this -> display('SettlingContactPage');
 	}
-	public function getSeettlingContact(){
+	public function getSettlingContact(){
 		//判断哪些合同可结算
 		$total_customer_funds = $this -> db_constomer_funds ->getTotalCustomerFunds();
 		$condition = array();
@@ -80,7 +80,6 @@ class BusinessPercentController extends Controller {
 	}
 	public function getSettlingRatioAndPrice(){
 		//依次计算上浮底价，最终实际底价，考虑回款金额，计算达标业绩提成比例，未达标利润提成比例。最后再计算业绩和利润提成金额。
-		exit;
 		$settling_contact =  $this -> db_contact_main ->getSettlingContact();
 		$settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
 		// print_r($settling_contact_detail);exit;
@@ -90,11 +89,14 @@ class BusinessPercentController extends Controller {
 		}
 		
 	}
-	public function SettledCommission(){
-		$this -> display('SettledCommissionPage');
+	public function loadManualContactPage(){
+		$this -> display('ManualContactPage');
 	}
-	public function CommissionBuisness(){
-		$this -> display('CommissionBusinessPage');
+	public function loadSettledContactPage(){
+		$this -> display('BusinessPercent:SettledCommissionPage');
+	}
+	public function loadCommissionBuisnessPage(){
+		$this -> display('BusinessPercent:CommissionBusinessPage');
 	}
 }
 ?>

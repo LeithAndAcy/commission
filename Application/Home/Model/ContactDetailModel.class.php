@@ -34,6 +34,7 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['customer_name'] = $value['customer_name'];
 				$contact_detail[$i]['salesman_id'] = $value['salesman_id'];
 				$contact_detail[$i]['salesman_name'] = $value['salesman_name'];
+				$contact_detail[$i]['cSOCode'] = $value['cSOCode'];
 				$contact_detail[$i]['normal_business_ratio'] *= 100;
 				$contact_detail[$i]['normal_profit_ratio'] *= 100;
 				$contact_detail[$i]['business_adjust'] *= 100;
@@ -67,6 +68,7 @@ class ContactDetailModel extends Model {
 		$data['business_adjust'] = $business_adjust * 0.01;
 		$data['profit_adjust'] = $profit_adjust * 0.01;
 		$data['cost_price_adjust'] = $cost_price_adjust;
+		$data['operator'] = $_SESSION['user_name'];
 		$this -> where($condition)->save($data);
  	}
 }

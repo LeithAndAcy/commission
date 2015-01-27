@@ -12,17 +12,16 @@ class ContactMainModel extends Model {
 	}
 	public function addContactMain($all_contact_main){
 		foreach ($all_contact_main as $key => $value) {
-			unset($allContactMain[$key]['cSOCode']);
-			$this -> add($allContactMain[$key]);
+			$this -> add($value);
 		}
 	}
 	public function getSettlementContact(){
-		$res = $this -> query("select contact_id,customer_id,salesman_id from commission_contact_main where settlement = 1 and settled = 0 and settling = 0");
+		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 0 and manual != 1");
 		return $res;
 	}
 	
 	public function getSettlingContact($all_contact_main){
-		$res = $this -> query("select contact_id,customer_id,salesman_id from commission_contact_main where settlement = 1 and settled = 0 and settling = 1");
+		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 1 and manual != 1");
 		return $res;
 	}
 	
@@ -34,6 +33,11 @@ class ContactMainModel extends Model {
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
 		$this -> where($condition)-> setField('settling',1);
+	}
+	public function setManualContact($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$this -> where($condition)-> setField('manual',1);
 	}
 }
 ?>
