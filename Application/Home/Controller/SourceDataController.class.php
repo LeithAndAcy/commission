@@ -17,6 +17,8 @@ class SourceDataController extends Controller {
 	private $db_contact_detail;
 	private $db_constomer_funds;
 	private $db_length_limit;
+	private $db_funds_back;
+	private $db_tax_ratio;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -35,6 +37,8 @@ class SourceDataController extends Controller {
 		$this -> db_contact_detail = D("ContactDetail");
 		$this -> db_constomer_funds = D("CustomerFunds");
 		$this -> db_length_limit = D("LengthLimit");
+		$this -> db_funds_back = D("FundsBack");
+		$this -> db_tax_ratio = D("TaxRatio");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
@@ -368,18 +372,8 @@ class SourceDataController extends Controller {
 		$this -> db_length_limit -> deleteItem($id);
 	}
 	public function loadFundsBackPage(){
-		$all_funds_back = array(
-			array(
-				'customer_id' => 'customer_id_001',
-				'customer_name' => 'customer_name_001',
-				'funds_back_money' => '资金回笼调整金额一'
-			),
-			array(
-				'customer_id' => 'customer_id_002',
-				'customer_name' => 'customer_name_002',
-				'funds_back_money' => '资金回笼调整金额二'
-			)
-		);
+		$all_funds_back = $this -> db_funds_back -> getAllItems();
+		$all_funds_back = $this -> db_customer -> addCustomerName($all_funds_back);
 		$this -> assign('all_funds_back',$all_funds_back);
 		$this -> display('FundsBackPage');
 	}
@@ -435,24 +429,27 @@ class SourceDataController extends Controller {
 		$this -> display('IncidentalFeePage');
 	}
 	public function loadTaxPage(){
-		$all_tax_ratio = array(
-			array(
-				'low_limit' => '1000',
-				'high_limit' => '2000',
-				'ratio' => '20',
-			),
-		);
+		$all_tax_ratio = $this -> db_tax_ratio -> getAllItems();
 		$this -> assign("all_tax_ratio",$all_tax_ratio);
 		$this ->display('TaxPage');
 	}
 	public function editTaxRatio(){
-		
+		$id = $_POST['edit_id'];
+		$ratio = $_POST['edit_ratio'];
+		$this -> db_tax_ratio -> editItem($id,$ratio);
+		$this -> loadTaxPage();
 	}
 	public function addTaxRatio(){
-		
+		$data = array();
+		$data['low_limit'] = $_POST['add_new_low_limit'];
+		$data['high_limit'] = $_POST['add_new_high_limit'];
+		$data['ratio'] = $_POST['add_new_ratio'];
+		$this -> db_tax_ratio -> addItem($data);
+		$this -> loadTaxPage();
 	}
 	public function deleteTaxRatioById(){
-		
+		$id = $_POST['delete_id'];
+		$this -> db_tax_ratio -> deleteItem($id);
 	}
 	public function loadCustomerPage(){
 		$all_customer = $this -> db_customer ->getAllCustomer();
