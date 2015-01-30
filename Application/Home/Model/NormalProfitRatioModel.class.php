@@ -19,7 +19,6 @@ class NormalProfitRatioModel extends Model {
 	public function edtiNormalProfitRatio($id,$ratio){
 		$condition = array();
 		$condition['id'] = $id;
-		
 		$this -> where($condition) -> setField('ratio',$ratio*0.01);
 	}
 	public function deleteNormalProfitRatioById($id){

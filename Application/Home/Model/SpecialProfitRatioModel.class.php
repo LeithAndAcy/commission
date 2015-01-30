@@ -14,10 +14,10 @@ class SpecialProfitRatioModel extends Model {
 	public function addItem($data){
 		$data['ratio'] *= 0.01;
 		$condition['salesman_id'] = $data['salesman_id'];
-		$temp = $this -> where($condtion)->select();
+		$temp = $this -> where($condition)->select();
 		foreach ($temp as $key => $value) {
-			if(($data['low_limit'] >= $value['low_limit'] && $data['low_limit']<=$value['high_limit']) ||
-			 ($data['high_limit'] <= $value['high_limit'] && $data['high_limit'] >= $value['low_limit'])){
+			if(($data['low_limit'] > $value['low_limit'] && $data['low_limit']<$value['high_limit']) ||
+			 ($data['high_limit'] < $value['high_limit'] && $data['high_limit'] > $value['low_limit'])){
 				return false;
 			}
 		}
