@@ -14,8 +14,11 @@ class InsuranceFundModel extends Model {
 	}
 	
 	public function addItem($data){
-		print_r($data);
-		// $this -> add($data);
+		if(!($this ->checkDuplicate($data['salesman_id']))){
+			$data['insurance'] *= 0.01;
+			$data['fund'] *= 0.01;
+			$this -> add($data);
+		}
 	}
 	public function editInsuranceAndFund($id,$data){
 		$condition = array();
@@ -27,7 +30,17 @@ class InsuranceFundModel extends Model {
 	public function deleteItemById($id){
 		$condition = array();
 		$condition['id'] = $id;
-		// $this -> where($condition) -> delete();
+		$this -> where($condition) -> delete();
+	}
+	public function checkDuplicate($salesman_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$res = $this-> where($condition)->find();
+		if($res){
+			return ture; 
+		}else{
+			return false; 
+		}
 	}
 }
 ?>

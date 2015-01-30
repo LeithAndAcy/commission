@@ -1,18 +1,20 @@
 <?php
 namespace Home\Model;
 use Think\Model;
-class FundsBackModel extends Model {
+class WageDeductionModel extends Model {
 	
 	public function getAllItems(){
 		$res = $this->select();
+		
 		return $res;
 	}
-	public function editItem($id,$funds_back_money){
+	public function editItem($id,$ratio){
 		$condition = array();
 		$condition['id'] = $id;
-		$this -> where($condition) -> setField('funds_back_money',$funds_back_money);
+		$this -> where($condition) -> setField('ratio',$ratio * 0.01);
 	}
 	public function addItem($data){
+		$data['ratio'] *= 0.01;
 		$this -> add($data);	
 	}
 	public function deleteItem($id){

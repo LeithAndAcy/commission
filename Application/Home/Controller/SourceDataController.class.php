@@ -19,6 +19,7 @@ class SourceDataController extends Controller {
 	private $db_length_limit;
 	private $db_funds_back;
 	private $db_tax_ratio;
+	private $db_wage_deduction;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -39,6 +40,7 @@ class SourceDataController extends Controller {
 		$this -> db_length_limit = D("LengthLimit");
 		$this -> db_funds_back = D("FundsBack");
 		$this -> db_tax_ratio = D("TaxRatio");
+		$this -> db_wage_deduction = D("WageDeduction");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
@@ -293,6 +295,7 @@ class SourceDataController extends Controller {
 		$all_insurance_fund = $res['data'];
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_insurance_fund",$all_insurance_fund);
+		$this -> assign("all_salesman",$all_salesman);
 		$this -> display('InsuranceAndFundPage');
 	}
 	public function editInsuranceFund(){
@@ -378,31 +381,28 @@ class SourceDataController extends Controller {
 		$this -> display('FundsBackPage');
 	}
 	public function addFundsBack(){
-		
+		$data = array();
+		$customer_name = $_POST['add_new_customer_name'];
+		$data['customer_id'] = $this -> db_customer -> getIdByName($customer_name);
+		$data['funds_back_money'] = $_POST['add_new_funds_back_money'];
+		$this -> db_funds_back -> addItem($data);
+		$this -> loadFundsBackPage();
 	}
 	public function editFundsBack(){
-		
+		$id = $_POST['edit_id'];
+		$funds_back_money = $_POST['edit_funds_back_money'];
+		$this -> db_funds_back -> editItem($id,$funds_back_money);
+		$this -> loadFundsBackPage();
 	}
 	public function deleteFundsBack(){
-		
+		$id = $_POST['delete_id'];
+		$this -> db_funds_back -> deleteItem($id);
 	}
 	public function loadHumanWagePage(){
-		$all_human_wage = array(
-			array(
-				'salesman_id' => '员工编码一',
-				'name' => '员工姓名',
-				'real_wage' => '实发工资',
-				'should_wage' => '应发工资',
-				'freight' => '运费',
-				'trencher' => '木盘非',
-				'blocking' => '挤压物资费',
-				'cutting' => '裁剪费',
-				'reimbursement' => '报销费',
-				'gurantee' => '担保',
-				'deduction' => '上月扣款',
-			),
-		);
-		$this -> assign("all_human_wage",$all_human_wage);
+		$all_wage_deduction = $this -> db_wage_deduction -> getAllItems();
+		$res = $this -> _addSalesmanName($all_wage_deduction);
+		$all_wage_deduction = $res['data'];
+		$this -> assign("all_wage_deduction",$all_wage_deduction);
 		$this -> display('HumanWagePage');
 	}
 	public function addHumanWagePage(){
@@ -480,6 +480,7 @@ class SourceDataController extends Controller {
 	}
 	public function editSalesman(){
 		$id = $_POST['edit_id'];
+		$data['onboard_status'] = $_POST['edit_onboard_status'];
 		$data['shanghai_salary'] = $_POST['edit_shanghai_salary'];
 		$data['kunshan_salary'] = $_POST['edit_kunshan_salary'];
 		
@@ -489,8 +490,9 @@ class SourceDataController extends Controller {
 	public function addSalesman(){
 		$data = array();
 		$data['salesman_id'] = $_POST['add_new_salesman_id'];
-		$data['name'] = $_POST['add_new_name'];
+		$data['salesman_name'] = $_POST['add_new_name'];
 		$data['status'] = $_POST['add_new_status'];
+		$data['onboard_status'] = $_POST['add_new_onboard_status'];
 		$data['shanghai_salary'] = $_POST['add_new_shanghai_salary'];
 		$data['kunshan_salary'] = $_POST['add_new_kunshan_salary'];
 		$this -> db_salesman -> addItem($data);

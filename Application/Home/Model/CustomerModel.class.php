@@ -12,7 +12,9 @@ class CustomerModel extends Model {
 		$this -> where($condition)->save($data);
 	}
 	public function addItem($data){
-		$this -> add($data);
+		if(!($this ->checkDuplicate($data['customer_id']))){
+			$this -> add($data);
+		}
 	}
 	public function deleteItem($id){
 		$condition['id'] = $id;
@@ -29,6 +31,22 @@ class CustomerModel extends Model {
 			}
 		}
 		return $array;
+	}
+	public function getIdByName($name){
+		$condition = array();
+		$condition['customer_name'] = $name;
+		$res = $this -> where($condition) -> getField("customer_id");
+		return $res;
+	}
+	public function checkDuplicate($id){
+		$condition = array();
+		$condition['customer_id'] = $id;
+		$res = $this -> where($condition) -> getField("customer_id");
+		if($res){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 ?>

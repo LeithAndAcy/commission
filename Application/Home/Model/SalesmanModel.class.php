@@ -5,7 +5,7 @@ class SalesmanModel extends Model {
 	
 	public function getAllSalesman(){
 		
-		$res = $this->getField('id,salesman_id,salesman_name,status');
+		$res = $this->getField('id,salesman_id,salesman_name,status,onboard_status');
 		return $res;
 	}
 	
@@ -21,7 +21,9 @@ class SalesmanModel extends Model {
 	}
 	
 	public function addItem($data){
-		$this -> add($data);
+		if(!($this ->checkDuplicate($data['salesman_id']))){
+			$this -> add($data);
+		}
 	}
 	public function deleteItem($id){
 		$condition = array();
@@ -37,6 +39,16 @@ class SalesmanModel extends Model {
 			return false;  //名字重复，新名字不能用
 		}else{
 			return true; //名字没重复，新名字能用	
+		}
+	}
+	public function checkDuplicate($salesman_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$res = $this-> where($condition)->find();
+		if($res){
+			return ture; 
+		}else{
+			return false; 
 		}
 	}
 	public function addSalesmanName($array_data){

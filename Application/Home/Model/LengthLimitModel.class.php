@@ -16,13 +16,27 @@ class LengthLimitModel extends Model {
 		$this -> where($condition) -> setField('limit',$limit * 0.01);
 	}
 	public function addItem($data){
-		$data['limit'] *= 0.01;
-		$this -> add($data);	
+		if(!($this ->checkDuplicate($data))){
+			$data['limit'] *= 0.01;
+			$this -> add($data);	
+		}
 	}
 	public function deleteItem($id){
 		$condition = array();
 		$condition['id'] = $id;
 		$this -> where($condition)-> delete();
+	}
+	
+	private function checkDuplicate($data){
+		$condition = array();
+		$condition['low_length'] = $data['low_length'];
+		$condition['high_length'] = $data['high_length'];
+		$res = $this -> where($condition)-> find();
+		if($res){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 ?>

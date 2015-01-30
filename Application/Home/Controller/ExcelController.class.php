@@ -37,8 +37,7 @@ class ExcelController extends Controller {
 	}
 	//import
 	public function loadPriceFloatExcel() {
-		$this -> db_price_float_ratio = D("PriceFloatRatio");
-		$excel_name = $_FILES['normal_profit_ratio_excel']['name'];
+		$excel_name = $_FILES['excel_file']['name'];
 		$index = stripos($excel_name, ".");
 		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
 			$this -> error("上传文件格式出错");
@@ -48,15 +47,15 @@ class ExcelController extends Controller {
 		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
 		$PHPReader = new \PHPExcel_Reader_Excel5();
 		$PHPexcel = new \PHPExcel();
-		$excel_obj = $_FILES['normal_profit_ratio_excel']['tmp_name'];
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
 		$PHPExcel_obj = $PHPReader -> load($excel_obj);
 		$currentSheet = $PHPExcel_obj -> getSheet(0);
 		$highestColumn = $currentSheet -> getHighestColumn();
 		$highestRow = $currentSheet -> getHighestRow();
 		$arr_price_float_ratio = array();
-		for ($j = 2; $j <= $highestRow; $j++)//从第一行开始读取数据
+		for ($j = 2; $j <= $highestRow; $j++)
 		{
-			for ($k = 'B'; $k <= $highestColumn; $k++)//从A列读取数据
+			for ($k = 'B'; $k <= $highestColumn; $k++)
 			{
 				$arr_normal_profir_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
@@ -74,7 +73,205 @@ class ExcelController extends Controller {
 		}
 		$this -> success("添加成功！");
 	}
-
+	public function importCustomersInfoExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_customers_info = array();
+		for ($j = 2; $j <= $highestRow; $j++)
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)
+			{
+				$arr_customers_info[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_customers_info as $key => $value) {
+			unset($arr_customers_info[$key]);
+			$arr_customers_info[$key]['customer_id'] = $value['B'];
+			$arr_customers_info[$key]['customer_name'] = $value['C'];
+			$this -> db_customer -> addItem($arr_customers_info[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importSalesmanInfoExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_salesman_info = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_salesman_info[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_salesman_info as $key => $value) {
+			unset($arr_salesman_info[$key]);
+			$arr_salesman_info[$key]['salesman_id'] = $value['B'];
+			$arr_salesman_info[$key]['salesman_name'] = $value['C'];
+			$arr_salesman_info[$key]['status'] = $value['D'];
+			$arr_salesman_info[$key]['onboard_status'] = $value['E'];
+			$arr_salesman_info[$key]['shanghai_salary'] = $value['F'];
+			$arr_salesman_info[$key]['kunshan_salary'] = $value['G'];
+			$this -> db_salesman -> addItem($arr_salesman_info[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importInsuranceAndFundExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_insurance_fund = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_insurance_fund[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_insurance_fund as $key => $value) {
+			unset($arr_insurance_fund[$key]);
+			$arr_insurance_fund[$key]['salesman_id'] = $value['B'];
+			$arr_insurance_fund[$key]['insurance'] = $value['C'];
+			$arr_insurance_fund[$key]['fund'] = $value['D'];
+			$this -> db_insurance_fund -> addItem($arr_insurance_fund[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importTaxRatioExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_tax_ratio = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_tax_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_tax_ratio as $key => $value) {
+			unset($arr_tax_ratio[$key]);
+			$arr_tax_ratio[$key]['low_limit'] = $value['B'];
+			$arr_tax_ratio[$key]['high_limit'] = $value['C'];
+			$arr_tax_ratio[$key]['ratio'] = $value['D'];
+			$this -> db_tax_ratio -> addItem($arr_tax_ratio[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importLengthLimitExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_length_limit = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_length_limit[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_length_limit as $key => $value) {
+			unset($arr_length_limit[$key]);
+			$arr_length_limit[$key]['low_length'] = $value['B'];
+			$arr_length_limit[$key]['high_length'] = $value['C'];
+			$arr_length_limit[$key]['limit'] = $value['D'];
+			$this -> db_length_limit -> addItem($arr_length_limit[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importFundsBackExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_funds_back = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_funds_back[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_funds_back as $key => $value) {
+			unset($arr_funds_back[$key]);
+			$arr_funds_back[$key]['customer_id'] = $value['B'];
+			$arr_funds_back[$key]['funds_back_money'] = $value['C'];
+			$this -> db_funds_back -> addItem($arr_funds_back[$key]);
+		}
+		$this -> success("添加成功！");
+	}
 	//export
 	public function generatePriceFloatRatioExcelFile(){
 		vendor('PHPExcel.PHPExcel');
@@ -151,7 +348,7 @@ class ExcelController extends Controller {
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('A') -> setWidth(18);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('B') -> setWidth(18);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('C') -> setWidth(18);
-		$objPHPExcel -> getActiveSheet() -> getColumnDimension('D') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('D') -> setWidth(30);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('E') -> setWidth(18);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('F') -> setWidth(18);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('G') -> setWidth(18);
@@ -161,7 +358,7 @@ class ExcelController extends Controller {
 		
 
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '长度下限') 
-		-> setCellValue('C1', '长度上限') -> setCellValue('D1', '可结算发货数量比例%');
+		-> setCellValue('C1', '长度上限') -> setCellValue('D1', '可结算发货数量比例(%)');
 		foreach ($length_limit as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['low_length']);
@@ -488,6 +685,61 @@ class ExcelController extends Controller {
 		
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "个税基础表".date('Ymdhis').".xls";
+		$filename = iconv("utf-8", "gb2312", $filename);
+		header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Disposition:inline;filename="'.$filename.'"');
+        header("Content-Transfer-Encoding: binary");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Pragma: no-cache");
+		header('Content-Encoding: none');
+		header('Expires: 0');
+		$objWriter -> save('php://output');
+	}
+	public function exportSalesmanInfoExcelFile(){
+		vendor('PHPExcel.PHPExcel');
+		$salesman_info = $this -> db_salesman -> getAllSalesmanInfo();
+		$temp_trans = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', );
+		$objPHPExcel = new \PHPExcel();
+
+		$objPHPExcel -> getProperties() -> setCreator("提成管理系统")
+		 -> setLastModifiedBy("提成管理系统") -> setTitle("人员工资基本信息表") 
+		 -> setSubject("人员工资基本信息表") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+		 -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
+
+		$objPHPExcel -> setActiveSheetIndex(0);
+
+		$objPHPExcel -> getActiveSheet() -> setTitle('人员工资基本信息表');
+		
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('A') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('B') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('C') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('D') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('E') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('F') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('G') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('H') -> setWidth(18);
+		
+		$objPHPExcel -> getActiveSheet() -> getDefaultStyle() -> getFont() -> setSize(12);
+		
+
+		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '业务员编码')
+		-> setCellValue('C1', '业务员姓名')-> setCellValue('D1', '人员状态')-> setCellValue('E1', '在职状态')
+		-> setCellValue('F1', '上海基本工资(元)')-> setCellValue('G1', '昆山基本工资(元)');
+		foreach ($salesman_info as $key => $value) {
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['salesman_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('C' . ($key + 2), $value['salesman_name']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['status']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['onboard_status']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('F' . ($key + 2), $value['shanghai_salary']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('G' . ($key + 2), $value['kunshan_salary']);
+		}
+		
+		
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$filename = "人员工资基本信息表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
