@@ -148,7 +148,7 @@
 				$.post("__CONTROLLER__/deleteLengthLimit", {
 					"delete_id" : delete_id,
 				}, function(data) {
-					window.location.reload();
+					window.location.href="/commission/index.php/Home/SourceData/loadLengthLimitPage";
 				});
 			}
 		});

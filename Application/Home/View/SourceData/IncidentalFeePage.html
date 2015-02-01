@@ -80,7 +80,7 @@
 				$.post("__CONTROLLER__/deleteNormalBusinessRatioById", {
 					"delete_id" : delete_id,
 				}, function(data) {
-					window.location.reload();
+					window.location.href="/commission/index.php/Home/SourceData/loadIncidentalFeePage";
 				});
 			}
 		});

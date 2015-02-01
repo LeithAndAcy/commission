@@ -221,16 +221,11 @@
 				$.post("__CONTROLLER__/deletePriceFloatRatio", {
 					"delete_id" : delete_id,
 				}, function(data) {
-					window.location.reload();
+					window.location.href="/commission/index.php/Home/SourceData/loadPriceFloatPage";
 				});
 			}
 		});
 		
-		// $("#export_price_float_excel").click(function(){
-			// $.post("__MODULE__/Excel/generatePriceFloatRatioExcelFile",{},function(data){
-				// window.open("__MODULE__/Excel/exportToExcel");
-			// });
-		// });
 	}); 
 </script>
 
