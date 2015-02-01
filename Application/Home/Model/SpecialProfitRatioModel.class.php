@@ -34,5 +34,11 @@ class SpecialProfitRatioModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition) -> delete();
 	}
+	public function getSpecialProfitRatio($salesman_id,$funds){
+		$condition = array();
+		$res = $this -> query("select ratio from commission_special_profit_ratio where(salesman_id = '$salesman_id') AND(low_limit <= '$funds') AND(high_limit > '$funds')");
+		$ratio = $res[0]['ratio'];
+		return $ratio;
+	}
 }
 ?>

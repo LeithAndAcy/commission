@@ -62,5 +62,13 @@ class U8Model extends Model {
 		$res = $this -> query("select cDwCode as customer_id,cPerson as salesman_id,iAmount as funds from Ap_CloseBill where (dVouchDate between '$begin_date' and '$end_date') AND (cVouchType = 48) AND (cCheckMan is not null)");
 		return $res;
 	}
+	public function getFundsBySalesmanAndDate($salesman_id){
+		//某个员工上个月的总回款
+		$first_day = date('Y-m-01',strtotime('-1 month'));
+		$last_day = date('Y-m-t', strtotime('-1 month'));
+		$res = $this -> query("select sum(iAmount) as total_funds from Ap_CloseBill where (dVouchDate between '$first_day' and '$last_day') AND (cVouchType = 48) AND (cCheckMan is not null) AND(cPerson = '$salesman_id')");
+		$total_funds = $res[0]['total_funds'];
+		return $total_funds;
+	}
 }
 ?>

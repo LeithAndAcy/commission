@@ -10,7 +10,7 @@
 			<button class="btn btn-info" id="get_settling_contact">
 				取可结算合同
 			</button>
-			<button class="btn btn-info" id="get_ratio">
+			<button class="btn btn-info" id="get_ratio_price">
 				取数
 			</button>
 			<button class="btn btn-info" id="jisuanhetong">
@@ -81,13 +81,13 @@
 							<td>{$vo.delivery_quantity}</td>
 							<td>{$vo.delivery_money}</td>
 							<td>{$vo.normal_business_ratio}%</td>
-							<td>达标业绩提成比例</td>
+							<td>{$vo.special_business_ratio}%</td>
 							<td>{$vo.normal_profit_ratio}%</td>
-							<td>回款未达标业绩提成比例</td>
+							<td>{$vo.special_profit_ratio}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_business_adjust">{$vo.business_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_profit_adjust">{$vo.profit_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
-							<td>最终底价</td>
+							<td>{$vo.end_cost_price}</td>
 							<td>基本业绩提成</td>
 							<td>回款达标业绩提成</td>
 							<td>基本利润提成</td>
@@ -215,10 +215,9 @@
 				window.location.reload();
 			});
 		});
-		$("#get_ratio").click(function() {
-			alert("去比例，金额");
+		$("#get_ratio_price").click(function() {
 			$.post("__CONTROLLER__/getSettlingRatioAndPrice", {}, function(data) {
-				window.location.reload();
+				window.location.href="/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});
 		});
 		$("#settlingContactTable tbody").on("click", "tr td span img:even", function() {
@@ -237,7 +236,6 @@
 			
 			$("#edit_contact_id").val(contact_id);
 			$("#edit_inventory_id").val(inventory_id);
-			
 		});
 	}); 
 </script>

@@ -64,9 +64,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<volist name="settling_contact_detail" id="vo">
+					<volist name="manual_contact_detail" id="vo">
 						<tr>
-							<td><button class="btn btn-primary">手动结算</button> </td>
+							<td><button class="btn btn-primary" contact_id = "{$vo.contact_id}" btn_type = "approve">同意</button> </td>
 							<td>{$vo.contact_id}</td>
 							<td>{$vo.customer_id}</td>
 							<td>{$vo.customer_name}</td>
@@ -241,7 +241,17 @@
 			
 			$("#edit_contact_id").val(contact_id);
 			$("#edit_inventory_id").val(inventory_id);
-			
+		});
+		$("[btn_type='approve']").click(function(){
+			var temp = confirm("是否申请结算");
+			if(temp){
+				var contact_id = $(this).attr("contact_id");
+				$.post("setSettlingContact",{
+					"contact_id" : contact_id,
+				},function(){
+					window.location.href="/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
+				});
+			}
 		});
 	}); 
 </script>

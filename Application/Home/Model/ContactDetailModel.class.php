@@ -37,6 +37,8 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['cSOCode'] = $value['cSOCode'];
 				$contact_detail[$i]['normal_business_ratio'] *= 100;
 				$contact_detail[$i]['normal_profit_ratio'] *= 100;
+				$contact_detail[$i]['special_business_ratio'] *= 100;
+				$contact_detail[$i]['special_profit_ratio'] *= 100;
 				$contact_detail[$i]['business_adjust'] *= 100;
 				$contact_detail[$i]['profit_adjust'] *= 100;
 				$i++;
@@ -52,6 +54,10 @@ class ContactDetailModel extends Model {
 			$condition['inventory_id'] = $value['inventory_id'];
 			$data['normal_business_ratio'] = $value['normal_business_ratio']*0.01;
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio']*0.01;
+			$data['float_price'] = $value['float_price'];
+			$data['end_cost_price'] = $value['end_cost_price'];
+			$data['special_business_ratio'] = $value['special_business_ratio'];
+			$data['special_profit_ratio'] = $value['special_profit_ratio'];
 			$this -> where($condition) -> save($data);
 		}
 	}
@@ -65,11 +71,34 @@ class ContactDetailModel extends Model {
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
 		$condition['inventory_id'] = $inventory_id;
+		$cost_price = $this -> where($condition) -> getField('cost_price');
+		$float_price = $this -> where($condition) -> getField('float_price');
 		$data['business_adjust'] = $business_adjust * 0.01;
 		$data['profit_adjust'] = $profit_adjust * 0.01;
 		$data['cost_price_adjust'] = $cost_price_adjust;
+		$data['end_cost_price'] = $data['cost_price_adjust']+ $cost_price + $float_price;
 		$data['operator'] = $_SESSION['user_name'];
 		$this -> where($condition)->save($data);
  	}
+	
+	public function checkContactSettable($contact_id){
+		//判断一个合同发货数量够不够结算，要用到表commission_length_limit
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity');
+		$flag = true;
+		foreach ($arr_contacat as $key => $value) {
+			$delivery_rate = $value['delivery_quantity'] % $value['sale_quantity'];
+			$sale_quantity = $value['sale_quantity'];
+			$temp = $this -> query("select limit from commission_length_limit where '$sale_quantity' >= low_length AND '$sale_quantity'<high_length");
+			if($delivery_rate < $temp){
+				$flag = false;
+				break;
+			}
+		}
+		return $flag;
+	}
+	
+	
 }
 ?>

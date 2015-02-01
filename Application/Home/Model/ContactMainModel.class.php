@@ -20,11 +20,14 @@ class ContactMainModel extends Model {
 		return $res;
 	}
 	
-	public function getSettlingContact($all_contact_main){
-		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 1 and manual != 1");
+	public function getSettlingContact(){
+		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 1");
 		return $res;
 	}
-	
+	public function getManualContact(){
+		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 0 and manual = 1");
+		return $res;
+	}
 	public function getContact($condition){
 		$res = $this -> where($condition)->select();
 		return $res;
@@ -38,6 +41,12 @@ class ContactMainModel extends Model {
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
 		$this -> where($condition)-> setField('manual',1);
+	}
+	public function getContactSalemanAndCustomer($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$res = $this -> where($condition) -> field("id,salesman_id,customer_id")->find(); 
+		return $res;
 	}
 }
 ?>

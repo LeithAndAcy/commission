@@ -90,10 +90,6 @@ class SourceDataController extends Controller {
 		//删除可能重复的数据。
 		$this -> db_contact_main -> deleteItems($arr_check_list);
 		$this -> db_contact_detail -> deleteItems($arr_check_list);
-		//换新方法，更新数据
-		// foreach ($arr_check_list as $key => $value) {
-// 			
-		// }
 		$this -> _processData($begin_date, $end_date);
 		
 	}
@@ -113,11 +109,9 @@ class SourceDataController extends Controller {
 		// 插入load_history
 		$this -> db_load_history -> addItem($begin_date,$end_date);
 	}
-	public function manualContact(){
+	public function setManualContact(){
 		$contact_id = $_POST['contact_id'];
 		$this -> db_contact_main->setManualContact($contact_id);
-		print_r("汇款怎么处理");exit;
-		//回款怎么处理？
 	}
 	public function loadSettleSummaryPage(){
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
@@ -162,10 +156,6 @@ class SourceDataController extends Controller {
 					$arr_ratio[$key]['normal_profit_ratio'] = $vvv['ratio'];
 					break;
 				}
-			}
-			//取float_price_ratio;待确定存活类别。
-			foreach ($price_float_ratio as $kkkk => $vvvv) {
-				
 			}
 		}
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);

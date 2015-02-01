@@ -30,5 +30,14 @@ class CustomerFundsModel extends Model {
 		$data['benefit'] = $benefit;
 		$this -> where($condition)->save($data);
 	}
+	public function subtractCustomerBenefit($customer_id,$salesman_id,$benefit){
+		//减去手动结算合同的扣款
+		$condition = array();
+		$condition['customer_id'] = $customer_id;
+		$condition['salesman_id'] = $salesman_id;
+		$data = $this -> where($condition) -> find();
+		$last_benefit = $data['benefit'] - $benefit;
+		$this -> where($condition)->setField('benefit',$last_benefit);
+	}
 }
 ?>
