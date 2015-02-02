@@ -13,7 +13,7 @@
 			<button class="btn btn-info" id="get_ratio_price">
 				取数
 			</button>
-			<button class="btn btn-info" id="jisuanhetong">
+			<button class="btn btn-info" id="btn_caculate">
 				计算
 			</button>
 		</div>
@@ -29,7 +29,7 @@
 						<th>业务员编码</th>
 						<th>业务员姓名</th>
 						<th>存货编码</th>
-						<th>存货类别</th>
+						<th>存货类别编码</th>
 						<th>存货名称</th>
 						<th>规格型号</th>
 						<th>颜色</th>
@@ -53,9 +53,9 @@
 						<th>基本业绩提成(元)</th>
 						<th>回款达标业绩提成(元)</th>
 						<th>基本利润提成(元)</th>
-						<th>回款达标利润提成(元)</th>
+						<th>回款未达标利润提成(元)</th>
 
-						<th>提成合计(元)</th>
+						<th>基本利润提成加基本利润提成</th>
 						<th>调整比例修改人员</th>
 						<th>操作</th>
 					</tr>
@@ -70,7 +70,7 @@
 							<td>{$vo.salesman_id}</td>
 							<td>{$vo.salesman_name}</td>
 							<th>{$vo.inventory_id}</th>
-							<td>{$vo.classification}</td>
+							<td>{$vo.classification_id}</td>
 							<td>{$vo.inventory_name}</td>
 							<td>{$vo.specification}</td>
 							<td>{$vo.colour}</td>
@@ -88,11 +88,11 @@
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_profit_adjust">{$vo.profit_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
 							<td>{$vo.end_cost_price}</td>
-							<td>基本业绩提成</td>
-							<td>回款达标业绩提成</td>
-							<td>基本利润提成</td>
-							<td>回款达标利润提成</td>
-							<td>提成合计</td>
+							<td>{$vo.normal_business}</td>
+							<td>{$vo.special_business}</td>
+							<td>{$vo.normal_profit}</td>
+							<td>{$vo.special_profit}</td>
+							<td>{$vo.total_business_profit}</td>
 							<td>{$vo.operator}</td>
 							<td contact_id="{$vo.contact_id}" inventory_id="{$vo.inventory_id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span></td>
 						</tr>
@@ -212,7 +212,7 @@
 		$("#settlingContactTable").dataTable();
 		$("#get_settling_contact").click(function() {
 			$.post("__CONTROLLER__/getSettlingContact", {}, function(data) {
-				window.location.reload();
+				window.location.href="/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});
 		});
 		$("#get_ratio_price").click(function() {
@@ -236,6 +236,11 @@
 			
 			$("#edit_contact_id").val(contact_id);
 			$("#edit_inventory_id").val(inventory_id);
+		});
+		$("#btn_caculate").click(function(){
+			$.post("__CONTROLLER__/settleContact",{},function(data){
+				
+			});
 		});
 	}); 
 </script>

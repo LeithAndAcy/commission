@@ -43,13 +43,14 @@ class U8Model extends Model {
 		// $this -> trueTableName = "Inventory";
 		
 		foreach ($contact_detail as $key => $value) {
-			$temp_contact_detail = $value['contact_detail'];
-			foreach ($temp_contact_detail as $kk => $vv) {
-				$temp_inventory_id = $vv['inventory_id'];
-			}
-			$res = $this -> query("select cInvCCode as classification_id,cInvName as inventory_name,cInvCCode as classification,cInvStd as specification,cInvDefine1 as colour form Inventory where cInvCode='$temp_inventory_id'");
-			print_r($res);exit;
+			$temp_inventory_id = $value['inventory_id'];
+			$res = $this -> query("select top 1 cInvCCode as classification_id,cInvName as inventory_name,cInvStd as specification,cInvDefine1 as colour from Inventory where cInvCode='$temp_inventory_id'");
+			$contact_detail[$key]['classification_id'] = $res[0]['classification_id'];
+			$contact_detail[$key]['inventory_name'] = $res[0]['inventory_name'];
+			$contact_detail[$key]['specification'] = $res[0]['specification'];
+			$contact_detail[$key]['colour'] = $res[0]['colour'];
 		}
+		return $contact_detail;
 	}
 	public function getAllContactMain($begin_date,$end_date){
 		// so_somain 取订单号，合同号，客户编码，业务员编码

@@ -19,6 +19,7 @@ class ExcelController extends Controller {
 	private $db_funds_back;
 	private $db_tax_ratio;
 	private $db_U8;
+	private $db_wage_deduction;
 	function _initialize() {
 		$this -> db_salesman = D("Salesman");
 		$this -> db_normal_business_ratio = D("NormalBusinessRatio");
@@ -35,6 +36,7 @@ class ExcelController extends Controller {
 		$this -> db_length_limit = D("LengthLimit");
 		$this -> db_funds_back = D("FundsBack");
 		$this -> db_tax_ratio = D("TaxRatio");
+		$this -> db_wage_deduction = D("WageDeduction");
 	}
 	//import
 	public function loadPriceFloatExcel() {
@@ -404,6 +406,56 @@ class ExcelController extends Controller {
 			$arr_special_business_ratio[$key]['high_limit'] = $value['E'];
 			$arr_special_business_ratio[$key]['ratio'] = $value['F'];
 			$this -> db_special_business_ratio -> addSpecialBusinessRatio($arr_special_business_ratio[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importWageDeductionExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if($_POST['date'] == null){
+			$this -> error("请选择月份");
+		}
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_wage_deduction = array();
+		for ($j = 3; $j <= $highestRow-1; $j++)// 第三行开始，
+		{
+			for ($k = 'D'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_wage_deduction[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_wage_deduction as $key => $value) {
+			unset($arr_wage_deduction[$key]);
+			if($value['D'] == ""){
+				continue;
+			}
+			$arr_wage_deduction[$key]['salesman_id'] = $value['D'];
+			$arr_wage_deduction[$key]['human_wage'] = $value['F'];
+			$arr_wage_deduction[$key]['nagative_salary'] = $value['G'];
+			$arr_wage_deduction[$key]['human_deduction'] = $value['H'];
+			$arr_wage_deduction[$key]['audit_deduction'] = $value['I'];
+			$arr_wage_deduction[$key]['invoice_deduction'] = $value['J'];
+			$arr_wage_deduction[$key]['wire_cutting'] = $value['K'];
+			$arr_wage_deduction[$key]['gurantee_delivery'] = $value['L'];
+			$arr_wage_deduction[$key]['receivables_deduction'] = $value['M'];
+			$arr_wage_deduction[$key]['blocking_material'] = $value['N'];
+			$arr_wage_deduction[$key]['incidental'] = $value['O'];
+			$arr_wage_deduction[$key]['rework_cost'] = $value['P'];
+			$arr_wage_deduction[$key]['total'] = $value['G']+$value['H']+$value['I']+$value['J']+$value['K']+$value['L']+$value['M']+$value['N']-$value['P'];
+			$arr_wage_deduction[$key]['date'] = $_POST['date'];
+			$this -> db_wage_deduction -> addItem($arr_wage_deduction[$key]);
 		}
 		$this -> success("添加成功！");
 	}

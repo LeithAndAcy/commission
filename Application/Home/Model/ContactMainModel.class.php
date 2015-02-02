@@ -48,5 +48,20 @@ class ContactMainModel extends Model {
 		$res = $this -> where($condition) -> field("id,salesman_id,customer_id")->find(); 
 		return $res;
 	}
+	public function getSettlingContactBySalesmanId($salesman_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$condition['settled'] = 0;
+		$condition['settling'] = 1;
+		$res = $this -> where($condition) -> select();
+		return $res;
+	}
+	public function setContactSettled($salesman_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$condition['settled'] = 0;
+		$condition['settling'] = 1;
+		$this -> where($condition) -> setField("settled",1);
+	}
 }
 ?>

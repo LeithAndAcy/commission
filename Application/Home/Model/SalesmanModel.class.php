@@ -13,6 +13,12 @@ class SalesmanModel extends Model {
 		$res = $this -> select();
 		return $res;
 	}
+	public function getOnboardSalesmanInfo(){
+		$condition = array();
+		$condition['onboard_status'] = "在职";
+		$res = $this -> where($condition) -> select();
+		return $res;
+	}
 	
 	public function editSalesman($id,$data){
 		$condition = array();

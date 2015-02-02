@@ -3,24 +3,30 @@ namespace Home\Model;
 use Think\Model;
 class WageDeductionModel extends Model {
 	
-	public function getAllItems(){
-		$res = $this->select();
+	public function getItemsByMonth($month){
+		$condition = array();
+		$condition['date'] = $month;
+		$res = $this->where($condition) ->select();
 		
 		return $res;
 	}
-	public function editItem($id,$ratio){
-		$condition = array();
-		$condition['id'] = $id;
-		$this -> where($condition) -> setField('ratio',$ratio * 0.01);
-	}
+	
 	public function addItem($data){
-		$data['ratio'] *= 0.01;
 		$this -> add($data);	
 	}
-	public function deleteItem($id){
+	public function getHumanWage($salesman_id,$month){
 		$condition = array();
-		$condition['id'] = $id;
-		$this -> where($condition)-> delete();
+		$condition['salesman_id'] = $salesman_id;
+		$condition['date'] = $month;
+		$res = $this -> where($condition)-> getField('human_wage');
+		return $res;
+	}
+	public function getTotalDeduction($salesman_id,$month){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$condition['date'] = $month;
+		$res = $this -> where($condition)-> getField('total');
+		return $res;
 	}
 }
 ?>

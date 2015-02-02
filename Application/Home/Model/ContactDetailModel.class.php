@@ -58,6 +58,11 @@ class ContactDetailModel extends Model {
 			$data['end_cost_price'] = $value['end_cost_price'];
 			$data['special_business_ratio'] = $value['special_business_ratio'];
 			$data['special_profit_ratio'] = $value['special_profit_ratio'];
+			$data['normal_business'] = $value['normal_business'] *0.01;
+			$data['special_business'] = $value['special_business'] ;
+			$data['normal_profit'] = $value['normal_profit'] *0.01;
+			$data['special_profit'] = $value['special_profit'];
+			$data['total_business_profit'] = $data['normal_business'] + $data['normal_profit'];
 			$this -> where($condition) -> save($data);
 		}
 	}
@@ -98,7 +103,19 @@ class ContactDetailModel extends Model {
 		}
 		return $flag;
 	}
-	
+	public function getBusinessAndProfit($contact_main){
+		$result = array();
+		foreach ($contact_main as $key => $value) {
+			$condition = array();
+			$condition['contact_id'] = $value['contact_id'];
+			$res = $this -> where($condition)-> find();
+			$result['special_business'] += $res['special_business'];
+			$result['special_profit'] += $res['special_profit'];
+			$result['business_profit'] += $this -> where($condition)->sum('total_business_profit');
+		}
+		$total_money = $result['special_business'] + $result['special_profit'] + $result['business_profit'];
+		return $total_money;
+	}
 	
 }
 ?>

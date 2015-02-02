@@ -14,7 +14,9 @@ class BusinessPercentController extends Controller {
 	private $db_normial_profit_ratio;
 	private $db_special_profit_ratio;
 	private $db_price_float_ratio;
+	private $db_wage_deduction;
 	private $db_U8;
+	
 	function _initialize() {
 		
 		$this -> db_constomer_funds = D("CustomerFunds");
@@ -28,6 +30,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
+		$this -> db_wage_deduction = D("WageDeduction");
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
 			exit;
@@ -38,12 +41,12 @@ class BusinessPercentController extends Controller {
 		
 	}
 	public function loadSettlingContactPage(){
-		
+		$this -> db_U8 = D("U8");
 		$settling_contact = $this -> db_contact_main ->getSettlingContact();
 		$settling_contact = $this -> db_customer -> addCustomerName($settling_contact);
 		$settling_contact = $this ->db_salesman -> addSalesmanName($settling_contact);
 		$settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
-		
+		$settling_contact_detail = $this -> db_U8 -> getInventoryDetail($settling_contact_detail);
 		$this -> assign("settling_contact_detail",$settling_contact_detail);
 		
 		$this -> display('SettlingContactPage');
@@ -137,19 +140,12 @@ class BusinessPercentController extends Controller {
 			$arr_ratio[$key]['special_business_ratio'] = $temp_special_business_ratio;
 			$temp_special_profit_ratio = $this -> db_special_profit_ratio ->getSpecialProfitRatio($salesman_id,$temp_total_funds);
 			$arr_ratio[$key]['special_profit_ratio'] = $temp_special_profit_ratio;
+			$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_money'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust'] );
+			$arr_ratio[$key]['special_business'] = $temp_total_funds * $arr_ratio[$key]['special_business_ratio'];
+			$arr_ratio[$key]['normal_profit'] = ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * $contact_detail[$key]['delivery_quantity'] *($arr_ratio[$key]['normal_profit_ratio'] + $contact_detail[$key]['profit_adjust']);
+			$arr_ratio[$key]['special_profit'] = $temp_special_profit_ratio * $temp_total_funds;
 		}
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
-		
-		//，最终实际底价，考虑回款金额，计算达标业绩提成比例，未达标利润提成比例。最后再计算业绩和利润提成金额。
-		// $settling_contact =  $this -> db_contact_main ->getSettlingContact();
-		// $settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
-		// print_r($settling_contact_detail);exit;
-// 		
-		// foreach ($settling_contact_detail as $key => $value) {
-			// $settling_contact_detail[$key]['normal_business'] = $value['normal_business_ratio'] * $value['delivery_money'] * 0.01;
-// 	
-		// }
-		
 	}
 	public function loadManualContactPage(){
 		$manual_contact = $this -> db_contact_main -> getManualContact();
@@ -169,10 +165,38 @@ class BusinessPercentController extends Controller {
 		$customer_id = $temp['customer_id'];
 		$this -> db_coustomer_funds -> subtractCustomerBenefit($customer_id,$salesman_id,$contact_total_money);
 	}
+	public function settleContact(){
+		//结算合同
+		$last_month = date('Y-m',strtotime('-1 month'));
+		$all_salesman = $this -> db_salesman -> getOnboardSalesmanInfo();
+	//	print_r($all_salesman);exit;
+		foreach ($all_salesman as $key => $value) {
+			$temp_human_wage = $this -> db_wage_deduction -> getHumanWage($value['salesman_id'],$last_month);
+			$temp_deduction_wage = $this -> db_wage_deduction -> getTotalDeduction($value['salesman_id'],$last_month);
+			$temp_arr_contact = $this -> db_contact_main -> getSettlingContactBySalesmanId($value['salesman_id']);
+			$temp_business_profit = $this -> db_contact_detail ->getBusinessAndProfit($temp_arr_contact);
+		//	$this -> db_contact_main -> setContactSettled($value['salesman_id']);
+			$temp_should_pay = $temp_human_wage+$temp_business_profit;
+			$temp_fact_pay = $temp_should_pay -$temp_deduction_wage;
+			print_r($temp_fact_pay);exit;
+			if($value['status'] == "上海"){
+				
+			}elseif($value['status'] == "昆山"){
+				
+			}
+		}
+	}
+	
 	public function loadSettledContactPage(){
 		$this -> display('BusinessPercent:SettledCommissionPage');
 	}
 	public function loadCommissionBuisnessPage(){
+		$condition = array();
+		$contact_main = $this -> db_contact_main -> getContact($condition);
+		$contact_detail = $this -> db_contact_detail -> getContactDetail($contact_main);
+		$contact_detail = $this -> db_salesman -> addSalesmanName($contact_detail);
+	//	print_r($contact_detail);exit;
+		$this -> assign("contact_detail",$contact_detail);
 		$this -> display('BusinessPercent:CommissionBusinessPage');
 	}
 }

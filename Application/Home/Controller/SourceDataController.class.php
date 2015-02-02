@@ -102,6 +102,7 @@ class SourceDataController extends Controller {
 		$this -> db_contact_main -> addContactMain($all_contact_main);
 		//插入contact_detail  
 		$all_contact_detail = $this -> db_U8 -> getContactDetail($all_contact_main);
+		//取得存货信息
 		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
 		// 取得客户回款金额
 		$customer_funds =  $this -> db_U8 ->getCustomerFunds($begin_date,$end_date);
@@ -121,6 +122,7 @@ class SourceDataController extends Controller {
 		$settlement_contact = $settlement_contact['data'];
 		
 		$settlement_contact_detail = $this -> db_contact_detail -> getContactDetail($settlement_contact);
+		$settlement_contact_detail = $this -> db_U8 -> getInventoryDetail($settlement_contact_detail);
 		$this -> assign('settlement_contact_detail',$settlement_contact_detail);
 		$this -> assign('load_history',$load_history);
 		$this -> display('SettleSummaryPage');
@@ -389,7 +391,8 @@ class SourceDataController extends Controller {
 		$this -> db_funds_back -> deleteItem($id);
 	}
 	public function loadHumanWagePage(){
-		$all_wage_deduction = $this -> db_wage_deduction -> getAllItems();
+		$month = date('Y-m',strtotime('-1 month'));
+		$all_wage_deduction = $this -> db_wage_deduction -> getItemsByMonth($month);
 		$res = $this -> _addSalesmanName($all_wage_deduction);
 		$all_wage_deduction = $res['data'];
 		$this -> assign("all_wage_deduction",$all_wage_deduction);
@@ -401,8 +404,9 @@ class SourceDataController extends Controller {
 	public function editHumanWagePage(){
 		
 	}
-	public function deleteHumanWagePage(){
-		
+	public function deleteWageDeduction(){
+		$id = $_POST['delete_id'];
+		$this -> db_wage_deduction -> deleteItem($id);
 	}
 	public function loadIncidentalFeePage(){
 		$all_incidental_fee = array(
