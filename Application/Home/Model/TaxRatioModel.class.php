@@ -27,5 +27,9 @@ class TaxRatioModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition)-> delete();
 	}
+	public function getTaxRatio($left_money){
+		$res = $this -> query("select ratio from commission_tax_ratio where (low_limit <= '$left_money') AND (high_limit > '$left_money')");
+		return $res[0]['ratio'];
+	}
 }
 ?>

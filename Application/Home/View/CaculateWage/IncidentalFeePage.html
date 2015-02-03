@@ -13,16 +13,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>业务员编码1</td>
-						<td>leithlin</td>
-						<td>5000</td>
-					</tr>
-					<tr>
-						<td>业务员编码2</td>
-						<td>张三</td>
-						<td>200</td>
-					</tr>
+					<volist name="payroll" id="vo">
+						<tr>
+							<td>{$vo.salesman_id}</td>
+							<td>{$vo.salesman_name}</td>
+							<td>{$vo.bogus}</td>
+						</tr>
+					</volist>
 				</tbody>
 			</table>
 		</div>

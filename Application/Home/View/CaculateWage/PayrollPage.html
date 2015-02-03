@@ -14,18 +14,14 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>业务员1</td>
-						<td>12000</td>
-						<td>13000</td>
-						<td>5000</td>
-					</tr>
-					<tr>
-						<td>业务员2</td>
-						<td>3000</td>
-						<td>15000</td>
-						<td>200</td>
-					</tr>
+					<volist name="payroll" id="vo">
+						<tr>
+							<td>{$vo.salesman_name}</td>
+							<td>{$vo.shanghai_salary}</td>
+							<td>{$vo.kunshan_salary}</td>
+							<td>{$vo.bogus}</td>
+						</tr>
+					</volist>
 				</tbody>
 			</table>
 		</div>

@@ -14,12 +14,14 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>编码1</td>
-						<td>姓名2</td>
-						<td>200000</td>
-						<td>2014-01</td>
-					</tr>
+					<volist name="payroll" id="vo">
+						<tr>
+							<td>{$vo.salesman_id}</td>
+							<td>{$vo.salesman_name}</td>
+							<td>{$vo.total}</td>
+							<td>{$vo.date}</td>
+						</tr>
+					</volist>
 				</tbody>
 			</table>
 		</div>

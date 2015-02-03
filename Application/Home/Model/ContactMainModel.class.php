@@ -28,6 +28,12 @@ class ContactMainModel extends Model {
 		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 0 and manual = 1");
 		return $res;
 	}
+	public function getSettledContact(){
+		$condition = array();
+		$condition['settled'] = 1;
+		$res = $this -> where($condition) -> select();
+		return $res;
+	}
 	public function getContact($condition){
 		$res = $this -> where($condition)->select();
 		return $res;

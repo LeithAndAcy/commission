@@ -42,5 +42,11 @@ class InsuranceFundModel extends Model {
 			return false; 
 		}
 	}
+	public function getInsuranceFund($salesman_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$res = $this-> where($condition)->find();
+		return $res;
+	}
 }
 ?>

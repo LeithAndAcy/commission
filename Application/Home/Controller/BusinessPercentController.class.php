@@ -15,6 +15,9 @@ class BusinessPercentController extends Controller {
 	private $db_special_profit_ratio;
 	private $db_price_float_ratio;
 	private $db_wage_deduction;
+	private $db_insurance_fund;
+	private $db_tax;
+	private $db_salary;
 	private $db_U8;
 	
 	function _initialize() {
@@ -31,6 +34,9 @@ class BusinessPercentController extends Controller {
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
 		$this -> db_wage_deduction = D("WageDeduction");
+		$this -> db_tax_ratio = D("TaxRatio");
+		$this -> db_insurance_fund = D("InsuranceFund");
+		$this -> db_salary = D("Salary");
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
 			exit;
@@ -175,23 +181,116 @@ class BusinessPercentController extends Controller {
 			$temp_deduction_wage = $this -> db_wage_deduction -> getTotalDeduction($value['salesman_id'],$last_month);
 			$temp_arr_contact = $this -> db_contact_main -> getSettlingContactBySalesmanId($value['salesman_id']);
 			$temp_business_profit = $this -> db_contact_detail ->getBusinessAndProfit($temp_arr_contact);
-		//	$this -> db_contact_main -> setContactSettled($value['salesman_id']);
+			$this -> db_contact_main -> setContactSettled($value['salesman_id']);
 			$temp_should_pay = $temp_human_wage+$temp_business_profit;
 			$temp_fact_pay = $temp_should_pay -$temp_deduction_wage;
-			print_r($temp_fact_pay);exit;
+			
+			$temp_insurance_fund_ratio = $this -> db_insurance_fund -> getInsuranceFund($value['salesman_id']);
+			$temp_insurance_ratio = $temp_insurance_fund_ratio['insurance'];
+			$temp_fund_ratio = $temp_insurance_fund_ratio['fund'];
+			
 			if($value['status'] == "上海"){
+				$kunshan_bogus = $temp_fact_pay - $value['shanghai_salary'];
+				if($kunshan_bogus <= 0){
+					$temp_insurace = $temp_fact_pay * $temp_insurance_ratio;
+					$temp_fund = $temp_fact_pay * $temp_fund_ratio;
+					$temp_left = $temp_fact_pay - $temp_insurace - $temp_fund;
+					
+					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
+					$temp_tax =$temp_left * $temp_tax_ratio;
+					$temp_shanghai_salary = $temp_left - $temp_tax;
+					$salary = array();
+					$salary['salesman_id'] = $value['salesman_id'];
+					$salary['status'] = $value['status'];
+					$salary['shanghai_salary'] = $temp_shanghai_salary;
+					$salary['insurance'] = $temp_insurace;
+					$salary['fund']= $temp_fund;
+					$salary['tax'] = $temp_tax;
+					$salary['date'] = $last_month;
+					$this -> db_salary -> addItem($salary);
+				}else{
+					$temp_insurace = $value['shanghai_salary'] * $temp_insurance_ratio;
+					$temp_fund = $value['shanghai_salary'] * $temp_fund_ratio;
+					$temp_left = $value['shanghai_salary'] - $temp_insurace - $temp_fund;
+					
+					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
+					$temp_tax =$temp_left * $temp_tax_ratio;
+					$temp_shanghai_salary = $temp_left - $temp_tax;
+					$salary = array();
+					$salary['salesman_id'] = $value['salesman_id'];
+					$salary['status'] = $value['status'];
+					$salary['shanghai_salary'] = $temp_shanghai_salary;
+					if($kunshan_bogus <= $value['kunshan_salary']){
+						$salary['kunshan_salary'] = $kunshan_bogus;
+					}else{
+						$salary['kunshan_salary'] = $value['kunshan_salary'];
+						$salary['bogus'] = $kunshan_bogus - $value['kunshan_salary'];
+					}
+					$salary['insurance'] = $temp_insurace;
+					$salary['fund']= $temp_fund;
+					$salary['tax'] = $temp_tax;
+					$salary['date'] = $last_month;
+					$this -> db_salary -> addItem($salary);
+				}
 				
 			}elseif($value['status'] == "昆山"){
-				
+				$shanghai_bogus = $temp_fact_pay - $value['kunshan_salary'];
+				if($shanghai_bogus <= 0){
+					$temp_insurace = $temp_fact_pay * $temp_insurance_ratio;
+					$temp_fund = $temp_fact_pay * $temp_fund_ratio;
+					$temp_left = $temp_fact_pay - $temp_insurace - $temp_fund;
+					
+					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
+					$temp_tax =$temp_left * $temp_tax_ratio;
+					$temp_kunshan_salary = $temp_left - $temp_tax;
+					$salary = array();
+					$salary['salesman_id'] = $value['salesman_id'];
+					$salary['status'] = $value['status'];
+					$salary['kunshan_salary'] = $temp_kunshan_salary;
+					$salary['insurance'] = $temp_insurace;
+					$salary['fund']= $temp_fund;
+					$salary['tax'] = $temp_tax;
+					$salary['date'] = $last_month;
+					$this -> db_salary -> addItem($salary);
+				}else{
+					$temp_insurace = $value['kunshan_salary'] * $temp_insurance_ratio;
+					$temp_fund = $value['kunshan_salary'] * $temp_fund_ratio;
+					$temp_left = $value['kunshan_salary'] - $temp_insurace - $temp_fund;
+					
+					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
+					$temp_tax =$temp_left * $temp_tax_ratio;
+					$temp_shanghai_salary = $temp_left - $temp_tax;
+					$salary = array();
+					$salary['salesman_id'] = $value['salesman_id'];
+					$salary['status'] = $value['status'];
+					$salary['shanghai_salary'] = $temp_shanghai_salary;
+					if($shanghai_bogus <= $value['shanghai_salary']){
+						$salary['shanghai_salary'] = $shanghai_bogus;
+					}else{
+						$salary['shanghai_salary'] = $value['kunshan_salary'];
+						$salary['bogus'] = $shanghai_bogus - $value['kunshan_salary'];
+					}
+					$salary['insurance'] = $temp_insurace;
+					$salary['fund']= $temp_fund;
+					$salary['tax'] = $temp_tax;
+					$salary['date'] = $last_month;
+					$this -> db_salary -> addItem($salary);
+				}
 			}
 		}
 	}
 	
 	public function loadSettledContactPage(){
-		$this -> display('BusinessPercent:SettledCommissionPage');
+		$this -> db_U8 = D("U8");
+		$settled_contact = $this -> db_contact_main ->getSettledContact();
+		$settled_contact = $this -> db_customer -> addCustomerName($settled_contact);
+		$settled_contact = $this ->db_salesman -> addSalesmanName($settled_contact);
+		$settled_contact_detail = $this -> db_contact_detail ->getContactDetail($settled_contact);
+		$settled_contact_detail = $this -> db_U8 -> getInventoryDetail($settled_contact_detail);
+		$this -> assign("settled_contact_detail",$settled_contact_detail);
+		$this -> display('BusinessPercent:SettledContactPage');
 	}
 	public function loadCommissionBuisnessPage(){
-		$condition = array();
 		$contact_main = $this -> db_contact_main -> getContact($condition);
 		$contact_detail = $this -> db_contact_detail -> getContactDetail($contact_main);
 		$contact_detail = $this -> db_salesman -> addSalesmanName($contact_detail);
