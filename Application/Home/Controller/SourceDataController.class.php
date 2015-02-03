@@ -115,6 +115,7 @@ class SourceDataController extends Controller {
 		$this -> db_contact_main->setManualContact($contact_id);
 	}
 	public function loadSettleSummaryPage(){
+		$this -> db_U8 = D("U8");
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
 		$settlement_contact = $this -> db_contact_main -> getSettlementContact();
 		$settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);
