@@ -5,26 +5,22 @@ class InsuranceFundModel extends Model {
 	
 	public function getAllInsuranceFund(){
 		
-		$res = $this->select();
-		foreach ($res as $key => $value) {
-			$res[$key]['insurance'] *= 100;
-			$res[$key]['fund'] *= 100;
-		}
+		$res = $this -> query("select id,salesman_id,ltrim(str(insurance,9,2)) as insurance,ltrim(str(fund,9,2)) as fund from commission_insurance_fund");
 		return $res;
 	}
 	
 	public function addItem($data){
-		if(!($this ->checkDuplicate($data['salesman_id']))){
-			$data['insurance'] *= 0.01;
-			$data['fund'] *= 0.01;
+		if(($this ->checkDuplicate($data['salesman_id']))){
+			$condition = array();
+			$condition['salesman_id'] = $data['salesman_id'];
+			$this -> where($condition) -> save($data);
+		}else{
 			$this -> add($data);
 		}
 	}
 	public function editInsuranceAndFund($id,$data){
 		$condition = array();
 		$condition['id'] = $id;
-		$data['insurance'] *= 0.01;
-		$data['fund'] *= 0.01;
 		$this -> where($condition) -> save($data);
 	}
 	public function deleteItemById($id){

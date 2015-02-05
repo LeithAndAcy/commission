@@ -46,9 +46,9 @@
 							<td id="{$vo.id}_salesman_id">{$vo.salesman_id}</td>
 							<td id="{$vo.id}_name">{$vo.salesman_name}</td>
 							<td id="{$vo.id}_number">{$vo.inventory_id}</td>
-							<td>名称</td>
-							<td>类别</td>
-							<td>规格型号</td>
+							<td>{$vo.inventory_name}</td>
+							<td>{$vo.classification_id}</td>
+							<td>{$vo.specification}</td>
 							<td id="{$vo.id}_ratio">{$vo.ratio}%</td>
 							<td normal_business_ratio_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#edit"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span></td>
 						</tr>

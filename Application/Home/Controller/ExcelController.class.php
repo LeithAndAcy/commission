@@ -809,13 +809,13 @@ class ExcelController extends Controller {
 		
 
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '业务员编码')
-		-> setCellValue('C1', '业务员姓名')-> setCellValue('D1', '社保')-> setCellValue('E1', '公积金');
+		-> setCellValue('C1', '业务员姓名')-> setCellValue('D1', '社保(元)')-> setCellValue('E1', '公积金(元)');
 		foreach ($all_insurance_fund as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['salesman_id']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('C' . ($key + 2), $value['salesman_name']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['insurance']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['fund']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['insurance']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['fund']);
 		}
 		
 		
@@ -944,7 +944,7 @@ class ExcelController extends Controller {
 		$this -> db_U8 = D("U8");
 		$normal_business_ratio = $this -> db_normal_business_ratio ->getAllNormalBusinessRatio();
 		$normal_business_ratio = $this -> db_salesman -> addSalesmanName($normal_business_ratio);
-	//	$normal_business_ratio = $this -> db_U8 -> getInventoryDetail($normal_business_ratio);
+		$normal_business_ratio = $this -> db_U8 -> getInventoryDetail($normal_business_ratio);
 		$temp_trans = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', );
 		$objPHPExcel = new \PHPExcel();
 
@@ -978,7 +978,7 @@ class ExcelController extends Controller {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('C' . ($key + 2), $value['salesman_name']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['inventory_id']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['inventory_name']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('F' . ($key + 2), $value['classification']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('F' . ($key + 2), $value['classification_id']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('G' . ($key + 2), $value['specification']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('H' . ($key + 2), $value['ratio']);
 		}
@@ -1003,7 +1003,7 @@ class ExcelController extends Controller {
 		$this -> db_U8 = D("U8");
 		$special_business_ratio = $this -> db_special_business_ratio ->getAllSpecialBusinessRatio();
 		$special_business_ratio = $this -> db_salesman -> addSalesmanName($special_business_ratio);
-	//	$special_business_ratio = $this -> db_U8 -> getInventoryDetail($special_business_ratio);
+		$special_business_ratio = $this -> db_U8 -> getClassificationName($special_business_ratio);
 		$temp_trans = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', );
 		$objPHPExcel = new \PHPExcel();
 

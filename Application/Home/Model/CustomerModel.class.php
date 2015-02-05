@@ -12,7 +12,11 @@ class CustomerModel extends Model {
 		$this -> where($condition)->save($data);
 	}
 	public function addItem($data){
-		if(!($this ->checkDuplicate($data['customer_id']))){
+		if(($this ->checkDuplicate($data['customer_id']))){
+			$condition = array();
+			$condition['customer_id'] = $data['customer_id'];
+			$this -> where($condition) -> save($data);
+		}{
 			$this -> add($data);
 		}
 	}

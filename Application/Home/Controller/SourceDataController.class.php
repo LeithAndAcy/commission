@@ -164,10 +164,12 @@ class SourceDataController extends Controller {
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
 	}
 	public function loadNormalBusinessPage(){
+		$this -> db_U8 = D("U8");
 		$all_normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
 		$res = $this -> _addSalesmanName($all_normal_business_ratio);
 		$all_normal_business_ratio = $res['data'];
 		$all_salesman = $res['salesman'];
+		$all_normal_business_ratio = $this -> db_U8 -> getInventoryDetail($all_normal_business_ratio);
 		$this -> assign("all_normal_business_ratio",$all_normal_business_ratio);
 		$this -> assign("all_salesman",$all_salesman);
 		$this -> display('NormalBusinessPage');
@@ -191,9 +193,11 @@ class SourceDataController extends Controller {
 		$this -> db_normal_business_ratio -> deleteNormalBusinessRatioById($id);
 	}
 	public function loadSpecialBusinessPage(){
+		$this -> db_U8 = D("U8");
 		$all_special_business_ratio = $this -> db_special_business_ratio -> getAllSpecialBusinessRatio();
 		$res = $this -> _addSalesmanName($all_special_business_ratio);
 		$all_special_business_ratio = $res['data'];
+		$all_special_business_ratio = $this -> db_U8 -> getClassificationName($all_special_business_ratio);
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_special_business_ratio",$all_special_business_ratio);
 		$this -> assign("all_salesman",$all_salesman);
@@ -216,7 +220,6 @@ class SourceDataController extends Controller {
 		$data['high_limit'] = $_POST['add_new_high_limit'];
 		$data['ratio'] = $_POST['add_new_ratio'];
 		$data['classification_id'] = $_POST['add_new_classification_id'];
-		$data['classification_name'] = $_POST['add_new_classification_name'];
 		$temp = $this -> db_special_business_ratio -> addSpecialBusinessRatio($data);
 		if($temp == FALSE){
 			$this -> error("回款区间有重复，请重新输入!!",'/commission/index.php/Home/SourceData/loadSpecialBusinessPage',3);
@@ -225,9 +228,11 @@ class SourceDataController extends Controller {
 		}
 	}
 	public function loadNormalProfitPage(){
+		$this -> db_U8 = D("U8");
 		$all_normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$res = $this -> _addSalesmanName($all_normal_profit_ratio);
 		$all_normal_profit_ratio = $res['data'];
+		$all_normal_profit_ratio = $this -> db_U8 -> getInventoryDetail($all_normal_profit_ratio);
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_normal_profit_ratio",$all_normal_profit_ratio);
 		$this -> assign("all_salesman",$all_salesman);
@@ -305,7 +310,7 @@ class SourceDataController extends Controller {
 		$data['insurance'] = $_POST['add_new_insurance'];
 		$data['fund'] = $_POST['add_new_fund'];
 		$this -> db_insurance_fund -> addItem($data);
-		$this -> loadNormalProfitPage();
+		$this -> loadInsuranceAndFundPage();
 	}
 	public function deleteInsuranceFund(){
 		$id = $_POST['delete_id'];
@@ -313,13 +318,14 @@ class SourceDataController extends Controller {
 	}
 	
 	public function loadPriceFloatPage(){
+		$this -> db_U8 = D("U8");
 		$all_price_float_ratio = $this -> db_price_float_ratio ->getAllPriceFloatRatio();
+		$all_price_float_ratio = $this -> db_U8 -> getClassificationName($all_price_float_ratio);
 		$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
 		$this -> display('PriceFloatPage');
 	}
 	public function addPriceFloatRatio(){
 		$data['classification_id'] = $_POST['add_new_classification_id'];
-		$data['classification_name'] = $_POST['add_new_name'];
 		$data['low_price'] = $_POST['add_new_low_price'];
 		$data['high_price'] = $_POST['add_new_high_price'];
 		$data['low_length'] = $_POST['add_new_low_length'];
@@ -331,7 +337,6 @@ class SourceDataController extends Controller {
 	public function editPriceFloatRatio(){
 		$id = $_POST['edit_id'];
 		$data['classification_id'] = $_POST['edit_classification_id'];
-		$data['classification_name'] = $_POST['edit_name'];
 		$data['low_price'] = $_POST['edit_low_price'];
 		$data['high_price'] = $_POST['edit_high_price'];
 		$data['low_length'] = $_POST['edit_low_length'];
@@ -360,8 +365,13 @@ class SourceDataController extends Controller {
 		$data['low_length'] = $_POST['add_new_low_length'];
 		$data['high_length'] = $_POST['add_new_high_length'];
 		$data['limit'] = $_POST['add_new_limit'];
-		$this -> db_length_limit -> addItem($data);
-		$this -> loadLengthLimitPage();
+		$temp =  $this -> db_length_limit -> addItem($data);
+		if($temp){
+			$this -> loadLengthLimitPage();
+		}else{
+			$this -> error("长度区间重复，请重新输入!!",'/commission/index.php/Home/SourceData/addLengthLimit',3);
+		}
+		
 	}
 	public function deleteLengthLimit(){
 		$id = $_POST['delete_id'];
@@ -375,8 +385,7 @@ class SourceDataController extends Controller {
 	}
 	public function addFundsBack(){
 		$data = array();
-		$customer_name = $_POST['add_new_customer_name'];
-		$data['customer_id'] = $this -> db_customer -> getIdByName($customer_name);
+		$data['customer_id'] =  $_POST['add_new_customer_id'];
 		$data['funds_back_money'] = $_POST['add_new_funds_back_money'];
 		$this -> db_funds_back -> addItem($data);
 		$this -> loadFundsBackPage();

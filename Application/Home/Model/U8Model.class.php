@@ -52,6 +52,16 @@ class U8Model extends Model {
 		}
 		return $contact_detail;
 	}
+	
+	public function getClassificationName($array){
+		foreach ($array as $key => $value) {
+			$temp_classification_id = $value['classification_id'];
+			$res = $this -> query("select top 1 cInvCCode as classification_id,cInvCName as classification_name from InventoryClass where cInvCCode='$temp_classification_id'");
+			$array[$key]['classification_name'] = $res[0]['classification_name'];
+		}
+		return $array;
+	}
+	
 	public function getAllContactMain($begin_date,$end_date){
 		// so_somain 取订单号，合同号，客户编码，业务员编码
 		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where (dmodifysystime between '$begin_date' and '$end_date') OR (dcreatesystime between '$begin_date' and '$end_date')");
@@ -71,5 +81,6 @@ class U8Model extends Model {
 		$total_funds = $res[0]['total_funds'];
 		return $total_funds;
 	}
+	
 }
 ?>

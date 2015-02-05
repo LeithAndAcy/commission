@@ -4,17 +4,20 @@ use Think\Model;
 class NormalProfitRatioModel extends Model {
 	
 	public function getAllNormalProfitRatio(){
-		
-		$res = $this->select();
-		foreach ($res as $key => $value) {
-			$res[$key]['ratio'] *= 100;
-		}
+		$res = $this -> query("select id,salesman_id,ltrim(str(ratio * 100,12,2)) as ratio  from commission_normal_profit_ratio");
 		return $res;
 	}
 	
 	public function addNormalProfitRatio($data){
-		$data['ratio'] *= 0.01;
-		$this -> add($data);
+		$data['ratio'] *= 0.01;	
+		$condition = array();
+		$condition['salesman_id'] = $data['salesman_id'];
+		if($this -> where($condition) -> find()){
+			$this -> where($condition) -> save($data);
+		}else{
+			$this -> add($data);
+		}
+		
 	}
 	public function edtiNormalProfitRatio($id,$ratio){
 		$condition = array();

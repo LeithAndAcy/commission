@@ -4,16 +4,21 @@ use Think\Model;
 class PriceFloatRatioModel extends Model {
 	
 	public function getAllPriceFloatRatio(){
-		$res = $this->select();
-		foreach ($res as $key => $value) {
-			$res[$key]['ratio'] *= 100;
-		}
+		$res = $this -> query("select id,classification_id,ltrim(str(low_price,12,2)) as low_price,ltrim(str(high_price,12,2)) as high_price,low_length,high_length,ltrim(str(ratio * 100,12,2)) as ratio  from commission_price_float_ratio");
 		return $res;
 	}
 	
 	public function addItem($data){
-		if(!($this ->checkDuplicate($data))){
-			$data['ratio'] *= 0.01;
+		$data['ratio'] *= 0.01;
+		if($this -> checkDuplicate($data)){
+			$condition = array();
+			$condition['classification_id'] = $data['classification_id'];
+			$condition['low_price'] = $data['low_price'];
+			$condition['high_price'] = $data['high_price'];
+			$condition['low_length'] = $data['low_length'];
+			$condition['high_length'] = $data['high_length'];
+			$this -> where($condition) -> save($data);
+		}else{
 			$this -> add($data);
 		}
 	}

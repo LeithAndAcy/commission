@@ -27,7 +27,11 @@ class SalesmanModel extends Model {
 	}
 	
 	public function addItem($data){
-		if(!($this ->checkDuplicate($data['salesman_id']))){
+		if(($this ->checkDuplicate($data['salesman_id']))){
+			$condition = array();
+			$condition['salesman_id'] = $data['salesman_id'];
+			$this -> where($condition) -> save($data);
+		}else{
 			$this -> add($data);
 		}
 	}
