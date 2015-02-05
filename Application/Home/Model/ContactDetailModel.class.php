@@ -9,6 +9,7 @@ class ContactDetailModel extends Model {
 			$this -> where($condition)->delete();
 		}
 	}
+	//插入数据
 	public function addContactDetail($all_contact_detail){
 		foreach ($all_contact_detail as $key => $value) {
 			$contact_detail = $value['contact_detail'];

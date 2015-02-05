@@ -434,8 +434,15 @@ class SourceDataController extends Controller {
 	}
 	public function loadTaxPage(){
 		$all_tax_ratio = $this -> db_tax_ratio -> getAllItems();
+		$tax_beginning_point = $this -> db_tax_ratio -> getTaxBeginningPoint();
+		$this -> assign("tax_beginning_point",$tax_beginning_point);
 		$this -> assign("all_tax_ratio",$all_tax_ratio);
 		$this ->display('TaxPage');
+	}
+	public function editTaxBeginningPoint(){
+		$tax_beginning_point = $_POST['edit_tax_beginning_point'];
+		$this -> db_tax_ratio -> editTaxBeginningPoint($tax_beginning_point);
+		$this -> loadTaxPage();
 	}
 	public function editTaxRatio(){
 		$id = $_POST['edit_id'];
@@ -448,8 +455,13 @@ class SourceDataController extends Controller {
 		$data['low_limit'] = $_POST['add_new_low_limit'];
 		$data['high_limit'] = $_POST['add_new_high_limit'];
 		$data['ratio'] = $_POST['add_new_ratio'];
-		$this -> db_tax_ratio -> addItem($data);
-		$this -> loadTaxPage();
+		$temp = $this -> db_tax_ratio -> addItem($data);
+		if($temp){
+			$this -> loadTaxPage();
+		}else{
+			$this -> error("工资区间重复，请重新输入!!",'/commission/index.php/Home/SourceData/loadTaxPage',3);
+		}
+		
 	}
 	public function deleteTaxRatioById(){
 		$id = $_POST['delete_id'];

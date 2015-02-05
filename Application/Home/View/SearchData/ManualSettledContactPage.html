@@ -14,7 +14,6 @@
 			<table id="settlingContactTable" class="table table-striped table-bordered table-hover datatable" width="300%" cellspacing="0" style="margin-top: 20px;overflow-x: auto">
 				<thead>
 					<tr>
-						<th></th>
 						<th>合同号</th>
 						<th>销售订单号</th>
 						<th>客户编码</th>
@@ -54,9 +53,8 @@
 					</tr>
 				</thead>
 				<tbody>
-					<volist name="manual_contact_detail" id="vo">
+					<volist name="manual_settled_contact_detail" id="vo">
 						<tr>
-							<td><button class="btn btn-primary" contact_id = "{$vo.contact_id}" btn_type = "approve">同意</button> </td>
 							<td>{$vo.contact_id}</td>
 							<td>{$vo.cSOCode}</td>
 							<td>{$vo.customer_id}</td>

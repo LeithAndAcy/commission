@@ -154,10 +154,12 @@ class BusinessPercentController extends Controller {
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
 	}
 	public function loadManualContactPage(){
+		$this -> db_U8 = D("U8");
 		$manual_contact = $this -> db_contact_main -> getManualContact();
 		$manual_contact = $this -> db_customer -> addCustomerName($manual_contact);
 		$manual_contact = $this ->db_salesman -> addSalesmanName($manual_contact);
 		$manual_contact_detail = $this -> db_contact_detail -> getContactDetail($manual_contact);
+		$manual_contact_detail = $this -> db_U8 -> getInventoryDetail($manual_contact_detail);
 		$this -> assign("manual_contact_detail",$manual_contact_detail);
 		$this -> display('ManualContactPage');
 	}
@@ -290,6 +292,9 @@ class BusinessPercentController extends Controller {
 		$this -> assign("settled_contact_detail",$settled_contact_detail);
 		$this -> display('BusinessPercent:SettledContactPage');
 	}
+	
+	
+	
 	public function loadCommissionBuisnessPage(){
 		$contact_main = $this -> db_contact_main -> getContact($condition);
 		$contact_detail = $this -> db_contact_detail -> getContactDetail($contact_main);

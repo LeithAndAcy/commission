@@ -5,6 +5,10 @@ class SearchDataController extends Controller {
 		
 	private $db_salary;
 	private $db_salesman;
+	private $db_contact_main;
+	private $db_contact_detail;
+	private $db_customer;
+	private $db_U8;
 	
 	function _initialize() {
 		if (!_checkLogin()) {
@@ -13,6 +17,9 @@ class SearchDataController extends Controller {
 		}
 		$this -> db_salary = D("Salary");
 		$this -> db_salesman = D("Salesman");
+		$this -> db_contact_main = D("ContactMain");
+		$this -> db_contact_detail = D("ContactDetail");
+		$this -> db_customer = D("Customer");
 	}
     public function loadSearchDataPage(){
     	$this -> display('SearchDataPage');
@@ -22,10 +29,21 @@ class SearchDataController extends Controller {
 		$business_percent = A('BusinessPercent');
 		$business_percent -> loadSettledContactPage();
 	}
+	public function loadManualSettledContactPage(){
+		$this -> db_U8 = D("U8");
+		$manual_settled_contact = $this -> db_contact_main -> getManualSettledContact();
+		$manual_settled_contact_detail = $this -> db_contact_detail -> getContactDetail($manual_settled_contact);
+		$manual_settled_contact_detail = $this -> db_salesman -> addSalesmanName($manual_settled_contact_detail);
+		$manual_settled_contact_detail = $this -> db_customer -> addCustomerName($manual_settled_contact_detail);
+		$manual_settled_contact_detail = $this -> db_U8 -> getInventoryDetail($manual_settled_contact_detail);
+		$this -> assign("manual_settled_contact_detail",$manual_settled_contact_detail);
+		$this -> display('ManualSettledContactPage');
+	}
 	public function searchCommissionBusiness(){
 		$business_percent = A('BusinessPercent');
 		$business_percent -> loadCommissionBuisnessPage();
 	}
+	
 	public function searchShanghaiSalary(){
 		$payroll = $this -> db_salary -> getAllShanghaiSalary();
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
