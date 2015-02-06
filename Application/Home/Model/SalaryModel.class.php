@@ -19,16 +19,29 @@ class SalaryModel extends Model {
 		$res = $this -> where($condition) -> select();
 		return $res;
 	}
-	public function getAllShanghaiSalary(){
+	
+	public function getAllShanghaiSalary($Page){
 		$condition = array();
 		$condition['status'] = "上海";
-		$res = $this -> where($condition) -> select();
+		$res = $this -> where($condition)-> order('date desc')->limit($Page->firstRow.','.$Page->listRows) -> select();
 		return $res;
 	}
-	public function getAllKunshanSalary(){
+	public function countAllShanghaiSalary(){
+		$condition = array();
+		$condition['status'] = "上海";
+		$res = $this -> where($condition) -> count();
+		return $res;
+	}
+	public function getAllKunshanSalary($Page){
 		$condition = array();
 		$condition['status'] = "昆山";
-		$res = $this -> where($condition) -> select();
+		$res = $this -> where($condition) -> order('date desc')->limit($Page->firstRow.','.$Page->listRows) -> select();
+		return $res;
+	}
+	public function countAllKunshanSalary(){
+		$condition = array();
+		$condition['status'] = "昆山";
+		$res = $this -> where($condition) -> count();
 		return $res;
 	}
 	public function getKunshanSalary($month){
@@ -38,8 +51,8 @@ class SalaryModel extends Model {
 		$res = $this -> where($condition) -> select();
 		return $res;
 	}
-	public function getAllSalary(){
-		$res = $this -> select();
+	public function getAllSalary($Page){
+		$res = $this -> order('date desc')->limit($Page->firstRow.','.$Page->listRows) -> select();
 		return $res;
 	}
 }

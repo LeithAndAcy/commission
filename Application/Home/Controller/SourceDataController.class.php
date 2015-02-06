@@ -71,8 +71,7 @@ class SourceDataController extends Controller {
 			$edited_contact_main = $temp_edited_contact_mian['data'];
 		//	print_r($edited_contact_detail);
 			$edited_contact_detail = $this -> db_U8 ->getContactDetail($edited_contact_main);
-		//  去合同明细，等字段确认再做。
-		//	$edited_contact_inventory_detail = $this -> db_U8 ->getInventoryDetail($edited_contact_detail);
+			$edited_contact_inventory_detail = $this -> db_U8 ->getInventoryDetail($edited_contact_detail);
 			$this -> assign("edited_contact_detail",$edited_contact_detail);
 			$this -> assign("begin_date",$begin_date);
 			$this -> assign("end_date",$end_date);
@@ -117,7 +116,10 @@ class SourceDataController extends Controller {
 	public function loadSettleSummaryPage(){
 		$this -> db_U8 = D("U8");
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
-		$settlement_contact = $this -> db_contact_main -> getSettlementContact();
+		$count_settlement_contact = $this -> db_contact_main -> countSettlementContact();
+		$Page = new \Think\Page($count_settlement_contact,1000);
+		$show = $Page->show();// 分页显示输出
+		$settlement_contact = $this -> db_contact_main -> getSettlementContact($Page);
 		$settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);
 		$settlement_contact = $this -> _addSalesmanName($settlement_contact);
 		$settlement_contact = $settlement_contact['data'];
@@ -125,6 +127,7 @@ class SourceDataController extends Controller {
 		$settlement_contact_detail = $this -> db_contact_detail -> getContactDetail($settlement_contact);
 		$settlement_contact_detail = $this -> db_U8 -> getInventoryDetail($settlement_contact_detail);
 		$this -> assign('settlement_contact_detail',$settlement_contact_detail);
+		$this -> assign('page',$show);
 		$this -> assign('load_history',$load_history);
 		$this -> display('SettleSummaryPage');
 	}
@@ -135,6 +138,7 @@ class SourceDataController extends Controller {
 		$profit_adjust =  $_POST['edit_profit_adjust'];
 		$cost_price_adjust = $_POST['edit_cost_price_adjust'];
 		$this -> db_contact_detail -> updateAdjust($contact_id,$inventory_id,$business_adjust,$profit_adjust,$cost_price_adjust);
+		$this -> db_contact_main -> setContactEdited($contact_id);
 		$this -> loadSettleSummaryPage();
 	}
 	public function getSettlementRatio(){
@@ -468,8 +472,12 @@ class SourceDataController extends Controller {
 		$this -> db_tax_ratio -> deleteItem($id);
 	}
 	public function loadCustomerPage(){
-		$all_customer = $this -> db_customer ->getAllCustomer();
+		$count_all_customer = $this -> db_customer -> count();
+		$Page = new \Think\Page($count_all_customer,1000);
+		$show = $Page->show();
+		$all_customer = $this -> db_customer ->getAllCustomer($Page);
 		$this -> assign("all_customer",$all_customer);
+		$this -> assign('page',$show);
 		$this -> display('CustomerPage');
 	}
 	public function editCustomer(){

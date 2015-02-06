@@ -3,8 +3,8 @@ namespace Home\Model;
 use Think\Model;
 class CustomerModel extends Model {
 	
-	public function getAllCustomer(){
-		$res = $this->select();
+	public function getAllCustomer($Page){
+		$res = $this-> limit($Page->firstRow.','.$Page->listRows) ->select();
 		return $res;
 	}
 	public function editItem($id,$data){
@@ -12,11 +12,11 @@ class CustomerModel extends Model {
 		$this -> where($condition)->save($data);
 	}
 	public function addItem($data){
-		if(($this ->checkDuplicate($data['customer_id']))){
+		if($this -> checkDuplicate($data['customer_id'])){
 			$condition = array();
 			$condition['customer_id'] = $data['customer_id'];
 			$this -> where($condition) -> save($data);
-		}{
+		}else{
 			$this -> add($data);
 		}
 	}
@@ -45,7 +45,7 @@ class CustomerModel extends Model {
 	public function checkDuplicate($id){
 		$condition = array();
 		$condition['customer_id'] = $id;
-		$res = $this -> where($condition) -> getField("customer_id");
+		$res = $this -> where($condition) -> find();
 		if($res){
 			return true;
 		}else{

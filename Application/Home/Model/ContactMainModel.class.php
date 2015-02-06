@@ -15,31 +15,109 @@ class ContactMainModel extends Model {
 			$this -> add($value);
 		}
 	}
-	public function getSettlementContact(){
-		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 0 and manual != 1");
+	public function getSettlementContact($Page){
+		$condition = array();
+		$condition['settlement'] = 1;
+		$condition['settled'] = 0;
+		$condition['settling'] = 0;
+		$condition['manual'] = 0;
+		$res = $this -> where($condition)->limit($Page->firstRow.','.$Page->listRows) -> select();
 		return $res;
 	}
 	
-	public function getSettlingContact(){
-		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 1");
+	public function countSettlementContact(){
+		$condition = array();
+		$condition['settlement'] = 1;
+		$condition['settled'] = 0;
+		$condition['settling'] = 0;
+		$condition['manual'] = 0;
+		$res = $this -> where($condition) -> count();
 		return $res;
 	}
-	public function getManualContact(){
-		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settlement = 1 and settled = 0 and settling = 0 and manual = 1");
+	
+	public function getSettlingContact($Page){
+		$condition = array();
+		$condition['settlement'] = 1;
+		$condition['settled'] = 0;
+		$condition['settling'] = 1;
+		$res = $this -> where($condition)->limit($Page->firstRow.','.$Page->listRows) -> select();
 		return $res;
 	}
-	public function getManualSettledContact(){
-		$res = $this -> query("select contact_id,customer_id,salesman_id,cSOCode from commission_contact_main where settled = 1 and manual = 1");
+	public function countSettlingContact(){
+		$condition = array();
+		$condition['settlement'] = 1;
+		$condition['settled'] = 0;
+		$condition['settling'] = 1;
+		$res = $this -> where($condition)->count();
 		return $res;
 	}
-	public function getSettledContact(){
+	public function getManualContact($Page){
+		$condition = array();
+		$condition['settlement'] = 1;
+		$condition['manual'] = 1;
+		$condition['settling'] = 0;
+		$condition['settled'] = 0;
+		$res = $this -> where($condition)->limit($Page->firstRow.','.$Page->listRows) -> select();
+		return $res;
+	}
+	
+	public function countManualContact(){
+		$condition = array();
+		$condition['settlement'] = 1;
+		$condition['manual'] = 1;
+		$condition['settling'] = 0;
+		$condition['settled'] = 0;
+		$res = $this -> where($condition) -> count();
+		return $res;
+	}
+	
+	public function getManualSettledContact($Page){
 		$condition = array();
 		$condition['settled'] = 1;
-		$res = $this -> where($condition) -> select();
+		$condition['manual'] = 1;
+		$res = $this -> where($condition) ->limit($Page->firstRow.','.$Page->listRows)-> select();
 		return $res;
 	}
-	public function getContact($condition){
-		$res = $this -> where($condition)->select();
+	
+	public function countManualSettledContact(){
+		$condition = array();
+		$condition['settled'] = 1;
+		$condition['manual'] = 1;
+		$res = $this -> where($condition) -> count();
+		return $res;
+	}
+	
+	public function getEditedSettledContact($Page){
+		$condition = array();
+		$condition['settled'] = 1;
+		$condition['edited'] = 1;
+		$res =  $this -> where($condition) ->limit($Page->firstRow.','.$Page->listRows)-> select();
+		return $res;
+	}
+	
+	public function countEditedSettledContact(){
+		$condition = array();
+		$condition['settled'] = 1;
+		$condition['edited'] = 1;
+		$res =  $this -> where($condition) -> count();
+		return $res;
+	}
+	public function getSettledContact($Page){
+		$condition = array();
+		$condition['settled'] = 1;
+		$res = $this -> where($condition) ->limit($Page->firstRow.','.$Page->listRows)-> select();
+		return $res;
+	}
+	
+	public function countSettledContact(){
+		$condition = array();
+		$condition['settled'] = 1;
+		$res = $this -> where($condition) -> count();
+		return $res;
+	}
+	
+	public function getContact($Page){
+		$res = $this ->limit($Page->firstRow.','.$Page->listRows)->select();
 		return $res;
 	}
 	public function setSettlingContact($contact_id){
@@ -72,6 +150,11 @@ class ContactMainModel extends Model {
 		$condition['settled'] = 0;
 		$condition['settling'] = 1;
 		$this -> where($condition) -> setField("settled",1);
+	}
+	public function setContactEdited($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$this -> where($condition) -> setField('edited',1);
 	}
 }
 ?>

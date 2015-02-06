@@ -31,13 +31,31 @@ class SearchDataController extends Controller {
 	}
 	public function loadManualSettledContactPage(){
 		$this -> db_U8 = D("U8");
-		$manual_settled_contact = $this -> db_contact_main -> getManualSettledContact();
+		$count_manual_settled_count = $this -> db_contact_main -> countManualSettledContact();
+		$Page = new \Think\Page($count_manual_settled_count,1000);
+		$show = $Page->show();// 分页显示输出
+		$manual_settled_contact = $this -> db_contact_main -> getManualSettledContact($Page);
 		$manual_settled_contact_detail = $this -> db_contact_detail -> getContactDetail($manual_settled_contact);
 		$manual_settled_contact_detail = $this -> db_salesman -> addSalesmanName($manual_settled_contact_detail);
 		$manual_settled_contact_detail = $this -> db_customer -> addCustomerName($manual_settled_contact_detail);
 		$manual_settled_contact_detail = $this -> db_U8 -> getInventoryDetail($manual_settled_contact_detail);
+		$this -> assign('page',$show);
 		$this -> assign("manual_settled_contact_detail",$manual_settled_contact_detail);
 		$this -> display('ManualSettledContactPage');
+	}
+	public function loadEditedSettledContactPage(){
+		$this -> db_U8 = D("U8");
+		$count_edited_settled_contact = $this -> db_contact_main ->countEditedSettledContact();
+		$Page = new \Think\Page($count_edited_settled_contact,1000);
+		$show = $Page->show();// 分页显示输出
+		$edited_settled_contact = $this -> db_contact_main -> getEditedSettledContact($Page);
+		$edited_settled_contact_detail = $this -> db_contact_detail -> getContactDetail($edited_settled_contact);
+		$edited_settled_contact_detail = $this -> db_salesman -> addSalesmanName($edited_settled_contact_detail);
+		$edited_settled_contact_detail = $this -> db_customer -> addCustomerName($edited_settled_contact_detail);
+		$edited_settled_contact_detail = $this -> db_U8 -> getInventoryDetail($edited_settled_contact_detail);
+		$this -> assign('page',$show);
+		$this -> assign("manual_settled_contact_detail",$edited_settled_contact_detail);
+		$this -> display('EditedSettledContactPage');
 	}
 	public function searchCommissionBusiness(){
 		$business_percent = A('BusinessPercent');
@@ -45,45 +63,65 @@ class SearchDataController extends Controller {
 	}
 	
 	public function searchShanghaiSalary(){
-		$payroll = $this -> db_salary -> getAllShanghaiSalary();
+		$count_payroll = $this -> db_salary ->countAllShanghaiSalary();
+		$Page = new \Think\Page($count_payroll,1000);
+		$show = $Page->show();// 分页显示输出
+		$payroll = $this -> db_salary -> getAllShanghaiSalary($Page);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
 		$this -> assign("payroll",$payroll);
+		$this -> assign('page',$show);
 		$this -> display('ShanghaiSalaryPage');
 	}
 	public function searchKunshanSalary(){
-		$payroll = $this -> db_salary -> getAllKunshanSalary();
+		$count_payroll = $this -> db_salary ->countAllKunshanSalary();
+		$Page = new \Think\Page($count_payroll,1000);
+		$show = $Page->show();// 分页显示输出
+		$payroll = $this -> db_salary -> getAllKunshanSalary($Page);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
 		$this -> assign("payroll",$payroll);
+		$this -> assign('page',$show);
 		$this -> display('KunshanSalaryPage');
 	}
 	public function searchIncidentalFee(){
-		$payroll = $this -> db_salary -> getAllSalary();
+		$count_payroll = $this -> db_salary -> count();
+		$Page = new \Think\Page($count_payroll,1000);
+		$show = $Page->show();// 分页显示输出
+		$payroll = $this -> db_salary -> getAllSalary($Page);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		$this -> assign("payroll",$payroll);
+		$this -> assign('page',$show);
 		$this -> display('IncidentalFeePage');
 	}
 	public function searchTotalSalary(){
-		$payroll = $this -> db_salary -> getAllSalary();
+		$count_payroll = $this -> db_salary -> count();
+		$Page = new \Think\Page($count_payroll,1000);
+		$show = $Page->show();// 分页显示输出
+		$payroll = $this -> db_salary -> getAllSalary($Page);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
 		$this -> assign("payroll",$payroll);
+		$this -> assign('page',$show);
 		$this -> display('TotalSalaryPage');
 	}
 	public function searchSalaryDetail(){
-		$payroll = $this -> db_salary -> getAllSalary();
+		$count_payroll = $this -> db_salary -> count();
+		$Page = new \Think\Page($count_payroll,1000);
+		$show = $Page->show();// 分页显示输出
+		$payroll = $this -> db_salary -> getAllSalary($Page);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
 		$this -> assign("payroll",$payroll);
+		$this -> assign('page',$show);
 		$this -> display('SalaryDetailPage');
 	}
 }

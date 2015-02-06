@@ -48,13 +48,18 @@ class BusinessPercentController extends Controller {
 	}
 	public function loadSettlingContactPage(){
 		$this -> db_U8 = D("U8");
-		$settling_contact = $this -> db_contact_main ->getSettlingContact();
+		$count_settling_contact = $this -> db_contact_main -> countSettlingContact();
+		$Page = new \Think\Page($count_settling_contact,1000);
+		$show = $Page->show();// 分页显示输出
+		
+		$settling_contact = $this -> db_contact_main ->getSettlingContact($Page);
 		$settling_contact = $this -> db_customer -> addCustomerName($settling_contact);
 		$settling_contact = $this ->db_salesman -> addSalesmanName($settling_contact);
 		$settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
 		$settling_contact_detail = $this -> db_U8 -> getInventoryDetail($settling_contact_detail);
-		$this -> assign("settling_contact_detail",$settling_contact_detail);
 		
+		$this -> assign("settling_contact_detail",$settling_contact_detail);
+		$this -> assign("page",$show);
 		$this -> display('SettlingContactPage');
 	}
 	public function getSettlingContact(){
@@ -100,6 +105,7 @@ class BusinessPercentController extends Controller {
 		$profit_adjust =  $_POST['edit_profit_adjust'];
 		$cost_price_adjust = $_POST['edit_cost_price_adjust'];
 		$this -> db_contact_detail -> updateAdjust($contact_id,$inventory_id,$business_adjust,$profit_adjust,$cost_price_adjust);
+		$this -> db_contact_main -> setContactEdited($contact_id);
 		$this -> loadSettlingContactPage();
 	}
 	public function getSettlingRatioAndPrice(){
@@ -155,12 +161,17 @@ class BusinessPercentController extends Controller {
 	}
 	public function loadManualContactPage(){
 		$this -> db_U8 = D("U8");
-		$manual_contact = $this -> db_contact_main -> getManualContact();
+		$count_manual_contact = $this -> db_contact_main -> countManualContact();
+		$Page = new \Think\Page($count_manual_contact,1000);
+		$show = $Page->show();// 分页显示输出 
+		
+		$manual_contact = $this -> db_contact_main -> getManualContact($Page);
 		$manual_contact = $this -> db_customer -> addCustomerName($manual_contact);
 		$manual_contact = $this ->db_salesman -> addSalesmanName($manual_contact);
 		$manual_contact_detail = $this -> db_contact_detail -> getContactDetail($manual_contact);
 		$manual_contact_detail = $this -> db_U8 -> getInventoryDetail($manual_contact_detail);
 		$this -> assign("manual_contact_detail",$manual_contact_detail);
+		$this -> assign("page",$show);
 		$this -> display('ManualContactPage');
 	}
 	public function setSettlingContact(){
@@ -284,11 +295,16 @@ class BusinessPercentController extends Controller {
 	
 	public function loadSettledContactPage(){
 		$this -> db_U8 = D("U8");
-		$settled_contact = $this -> db_contact_main ->getSettledContact();
+		$count_settled_contact = $this -> db_contact_main -> countSettledContact();
+		$Page = new \Think\Page($count_settled_contact,1000);
+		$show = $Page->show();// 分页显示输出
+		
+		$settled_contact = $this -> db_contact_main ->getSettledContact($Page);
 		$settled_contact = $this -> db_customer -> addCustomerName($settled_contact);
 		$settled_contact = $this ->db_salesman -> addSalesmanName($settled_contact);
 		$settled_contact_detail = $this -> db_contact_detail ->getContactDetail($settled_contact);
 		$settled_contact_detail = $this -> db_U8 -> getInventoryDetail($settled_contact_detail);
+		$this -> assign("page",$show);
 		$this -> assign("settled_contact_detail",$settled_contact_detail);
 		$this -> display('BusinessPercent:SettledContactPage');
 	}
@@ -296,10 +312,14 @@ class BusinessPercentController extends Controller {
 	
 	
 	public function loadCommissionBuisnessPage(){
-		$contact_main = $this -> db_contact_main -> getContact($condition);
+		
+		$count_contact_main = $this -> db_contact_main -> count();
+		$Page = new \Think\Page($count_contact_main,1000);
+		$show = $Page->show();// 分页显示输出
+		$contact_main = $this -> db_contact_main -> getContact($Page);
 		$contact_detail = $this -> db_contact_detail -> getContactDetail($contact_main);
 		$contact_detail = $this -> db_salesman -> addSalesmanName($contact_detail);
-	//	print_r($contact_detail);exit;
+		$this -> assign('page',$show);
 		$this -> assign("contact_detail",$contact_detail);
 		$this -> display('BusinessPercent:CommissionBusinessPage');
 	}

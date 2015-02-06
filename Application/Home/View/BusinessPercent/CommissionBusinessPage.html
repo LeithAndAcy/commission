@@ -50,14 +50,14 @@
 							<td>{$vo.special_business_ratio}</td>
 							<td>{$vo.normal_profit_ratio}</td>
 							<td>{$vo.special_profit_ratio}</td>
-							<!-- <td normal_business_ratio_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span>
-							<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span>
-							</td> -->
 						</tr>
 					</volist>
 
 				</tbody>
 			</table>
+			<div>
+				{$page}
+			</div>
 		</div>
 		<div class="modal fade" id="editDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
