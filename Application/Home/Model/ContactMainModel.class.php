@@ -156,5 +156,51 @@ class ContactMainModel extends Model {
 		$condition['contact_id'] = $contact_id;
 		$this -> where($condition) -> setField('edited',1);
 	}
+
+	public function getSettlementContactByContactId($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$condition['settlement'] = 1;
+		$condition['settled'] = 0;
+		$condition['settling'] = 0;
+		$condition['manual'] = 0;
+		$res =  $this -> where($condition) -> find();
+		return $res;
+	}
+	public function getSettlingContactByContactId($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$condition['settlement'] = 1;
+		$condition['settled'] = 0;
+		$condition['settling'] = 1;
+		$res = $this -> where($condition) -> find();
+		return $res;
+	}
+	public function getSettledContactByContactId($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$condition['settlement'] = 1;
+		$condition['settled'] = 1;
+		$res = $this -> where($condition) -> find();
+		return $res;
+	}
+	public function getManualSettledContactByContactId($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$condition['settlement'] = 1;
+		$condition['settled'] = 1;
+		$condition['manual'] = 1;
+		$res = $this -> where($condition) -> find();
+		return $res;
+	}
+	public function getEditedSettledContactByContactId($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$condition['settlement'] = 1;
+		$condition['settled'] = 1;
+		$condition['edited'] = 1;
+		$res = $this -> where($condition) -> find();
+		return $res;
+	}
 }
 ?>

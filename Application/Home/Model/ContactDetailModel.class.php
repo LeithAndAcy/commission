@@ -47,7 +47,7 @@ class ContactDetailModel extends Model {
 		}
 		return $contact_detail;
 	}
-	public function updateSettlementRatio($arr_ratio=array()){
+	public function updateSettlingRatio($arr_ratio=array()){
 		$condition = array();
 		$data = array();
 		foreach ($arr_ratio as $key => $value) {
@@ -67,6 +67,23 @@ class ContactDetailModel extends Model {
 			$this -> where($condition) -> save($data);
 		}
 	}
+	public function updateSettlementRatio($arr_ratio=array()){
+		$condition = array();
+		$data = array();
+		foreach ($arr_ratio as $key => $value) {
+			$condition['contact_id'] = $value['contact_id'];
+			$condition['inventory_id'] = $value['inventory_id'];
+			$data['normal_business_ratio'] = $value['normal_business_ratio']*0.01;
+			$data['normal_profit_ratio'] = $value['normal_profit_ratio']*0.01;
+			$data['float_price'] = $value['float_price'];
+			$data['end_cost_price'] = $value['end_cost_price'];
+			print_r($condition);
+			print_r($data);
+			$this -> where($condition) -> save($data);
+		}
+	}
+	
+
 	public function getContactTotalMoney($contact_id){
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
@@ -117,6 +134,9 @@ class ContactDetailModel extends Model {
 		$total_money = $result['special_business'] + $result['special_profit'] + $result['business_profit'];
 		return $total_money;
 	}
-	
+	public function searchByCondition($condition){
+		$res = $this -> where($condition) -> select();
+		return $res;
+	}
 }
 ?>

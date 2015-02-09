@@ -54,7 +54,7 @@ class SearchDataController extends Controller {
 		$edited_settled_contact_detail = $this -> db_customer -> addCustomerName($edited_settled_contact_detail);
 		$edited_settled_contact_detail = $this -> db_U8 -> getInventoryDetail($edited_settled_contact_detail);
 		$this -> assign('page',$show);
-		$this -> assign("manual_settled_contact_detail",$edited_settled_contact_detail);
+		$this -> assign("edited_settled_contact_detail",$edited_settled_contact_detail);
 		$this -> display('EditedSettledContactPage');
 	}
 	public function searchCommissionBusiness(){
@@ -124,5 +124,48 @@ class SearchDataController extends Controller {
 		$this -> assign('page',$show);
 		$this -> display('SalaryDetailPage');
 	}
+	
+	public function complicateSearch(){
+		$condition = array();
+		$condition['contact_id'] = $_POST['search_contact_id'];
+		$condition['classification_id'] = $_POST['search_classification_id'];
+		$condition['inventory_id'] = $_POST['search_inventory_id'];
+		$condition['specification'] = $_POST['search_specification'];
+		$condition['colour'] = $_POST['search_colour'];
+		$type = $_POST['search_type'];
+		foreach ($condition as $key => $value) {
+			if($value == ""){
+				unset($condition[$key]);
+			}
+		}
+		$res = $this -> db_contact_detail -> searchByCondition($condition);
+		foreach ($res as $key => $value) {
+			if($type == "manualSettled"){
+				$temp =  $this -> db_contact_main -> getManualSettledContactByContactId($value['contact_id']);
+			}elseif($type == "editedSettled"){
+				$temp =  $this -> db_contact_main -> getEditedSettledContactByContactId($value['contact_id']);
+			}
+			if($temp == null){
+				unset($res[$key]);
+			}else{
+				$res[$key]['salesman_id'] = $temp['salesman_id'];
+				$res[$key]['customer_id'] = $temp['customer_id'];
+				$res[$key]['cSOCode'] = $temp['cSOCode'];
+			}
+		}
+		$res = $this -> db_salesman -> addSalesmanName($res);
+		$res = $this -> db_customer -> addCustomerName($res);
+		if($type == "manualSettled"){
+			$this -> assign('manual_settled_contact_detail',$res);
+			$this -> display('ManualSettledContactPage');
+		}elseif($type == "editedSettled"){
+			$this -> assign("edited_settled_contact_detail",$res);
+			$this -> display('EditedSettledContactPage');
+		}else{
+			
+		}
+		
+	}
+	
 }
 ?>

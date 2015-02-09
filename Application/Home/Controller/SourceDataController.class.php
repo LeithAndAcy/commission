@@ -142,12 +142,15 @@ class SourceDataController extends Controller {
 		$this -> loadSettleSummaryPage();
 	}
 	public function getSettlementRatio(){
+		$this -> db_U8 = D("U8");
 		$contact_main = $this -> db_contact_main -> getSettlementContact();
 		$contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
+		$contact_detail = $this -> db_U8 -> getInventoryDetail($contact_detail);
 		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$arr_ratio = array();
+		print_r($contact_detail);
 		foreach ($contact_detail as $key => $value) {
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
@@ -161,6 +164,15 @@ class SourceDataController extends Controller {
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
 				if($value['salesman_id'] == $vvv['salesman_id']){
 					$arr_ratio[$key]['normal_profit_ratio'] = $vvv['ratio'];
+					break;
+				}
+			}
+			foreach ($price_float_ratio as $kkkk => $vvvv) {
+				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
+				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
+				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
+					$arr_ratio[$key]['float_price'] = $vvvv['ratio'] * 0.01 * $contact_detail[$key]['cost_price'];
+					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust'];
 					break;
 				}
 			}
@@ -552,6 +564,39 @@ class SourceDataController extends Controller {
 		$res['salesman'] = $all_salesmen;
 		return $res;
 	}
-	
+	public function complicateSearch(){
+		$condition = array();
+		$condition['contact_id'] = $_POST['search_contact_id'];
+		$condition['classification_id'] = $_POST['search_classification_id'];
+		$condition['inventory_id'] = $_POST['search_inventory_id'];
+		$condition['specification'] = $_POST['search_specification'];
+		$condition['colour'] = $_POST['search_colour'];
+		$type = $_POST['search_type'];
+		foreach ($condition as $key => $value) {
+			if($value == ""){
+				unset($condition[$key]);
+			}
+		}
+		$res = $this -> db_contact_detail -> searchByCondition($condition);
+		foreach ($res as $key => $value) {
+			$temp =  $this -> db_contact_main -> getSettlementContactByContactId( $value['contact_id']);
+			if($temp == null){
+				unset($res[$key]);
+			}else{
+				$res[$key]['salesman_id'] = $temp['salesman_id'];
+				$res[$key]['customer_id'] = $temp['customer_id'];
+				$res[$key]['cSOCode'] = $temp['cSOCode'];
+			}
+		}
+		$res = $this -> db_salesman -> addSalesmanName($res);
+		$res = $this -> db_customer -> addCustomerName($res);
+		
+		$this -> db_U8 = D("U8");
+		$load_history = $this -> db_load_history -> getLastThreeHistory();
+		$res = $this -> db_U8 -> getInventoryDetail($res);
+		$this -> assign('settlement_contact_detail',$res);
+		$this -> assign('load_history',$load_history);
+		$this -> display('SettleSummaryPage');
+	}
 }
 ?>

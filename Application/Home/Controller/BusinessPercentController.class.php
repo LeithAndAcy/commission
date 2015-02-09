@@ -56,7 +56,7 @@ class BusinessPercentController extends Controller {
 		$settling_contact = $this -> db_customer -> addCustomerName($settling_contact);
 		$settling_contact = $this ->db_salesman -> addSalesmanName($settling_contact);
 		$settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
-		$settling_contact_detail = $this -> db_U8 -> getInventoryDetail($settling_contact_detail);
+	//	$settling_contact_detail = $this -> db_U8 -> getInventoryDetail($settling_contact_detail);
 		
 		$this -> assign("settling_contact_detail",$settling_contact_detail);
 		$this -> assign("page",$show);
@@ -157,7 +157,7 @@ class BusinessPercentController extends Controller {
 			$arr_ratio[$key]['normal_profit'] = ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * $contact_detail[$key]['delivery_quantity'] *($arr_ratio[$key]['normal_profit_ratio'] + $contact_detail[$key]['profit_adjust']);
 			$arr_ratio[$key]['special_profit'] = $temp_special_profit_ratio * $temp_total_funds;
 		}
-		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
+		$this -> db_contact_detail -> updateSettlingRatio($arr_ratio);
 	}
 	public function loadManualContactPage(){
 		$this -> db_U8 = D("U8");
@@ -303,7 +303,7 @@ class BusinessPercentController extends Controller {
 		$settled_contact = $this -> db_customer -> addCustomerName($settled_contact);
 		$settled_contact = $this ->db_salesman -> addSalesmanName($settled_contact);
 		$settled_contact_detail = $this -> db_contact_detail ->getContactDetail($settled_contact);
-		$settled_contact_detail = $this -> db_U8 -> getInventoryDetail($settled_contact_detail);
+	//	$settled_contact_detail = $this -> db_U8 -> getInventoryDetail($settled_contact_detail);
 		$this -> assign("page",$show);
 		$this -> assign("settled_contact_detail",$settled_contact_detail);
 		$this -> display('BusinessPercent:SettledContactPage');
@@ -312,7 +312,6 @@ class BusinessPercentController extends Controller {
 	
 	
 	public function loadCommissionBuisnessPage(){
-		
 		$count_contact_main = $this -> db_contact_main -> count();
 		$Page = new \Think\Page($count_contact_main,1000);
 		$show = $Page->show();// 分页显示输出
@@ -323,5 +322,48 @@ class BusinessPercentController extends Controller {
 		$this -> assign("contact_detail",$contact_detail);
 		$this -> display('BusinessPercent:CommissionBusinessPage');
 	}
+	
+	public function complicateSearch(){
+		$condition = array();
+		$condition['contact_id'] = $_POST['search_contact_id'];
+		$condition['classification_id'] = $_POST['search_classification_id'];
+		$condition['inventory_id'] = $_POST['search_inventory_id'];
+		$condition['specification'] = $_POST['search_specification'];
+		$condition['colour'] = $_POST['search_colour'];
+		$type = $_POST['search_type'];
+		foreach ($condition as $key => $value) {
+			if($value == ""){
+				unset($condition[$key]);
+			}
+		}
+		$res = $this -> db_contact_detail -> searchByCondition($condition);
+		foreach ($res as $key => $value) {
+			if($type == "settling"){
+				$temp =  $this -> db_contact_main -> getSettlingContactByContactId($value['contact_id']);
+			}elseif($type == "settled"){
+				$temp =  $this -> db_contact_main -> getSettledContactByContactId($value['contact_id']);
+			}
+			if($temp == null){
+				unset($res[$key]);
+			}else{
+				$res[$key]['salesman_id'] = $temp['salesman_id'];
+				$res[$key]['customer_id'] = $temp['customer_id'];
+				$res[$key]['cSOCode'] = $temp['cSOCode'];
+			}
+		}
+		$res = $this -> db_salesman -> addSalesmanName($res);
+		$res = $this -> db_customer -> addCustomerName($res);
+		if($type == "settling"){
+			$this -> assign('settling_contact_detail',$res);
+			$this -> display('SettlingContactPage');
+		}elseif($type == "settled"){
+			$this -> assign("settled_contact_detail",$res);
+			$this -> display('BusinessPercent:SettledContactPage');
+		}else{
+			
+		}
+		
+	}
+	
 }
 ?>

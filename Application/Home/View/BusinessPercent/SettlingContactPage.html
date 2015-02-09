@@ -112,54 +112,49 @@
 						</button>
 						<h4 class="modal-title" id="myModalLabel">复杂搜索</h4>
 					</div>
-					<div class="modal-body">
-						<form class="form-horizontal" role="form">
-							<div class="form-group">
-								<label class="col-sm-4 control-label">合同号</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="businessRatio" placeholder="合同号">
+					<form class="form-horizontal" role="form" method="post" action="complicateSearch" >
+						<div class="modal-body">
+							<div class="modal-body">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">合同号</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_contact_id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label  class="col-sm-4 control-label">存货编码</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_inventory_id" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">存货分类编码</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_classification_id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">规格型号</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_specification">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">颜色</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_colour">
+									</div>
+								</div>
+								<div class="hidden">
+									<input type="text" name="search_type" value="settling" />
 								</div>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">存货类别</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="businessRatio" placeholder="存货类别">
-								</div>
+							<div class="modal-footer">
+								<input type="button" class="btn btn-default" data-dismiss="modal" value="取消"/>
+								<input type="submit" class="btn btn-primary" value="确定"/>
 							</div>
-							<div class="form-group">
-								<label  class="col-sm-4 control-label">存货编码</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="businessRatio" placeholder="存货编码">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">规格</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="businessRatio" placeholder="规格">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">型号</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="businessRatio" placeholder="型号">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">颜色</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="businessRatio" placeholder="颜色">
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							取消
-						</button>
-						<button type="button" class="btn btn-primary">
-							搜索
-						</button>
-					</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -197,7 +192,8 @@
 							</div>
 							<div class="hidden">
 								<input type="text" name="edit_contact_id"  id="edit_contact_id" value=""/>
-								<input type="text" name="edit_inventory_id" id="edit_inventory_id" value=""/>;
+								<input type="text" name="edit_inventory_id" id="edit_inventory_id" value=""/>
+								;
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -215,34 +211,34 @@
 		$("#settlingContactTable").dataTable();
 		$("#get_settling_contact").click(function() {
 			$.post("__CONTROLLER__/getSettlingContact", {}, function(data) {
-				window.location.href="/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
+				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});
 		});
 		$("#get_ratio_price").click(function() {
 			$.post("__CONTROLLER__/getSettlingRatioAndPrice", {}, function(data) {
-				window.location.href="/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
+				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});
 		});
 		$("#settlingContactTable tbody").on("click", "tr td span img:even", function() {
 			var contact_id = $(this).parent().parent().attr('contact_id');
 			var inventory_id = $(this).parent().parent().attr('inventory_id');
-			var business_adjust = $("#" + contact_id+"_"+ inventory_id + "_business_adjust").text();
-			var profit_adjust = $("#" + contact_id+"_"+ inventory_id + "_profit_adjust").text();
-			var cost_price_adjust = $("#" + contact_id+"_"+ inventory_id + "_cost_price_adjust").text();
-			
-			business_adjust = business_adjust.slice(0,-1);
-			profit_adjust = profit_adjust.slice(0,-1);
-			
+			var business_adjust = $("#" + contact_id + "_" + inventory_id + "_business_adjust").text();
+			var profit_adjust = $("#" + contact_id + "_" + inventory_id + "_profit_adjust").text();
+			var cost_price_adjust = $("#" + contact_id + "_" + inventory_id + "_cost_price_adjust").text();
+
+			business_adjust = business_adjust.slice(0, -1);
+			profit_adjust = profit_adjust.slice(0, -1);
+
 			$("#edit_business_adjust").val(business_adjust);
 			$("#edit_profit_adjust").val(profit_adjust);
 			$("#edit_cost_price_adjust").val(cost_price_adjust);
-			
+
 			$("#edit_contact_id").val(contact_id);
 			$("#edit_inventory_id").val(inventory_id);
 		});
-		$("#btn_caculate").click(function(){
-			$.post("__CONTROLLER__/settleContact",{},function(data){
-				
+		$("#btn_caculate").click(function() {
+			$.post("__CONTROLLER__/settleContact", {}, function(data) {
+
 			});
 		});
 	}); 
