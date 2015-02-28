@@ -71,7 +71,8 @@ class SourceDataController extends Controller {
 			$edited_contact_main = $temp_edited_contact_mian['data'];
 		//	print_r($edited_contact_detail);
 			$edited_contact_detail = $this -> db_U8 ->getContactDetail($edited_contact_main);
-			$edited_contact_inventory_detail = $this -> db_U8 ->getInventoryDetail($edited_contact_detail);
+			$edited_contact_detail = $this -> db_U8 ->getInventoryDetailOfConflictPage($edited_contact_detail);
+			
 			$this -> assign("edited_contact_detail",$edited_contact_detail);
 			$this -> assign("begin_date",$begin_date);
 			$this -> assign("end_date",$end_date);
@@ -101,6 +102,8 @@ class SourceDataController extends Controller {
 		$this -> db_contact_main -> addContactMain($all_contact_main);
 		//插入contact_detail  
 		$all_contact_detail = $this -> db_U8 -> getContactDetail($all_contact_main);
+		$all_contact_detail = $this -> db_U8 -> getInventoryDetailOfConflictPage($all_contact_detail);
+		
 		//取得存货信息
 		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
 		// 取得客户回款金额
@@ -125,7 +128,7 @@ class SourceDataController extends Controller {
 		$settlement_contact = $settlement_contact['data'];
 		
 		$settlement_contact_detail = $this -> db_contact_detail -> getContactDetail($settlement_contact);
-		$settlement_contact_detail = $this -> db_U8 -> getInventoryDetail($settlement_contact_detail);
+	//	$settlement_contact_detail = $this -> db_U8 -> getInventoryDetail($settlement_contact_detail);
 		$this -> assign('settlement_contact_detail',$settlement_contact_detail);
 		$this -> assign('page',$show);
 		$this -> assign('load_history',$load_history);
@@ -352,11 +355,6 @@ class SourceDataController extends Controller {
 	}
 	public function editPriceFloatRatio(){
 		$id = $_POST['edit_id'];
-		$data['classification_id'] = $_POST['edit_classification_id'];
-		$data['low_price'] = $_POST['edit_low_price'];
-		$data['high_price'] = $_POST['edit_high_price'];
-		$data['low_length'] = $_POST['edit_low_length'];
-		$data['high_length'] = $_POST['edit_high_length'];
 		$data['ratio'] = $_POST['edit_ratio'];
 		$this -> db_price_float_ratio ->editItem($id,$data);
 		$this -> loadPriceFloatPage();

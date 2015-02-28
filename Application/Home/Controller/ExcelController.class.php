@@ -426,12 +426,13 @@ class ExcelController extends Controller {
 		$excel_obj = $_FILES['excel_file']['tmp_name'];
 		$PHPExcel_obj = $PHPReader -> load($excel_obj);
 		$currentSheet = $PHPExcel_obj -> getSheet(0);
-		$highestColumn = $currentSheet -> getHighestColumn();
+		// $highestColumn = $currentSheet -> getHighestColumn();
+		$highestColumn = 'P';
 		$highestRow = $currentSheet -> getHighestRow();
 		$arr_wage_deduction = array();
 		for ($j = 3; $j <= $highestRow-1; $j++)// 第三行开始，
 		{
-			for ($k = 'D'; $k <= $highestColumn; $k++)//从B列读取数据
+			for ($k = 'D'; $k <= $highestColumn; $k++)
 			{
 				$arr_wage_deduction[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
@@ -443,17 +444,19 @@ class ExcelController extends Controller {
 			}
 			$arr_wage_deduction[$key]['salesman_id'] = $value['D'];
 			$arr_wage_deduction[$key]['human_wage'] = $value['F'];
-			$arr_wage_deduction[$key]['nagative_salary'] = $value['G'];
-			$arr_wage_deduction[$key]['human_deduction'] = $value['H'];
-			$arr_wage_deduction[$key]['audit_deduction'] = $value['I'];
-			$arr_wage_deduction[$key]['invoice_deduction'] = $value['J'];
-			$arr_wage_deduction[$key]['wire_cutting'] = $value['K'];
-			$arr_wage_deduction[$key]['gurantee_delivery'] = $value['L'];
-			$arr_wage_deduction[$key]['receivables_deduction'] = $value['M'];
-			$arr_wage_deduction[$key]['blocking_material'] = $value['N'];
-			$arr_wage_deduction[$key]['incidental'] = $value['O'];
-			$arr_wage_deduction[$key]['rework_cost'] = $value['P'];
-			$arr_wage_deduction[$key]['total'] = $value['G']+$value['H']+$value['I']+$value['J']+$value['K']+$value['L']+$value['M']+$value['N']-$value['P'];
+			// $arr_wage_deduction[$key]['nagative_salary'] = $value['G'];
+			// $arr_wage_deduction[$key]['human_deduction'] = $value['H'];
+			$arr_wage_deduction[$key]['audit_deduction'] = $value['G'];
+			$arr_wage_deduction[$key]['invoice_deduction'] = $value['H'];
+			$arr_wage_deduction[$key]['wire_cutting'] = $value['I'];
+			$arr_wage_deduction[$key]['gurantee_delivery'] = $value['J'];
+			$arr_wage_deduction[$key]['receivables_deduction'] = $value['K'];
+			$arr_wage_deduction[$key]['blocking_material'] = $value['L'];
+			$arr_wage_deduction[$key]['incidental'] = $value['M'];
+			$arr_wage_deduction[$key]['rework_cost'] = $value['N'];
+			$arr_wage_deduction[$key]['add_one'] = $value['O'];
+			$arr_wage_deduction[$key]['add_two'] = $value['P'];
+			$arr_wage_deduction[$key]['total'] = $value['F'] - $value['G']-$value['H']-$value['I']-$value['J']-$value['K']-$value['L']-$value['M']-$value['N'] + $value['O'] +$value['P'];
 			$arr_wage_deduction[$key]['date'] = $_POST['date'];
 			$this -> db_wage_deduction -> addItem($arr_wage_deduction[$key]);
 		}

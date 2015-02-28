@@ -4,8 +4,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingOne">
 				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 业务表
-					&nbsp;<i class="glyphicon glyphicon-plus"></i> 
-				</a></h4>
+				&nbsp;<i class="glyphicon glyphicon-plus"></i> </a></h4>
 			</div>
 			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 				<div class="panel-body">
@@ -41,8 +40,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingTwo">
 				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> 人事表
-					&nbsp;<i class="glyphicon glyphicon-plus"></i> 
-				</a></h4>
+				&nbsp;<i class="glyphicon glyphicon-plus"></i> </a></h4>
 			</div>
 			<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
 				<div class="panel-body">
@@ -72,7 +70,7 @@
 	</div>
 </block>
 <block name="content">
-	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="900px"></iframe>
+	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="800px" onLoad="iFrameHeight()"></iframe>
 </block>
 <block name="script">
 	<script>
@@ -84,6 +82,16 @@
 				$(this).parent().addClass("active");
 			});
 		});
+		function iFrameHeight() {
+			// var ifm = document.getElementById("workflow");
+			// var subWeb = document.frames ? document.frames["workflow"].document : ifm.contentDocument;
+			// if (ifm != null && subWeb != null) {
+				// ifm.height = subWeb.body.scrollHeight;
+			// }
+			// if(ifm.height < 800){
+				// ifm.height = 800;
+			// }
+		}
 	</script>
 </block>
 

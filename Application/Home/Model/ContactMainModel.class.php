@@ -120,6 +120,10 @@ class ContactMainModel extends Model {
 		$res = $this ->limit($Page->firstRow.','.$Page->listRows)->select();
 		return $res;
 	}
+	public function getContactByCondition($condition){
+		$res = $this -> where($condition) ->select();
+		return $res;
+	}
 	public function setSettlingContact($contact_id){
 		$condition = array();
 		$condition['contact_id'] = $contact_id;

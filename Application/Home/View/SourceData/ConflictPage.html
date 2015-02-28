@@ -24,13 +24,12 @@
 					<th>业务员姓名</th>
 
 					<th>存货类别编码</th>
-					<th>存货类别</th>
 					<th>存货名称</th>
 					<th>规格型号</th>
 					<th>颜色</th>
 					<th>销售单价</th>
 					<th>底价（元）</th>
-					<th>上浮的底价（元）</th>
+					<!-- <th>上浮的底价（元）</th> -->
 					<th>销售数量（米数）</th>
 					<th>发货数量（米数）</th>
 					<th>销售金额</th>
@@ -49,14 +48,13 @@
 						<td  rowspan="{$vo.count_length}">{$vo.salesman_id}</td>
 						<td rowspan="{$vo.count_length}">{$vo.salesman_name}</td>
 						<volist name="vo['contact_detail']" id="voo" offset="0" length='1'>
-							<td>{$voo.sale_classification_id}</td>
-							<td>{$voo.sale_classification}</td>
-							<td>{$voo.sale_inventory_name}</td>
-							<td>{$voo.sale_specification}</td>
+							<td>{$voo.classification_id}</td>
+							<td>{$voo.inventory_name}</td>
+							<td>{$voo.specification}</td>
 							<td>{$voo.colour}</td>
 							<td>{$voo.sale_price}</td>
 							<td>{$voo.cost_price}</td>
-							<td>{$voo.float_price}</td>
+							<!-- <td>{$voo.float_price}</td> -->
 							<td>{$voo.sale_quantity}</td>
 							<td>{$voo.delivery_quantity}</td>
 							<td>{$voo.delivery_money}</td>
@@ -65,14 +63,13 @@
 					</tr>
 					<volist name="vo['contact_detail']" id="voo" offset="1">
 						<tr>
-							<td>{$voo.sale_classification_id}</td>
-							<td>{$voo.sale_classification}</td>
-							<td>{$voo.sale_inventory_name}</td>
-							<td>{$voo.sale_specification}</td>
+							<td>{$voo.classification_id}</td>
+							<td>{$voo.inventory_name}</td>
+							<td>{$voo.specification}</td>
 							<td>{$voo.colour}</td>
 							<td>{$voo.sale_price}</td>
 							<td>{$voo.cost_price}</td>
-							<td>{$voo.float_price}</td>
+							<!-- <td>{$voo.float_price}</td> -->
 							<td>{$voo.sale_quantity}</td>
 							<td>{$voo.delivery_quantity}</td>
 							<td>{$voo.delivery_money}</td>

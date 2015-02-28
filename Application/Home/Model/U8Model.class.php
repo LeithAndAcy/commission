@@ -52,6 +52,22 @@ class U8Model extends Model {
 		}
 		return $contact_detail;
 	}
+	public function getInventoryDetailOfConflictPage($contact_detail){
+		//Inventory Table  取商品的信息，存货类别编码，存货名称，规格型号，颜色
+		// $this -> trueTableName = "Inventory";
+		
+		foreach ($contact_detail as $key => $value) {
+			foreach ($value['contact_detail'] as $kk => $vv) {
+				$temp_inventory_id = $vv['inventory_id'];
+				$res = $this -> query("select top 1 cInvCCode as classification_id,cInvName as inventory_name,cInvStd as specification,cInvDefine1 as colour from Inventory where cInvCode='$temp_inventory_id'");
+				$contact_detail[$key]['contact_detail'][$kk]['classification_id'] = $res[0]['classification_id'];
+				$contact_detail[$key]['contact_detail'][$kk]['inventory_name'] = $res[0]['inventory_name'];
+				$contact_detail[$key]['contact_detail'][$kk]['specification'] = $res[0]['specification'];
+				$contact_detail[$key]['contact_detail'][$kk]['colour'] = $res[0]['colour'];
+			}
+		}
+		return $contact_detail;
+	}
 	
 	public function getClassificationName($array){
 		foreach ($array as $key => $value) {

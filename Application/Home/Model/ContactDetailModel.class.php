@@ -77,8 +77,6 @@ class ContactDetailModel extends Model {
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio']*0.01;
 			$data['float_price'] = $value['float_price'];
 			$data['end_cost_price'] = $value['end_cost_price'];
-			print_r($condition);
-			print_r($data);
 			$this -> where($condition) -> save($data);
 		}
 	}
@@ -109,13 +107,13 @@ class ContactDetailModel extends Model {
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
 		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity');
-		$flag = true;
+		$flag = 1;
 		foreach ($arr_contacat as $key => $value) {
-			$delivery_rate = $value['delivery_quantity'] % $value['sale_quantity'];
+			$delivery_rate = $value['delivery_quantity'] / $value['sale_quantity'];
 			$sale_quantity = $value['sale_quantity'];
 			$temp = $this -> query("select limit from commission_length_limit where '$sale_quantity' >= low_length AND '$sale_quantity'<high_length");
-			if($delivery_rate < $temp){
-				$flag = false;
+			if($delivery_rate < $temp[0]['limit']){
+				$flag = 0;
 				break;
 			}
 		}

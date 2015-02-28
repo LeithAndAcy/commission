@@ -12,7 +12,15 @@ class WageDeductionModel extends Model {
 	}
 	
 	public function addItem($data){
-		$this -> add($data);	
+		$condition = array();
+		$condition['salesman_id'] = $data['salesman_id'];
+		$condition['date'] = $data['date'];
+		if($this -> where($condition) -> find()){
+			$this -> where($condition) -> save($data);
+		}else{
+			$this -> add($data);
+		}
+		
 	}
 	public function getHumanWage($salesman_id,$month){
 		$condition = array();

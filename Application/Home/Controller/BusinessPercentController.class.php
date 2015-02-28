@@ -19,7 +19,7 @@ class BusinessPercentController extends Controller {
 	private $db_tax;
 	private $db_salary;
 	private $db_U8;
-	
+	private $db_funds_back;
 	function _initialize() {
 		
 		$this -> db_constomer_funds = D("CustomerFunds");
@@ -37,6 +37,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_tax_ratio = D("TaxRatio");
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_salary = D("Salary");
+		$this -> db_funds_back = D("FundsBack");
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
 			exit;
@@ -65,6 +66,12 @@ class BusinessPercentController extends Controller {
 	public function getSettlingContact(){
 		//判断哪些合同可结算    先判断回款，再判断发货数量
 		$total_customer_funds = $this -> db_constomer_funds ->getTotalCustomerFunds();
+		foreach ($total_customer_funds as $key => $value) {
+			$condition = array();
+			$condition['customer_id'] = $value['customer_id'];
+			$temp = $this -> db_funds_back -> getFunds($condition);
+			$total_customer_funds[$key]['total_funds'] += $temp;
+		}
 		$condition = array();
 		$contact_main = array();
 		foreach ($total_customer_funds as $key => $value) {
@@ -72,16 +79,17 @@ class BusinessPercentController extends Controller {
 			$condition['salesman_id'] = $value['salesman_id'];
 			$condition['settling'] = 0;
 			$condition['settled'] = 0;
-			$contact_main[$key] = $this -> db_contact_main ->getContact($condition);
+			$contact_main[$key] = $this -> db_contact_main ->getContactByCondition($condition);
 			$contact_main[$key]['total_funds'] = $value['total_funds'];
 		}
+		print_r($contact_main);
 		foreach ($contact_main as $key => $value) {
 			foreach ($value as $kk => $vv) {
 				if($kk === "total_funds"){
 					$this -> db_constomer_funds ->setCustomerFunds($temp_customer_id,$temp_salesman_id,$contact_main[$key]['total_funds']);
 					break;
 				}
- 				$contact_total_money = $this -> db_contact_detail -> getContactTotalMoney($vv['contact_id']);
+				$contact_total_money = $this -> db_contact_detail -> getContactTotalMoney($vv['contact_id']);
 				if($contact_total_money > $contact_main[$key]['total_funds']){
 					$this -> db_constomer_funds ->setCustomerFunds($vv['customer_id'],$vv['salesman_id'],$contact_main[$key]['total_funds']);
 					break;
@@ -92,6 +100,8 @@ class BusinessPercentController extends Controller {
 						$contact_main[$key]['total_funds'] = $contact_main[$key]['total_funds'] - $contact_total_money;
 						$temp_customer_id = $vv['customer_id'];
 						$temp_salesman_id = $vv['salesman_id'];
+					}else{
+						
 					}
 				}
 			}
@@ -119,7 +129,6 @@ class BusinessPercentController extends Controller {
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			//取存货类别
-			$contact_detail[$key]['classification_id'] = "classification_id_01";
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
@@ -142,6 +151,7 @@ class BusinessPercentController extends Controller {
 				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
 					$arr_ratio[$key]['float_price'] = $vvvv['ratio'] * 0.01 * $contact_detail[$key]['cost_price'];
 					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust'];
+					$arr_ratio[$key]['float_price_ratio'] = $vvvv['ratio']* 0.01; 
 					break;
 				}
 			}
@@ -153,9 +163,9 @@ class BusinessPercentController extends Controller {
 			$temp_special_profit_ratio = $this -> db_special_profit_ratio ->getSpecialProfitRatio($salesman_id,$temp_total_funds);
 			$arr_ratio[$key]['special_profit_ratio'] = $temp_special_profit_ratio;
 			$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_money'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust'] );
-			$arr_ratio[$key]['special_business'] = $temp_total_funds * $arr_ratio[$key]['special_business_ratio'];
+			$arr_ratio[$key]['special_business'] = $value['delivery_money'] * $arr_ratio[$key]['special_business_ratio'];
 			$arr_ratio[$key]['normal_profit'] = ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * $contact_detail[$key]['delivery_quantity'] *($arr_ratio[$key]['normal_profit_ratio'] + $contact_detail[$key]['profit_adjust']);
-			$arr_ratio[$key]['special_profit'] = $temp_special_profit_ratio * $temp_total_funds;
+			$arr_ratio[$key]['special_profit'] = $value['delivery_money'] * $arr_ratio[$key]['special_profit_ratio'];
 		}
 		$this -> db_contact_detail -> updateSettlingRatio($arr_ratio);
 	}

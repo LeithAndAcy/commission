@@ -26,5 +26,9 @@ class FundsBackModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition)-> delete();
 	}
+	public function getFunds($condition){
+		$temp = $this -> where($condition) -> getField('funds_back_money');
+		return $temp;
+	}
 }
 ?>
