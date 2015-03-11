@@ -7,6 +7,10 @@ class TaxRatioModel extends Model {
 		$res = $this -> query("select id,ltrim(str(low_limit,11,2)) as low_limit,ltrim(str(high_limit,11,2)) as high_limit,ltrim(str(ratio*100,5,2)) as ratio from commission_tax_ratio where ratio != -100");
 		return $res;
 	}
+	public function getAllItemsSorted(){
+		$res = $this -> query("select id,low_limit,high_limit,ratio from commission_tax_ratio where ratio != -100 order by low_limit");
+		return $res;
+	}
 	// ratio = -100 存储税开始征收的钱
 	public function getTaxBeginningPoint(){
 		$condition = array();

@@ -26,7 +26,8 @@ class WageDeductionModel extends Model {
 		$condition = array();
 		$condition['salesman_id'] = $salesman_id;
 		$condition['date'] = $month;
-		$res = $this -> where($condition)-> getField('human_wage');
+		//工资减去扣款后的合计
+		$res = $this -> where($condition)-> getField('total');
 		return $res;
 	}
 	public function getTotalDeduction($salesman_id,$month){

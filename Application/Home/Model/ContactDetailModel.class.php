@@ -63,7 +63,7 @@ class ContactDetailModel extends Model {
 			$data['special_business'] = $value['special_business'] ;
 			$data['normal_profit'] = $value['normal_profit'] *0.01;
 			$data['special_profit'] = $value['special_profit'];
-			$data['total_business_profit'] = $data['normal_business'] + $data['normal_profit'];
+			$data['total_business_profit'] = $data['normal_business'] + $data['normal_profit'] + $data['special_business'] + $data['special_profit'];
 			$this -> where($condition) -> save($data);
 		}
 	}

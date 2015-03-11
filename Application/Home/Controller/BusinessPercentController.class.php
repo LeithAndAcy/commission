@@ -82,7 +82,7 @@ class BusinessPercentController extends Controller {
 			$contact_main[$key] = $this -> db_contact_main ->getContactByCondition($condition);
 			$contact_main[$key]['total_funds'] = $value['total_funds'];
 		}
-		print_r($contact_main);
+	//	print_r($contact_main);
 		foreach ($contact_main as $key => $value) {
 			foreach ($value as $kk => $vv) {
 				if($kk === "total_funds"){
@@ -198,29 +198,38 @@ class BusinessPercentController extends Controller {
 		//结算合同
 		$last_month = date('Y-m',strtotime('-1 month'));
 		$all_salesman = $this -> db_salesman -> getOnboardSalesmanInfo();
-	//	print_r($all_salesman);exit;
+		$tax_beginning_point = $this -> db_tax_ratio -> getTaxBeginningPoint();
+		$all_tax = $this -> db_tax_ratio -> getAllItemsSorted();
+		foreach ($all_tax as $key => $value) {
+			if($value['low_limit'] == 0){
+				$all_tax[$key]['tax'] = 0;
+				$sum = ($value['high_limit'] - $value['low_limit']) * $value['ratio'];
+			}else{
+				$all_tax[$key]['tax'] = $sum;
+				$sum += ($value['high_limit'] - $value['low_limit']) * $value['ratio'];
+			}
+		}
 		foreach ($all_salesman as $key => $value) {
 			$temp_human_wage = $this -> db_wage_deduction -> getHumanWage($value['salesman_id'],$last_month);
-			$temp_deduction_wage = $this -> db_wage_deduction -> getTotalDeduction($value['salesman_id'],$last_month);
+		//	$temp_deduction_wage = $this -> db_wage_deduction -> getTotalDeduction($value['salesman_id'],$last_month);
 			$temp_arr_contact = $this -> db_contact_main -> getSettlingContactBySalesmanId($value['salesman_id']);
 			$temp_business_profit = $this -> db_contact_detail ->getBusinessAndProfit($temp_arr_contact);
-			$this -> db_contact_main -> setContactSettled($value['salesman_id']);
-			$temp_should_pay = $temp_human_wage+$temp_business_profit;
-			$temp_fact_pay = $temp_should_pay -$temp_deduction_wage;
-			
-			$temp_insurance_fund_ratio = $this -> db_insurance_fund -> getInsuranceFund($value['salesman_id']);
-			$temp_insurance_ratio = $temp_insurance_fund_ratio['insurance'];
-			$temp_fund_ratio = $temp_insurance_fund_ratio['fund'];
+			$temp_fact_pay = $temp_human_wage+$temp_business_profit;
+			$temp_insurance_fund = $this -> db_insurance_fund -> getInsuranceFund($value['salesman_id']);
+			$temp_insurance = $temp_insurance_fund['insurance'];
+			$temp_fund = $temp_insurance_fund['fund'];
 			
 			if($value['status'] == "上海"){
 				$kunshan_bogus = $temp_fact_pay - $value['shanghai_salary'];
 				if($kunshan_bogus <= 0){
-					$temp_insurace = $temp_fact_pay * $temp_insurance_ratio;
-					$temp_fund = $temp_fact_pay * $temp_fund_ratio;
 					$temp_left = $temp_fact_pay - $temp_insurace - $temp_fund;
-					
-					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
-					$temp_tax =$temp_left * $temp_tax_ratio;
+					foreach ($all_tax as $kk => $vv) {
+						$temp = $temp_left - $tax_beginning_point;
+						if($temp >= $vv['low_limit'] && $temp < $vv['high_limit']){
+							$temp_tax = $vv['tax'];
+							break;
+						}
+					}
 					$temp_shanghai_salary = $temp_left - $temp_tax;
 					$salary = array();
 					$salary['salesman_id'] = $value['salesman_id'];
@@ -230,14 +239,17 @@ class BusinessPercentController extends Controller {
 					$salary['fund']= $temp_fund;
 					$salary['tax'] = $temp_tax;
 					$salary['date'] = $last_month;
+					// print_r($salary);exit;
 					$this -> db_salary -> addItem($salary);
 				}else{
-					$temp_insurace = $value['shanghai_salary'] * $temp_insurance_ratio;
-					$temp_fund = $value['shanghai_salary'] * $temp_fund_ratio;
-					$temp_left = $value['shanghai_salary'] - $temp_insurace - $temp_fund;
-					
-					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
-					$temp_tax =$temp_left * $temp_tax_ratio;
+					$temp_left = $value['shanghai_salary'] - $temp_insurance - $temp_fund;
+					foreach ($all_tax as $kk => $vv) {
+						$temp = $temp_left - $tax_beginning_point;
+						if($temp >= $vv['low_limit'] && $temp < $vv['high_limit']){
+							$temp_tax = $vv['tax'];
+							break;
+						}
+					}
 					$temp_shanghai_salary = $temp_left - $temp_tax;
 					$salary = array();
 					$salary['salesman_id'] = $value['salesman_id'];
@@ -245,61 +257,70 @@ class BusinessPercentController extends Controller {
 					$salary['shanghai_salary'] = $temp_shanghai_salary;
 					if($kunshan_bogus <= $value['kunshan_salary']){
 						$salary['kunshan_salary'] = $kunshan_bogus;
+						$salary['bogus'] = 0;
 					}else{
 						$salary['kunshan_salary'] = $value['kunshan_salary'];
 						$salary['bogus'] = $kunshan_bogus - $value['kunshan_salary'];
 					}
-					$salary['insurance'] = $temp_insurace;
+					$salary['insurance'] = $temp_insurance;
 					$salary['fund']= $temp_fund;
 					$salary['tax'] = $temp_tax;
 					$salary['date'] = $last_month;
+					// print_r($salary);exit;
 					$this -> db_salary -> addItem($salary);
 				}
 				
 			}elseif($value['status'] == "昆山"){
 				$shanghai_bogus = $temp_fact_pay - $value['kunshan_salary'];
 				if($shanghai_bogus <= 0){
-					$temp_insurace = $temp_fact_pay * $temp_insurance_ratio;
-					$temp_fund = $temp_fact_pay * $temp_fund_ratio;
 					$temp_left = $temp_fact_pay - $temp_insurace - $temp_fund;
-					
-					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
-					$temp_tax =$temp_left * $temp_tax_ratio;
+					foreach ($all_tax as $kk => $vv) {
+						$temp = $temp_left - $tax_beginning_point;
+						if($temp >= $vv['low_limit'] && $temp < $vv['high_limit']){
+							$temp_tax = $vv['tax'];
+							break;
+						}
+					}
 					$temp_kunshan_salary = $temp_left - $temp_tax;
 					$salary = array();
 					$salary['salesman_id'] = $value['salesman_id'];
 					$salary['status'] = $value['status'];
 					$salary['kunshan_salary'] = $temp_kunshan_salary;
-					$salary['insurance'] = $temp_insurace;
+					$salary['insurance'] = $temp_insurance;
 					$salary['fund']= $temp_fund;
 					$salary['tax'] = $temp_tax;
 					$salary['date'] = $last_month;
+					// print_r($salary);exit;
 					$this -> db_salary -> addItem($salary);
 				}else{
-					$temp_insurace = $value['kunshan_salary'] * $temp_insurance_ratio;
-					$temp_fund = $value['kunshan_salary'] * $temp_fund_ratio;
-					$temp_left = $value['kunshan_salary'] - $temp_insurace - $temp_fund;
-					
-					$temp_tax_ratio = $this -> db_tax_ratio -> getTaxRatio($temp_left);
-					$temp_tax =$temp_left * $temp_tax_ratio;
-					$temp_shanghai_salary = $temp_left - $temp_tax;
+					$temp_left = $value['kunshan_salary'] - $temp_insurance - $temp_fund;
+					foreach ($all_tax as $kk => $vv) {
+						$temp = $temp_left - $tax_beginning_point;
+						if($temp >= $vv['low_limit'] && $temp < $vv['high_limit']){
+							$temp_tax = $vv['tax'];
+							break;
+						}
+					}
+					$temp_kunshan_salary = $temp_left - $temp_tax;
 					$salary = array();
 					$salary['salesman_id'] = $value['salesman_id'];
 					$salary['status'] = $value['status'];
-					$salary['shanghai_salary'] = $temp_shanghai_salary;
+					$salary['kunshan_salary'] = $temp_kunshan_salary;
 					if($shanghai_bogus <= $value['shanghai_salary']){
 						$salary['shanghai_salary'] = $shanghai_bogus;
 					}else{
 						$salary['shanghai_salary'] = $value['kunshan_salary'];
 						$salary['bogus'] = $shanghai_bogus - $value['kunshan_salary'];
 					}
-					$salary['insurance'] = $temp_insurace;
+					$salary['insurance'] = $temp_insurance;
 					$salary['fund']= $temp_fund;
 					$salary['tax'] = $temp_tax;
 					$salary['date'] = $last_month;
+					// print_r($salary);exit;
 					$this -> db_salary -> addItem($salary);
 				}
 			}
+			$this -> db_contact_main -> setContactSettled($value['salesman_id']);
 		}
 	}
 	

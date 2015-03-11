@@ -51,7 +51,6 @@ class SpecialBusinessRatioModel extends Model {
 	}
 
 	public function getSpecialBusinessRatio($salesman_id, $classification_id, $funds) {
-		$condition = array();
 		$res = $this -> query("select ratio from commission_special_business_ratio where (classification_id = '$classification_id') AND(salesman_id = '$salesman_id') AND(low_limit <= '$funds') AND(high_limit > '$funds')");
 		$ratio = $res[0]['ratio'];
 		return $ratio;
