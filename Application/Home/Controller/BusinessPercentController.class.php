@@ -197,6 +197,8 @@ class BusinessPercentController extends Controller {
 	public function settleContact(){
 		//结算合同
 		$last_month = date('Y-m',strtotime('-1 month'));
+		//caculate the wage of last month,we may use the wage of the month before last month
+		$month_before_last_month = date('Y-m',strtotime('-2 month'));
 		$all_salesman = $this -> db_salesman -> getOnboardSalesmanInfo();
 		$tax_beginning_point = $this -> db_tax_ratio -> getTaxBeginningPoint();
 		$all_tax = $this -> db_tax_ratio -> getAllItemsSorted();
@@ -210,11 +212,15 @@ class BusinessPercentController extends Controller {
 			}
 		}
 		foreach ($all_salesman as $key => $value) {
+			$salary_of_last_month = $this -> db_salary -> getSalaryBySalesmanIdAndMonth($value['salesman_id'],$month_before_last_month);
 			$temp_human_wage = $this -> db_wage_deduction -> getHumanWage($value['salesman_id'],$last_month);
 		//	$temp_deduction_wage = $this -> db_wage_deduction -> getTotalDeduction($value['salesman_id'],$last_month);
 			$temp_arr_contact = $this -> db_contact_main -> getSettlingContactBySalesmanId($value['salesman_id']);
 			$temp_business_profit = $this -> db_contact_detail ->getBusinessAndProfit($temp_arr_contact);
 			$temp_fact_pay = $temp_human_wage+$temp_business_profit;
+			if($salary_of_last_month < 0){
+				$temp_fact_pay += $salary_of_last_month;
+			}
 			$temp_insurance_fund = $this -> db_insurance_fund -> getInsuranceFund($value['salesman_id']);
 			$temp_insurance = $temp_insurance_fund['insurance'];
 			$temp_fund = $temp_insurance_fund['fund'];
