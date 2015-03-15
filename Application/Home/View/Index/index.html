@@ -90,7 +90,6 @@
 					"user_pwd" : user_pwd,
 				}, function(data) {
 					if (data.status == "success") {
-						// console.log("success");
 						window.location.href = "__CONTROLLER__/loadHomePage";
 					} else if (data.status == "failure") {
 						var content = data.content;

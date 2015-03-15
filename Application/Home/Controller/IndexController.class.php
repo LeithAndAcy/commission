@@ -28,20 +28,19 @@ class IndexController extends Controller {
 			//验证成功
 			$_SESSION['user_name'] = $user_name;
 			$data['status'] = 'success';
+			
 			$this -> ajaxReturn($data);
 		}else{
 			$data['status'] = 'failure';
 			$data['content'] = '账号或者密码错误';
 			$this -> ajaxReturn($data);
 		}
-		
 	}
 	
 	public function logout(){
 		//退出，清空session
 		session_destroy();
 		// setcookie("REQUEST_URI", '', 0);
-		
 	}
 	
 	public function loadHomePage(){

@@ -126,9 +126,7 @@ class SourceDataController extends Controller {
 		$settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);
 		$settlement_contact = $this -> _addSalesmanName($settlement_contact);
 		$settlement_contact = $settlement_contact['data'];
-		
 		$settlement_contact_detail = $this -> db_contact_detail -> getContactDetail($settlement_contact);
-	//	$settlement_contact_detail = $this -> db_U8 -> getInventoryDetail($settlement_contact_detail);
 		$this -> assign('settlement_contact_detail',$settlement_contact_detail);
 		$this -> assign('page',$show);
 		$this -> assign('load_history',$load_history);

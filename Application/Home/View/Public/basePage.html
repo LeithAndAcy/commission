@@ -30,12 +30,9 @@
 			   	<li li_function="SourceData"><a href="#">基本数据</a></li>
 			   	<li li_function="CaculateWage"><a href="#">薪资计算</a></li>
 			   	<li li_function="BusinessPercent"><a href="#">业务提成</a></li>
-			   	
-			   	<!-- <li li_function="EditData"><a href="#">修改数据</a></li> -->
 			   	<li li_function="SearchData"><a href="#">搜索数据</a></li>
-			   	<!-- <li li_function="Report"><a href="#">报表</a></li> -->
-			   	<!-- <li><a href="#">功能5</a></li> -->
-			   	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="AddData"><a href="#">手动添加数据</a></li>
 			  </ul>
 			    
 			  <button id="btn_logout" class="btn btn-danger navbar-btn navbar-right">退出</button>

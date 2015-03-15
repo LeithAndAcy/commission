@@ -15,6 +15,9 @@ class ContactMainModel extends Model {
 			$this -> add($value);
 		}
 	}
+	public function addItem($data){
+		$this -> add($data);
+	}
 	public function getSettlementContact($Page){
 		$condition = array();
 		$condition['settlement'] = 1;

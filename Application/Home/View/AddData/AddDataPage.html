@@ -1,0 +1,136 @@
+<extend name="Public:basePage" />
+<block name="content">
+	<div>
+		<div style="position:fixed; top:60px;left:10px;width: 150px;z-index: 100;">
+			<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
+			  <li role="presentation" class="active">
+			  	<a href="#Contact" id="contact-tab" role="tab" data-toggle="tab" aria-expanded="true">添加合同</a>
+			  </li>
+			  <li role="presentation">
+			  	<a href="#Detail" role="tab" id="detail-tab" data-toggle="tab" aria-expanded="false">添加明细</a>
+			  </li>
+			</ul>
+		</div>
+		
+		<div id="myTabContent" class="tab-content row " style="padding-left:170px;padding-top: 50px">
+			<div role="tabpanel" class="tab-pane fade in active col-xs-12" id="Contact" aria-labelledby="changePWD-tab">
+       	 		<form id="addContact_form" class="form-horizontal" role="form" method="post" action="__CONTROLLER__/addContact">
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">合同编码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="contact_id" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">业务员编码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="salesman_id" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">客户编码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="customer_id" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">流水号:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="cSOCode" type="text" class="form-control" placeholder="cSOCode"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
+       	 				<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
+       	 			</div>
+       	 		</form>
+      		</div>
+      		<div role="tabpanel" class="tab-pane fade col-xs-12" id="Detail" aria-labelledby="profile-tab">
+				<form id="addDetail_form" class="form-horizontal" role="form" method="post" action="__CONTROLLER__/addDetail">
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">合同编码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="contact_id" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">存货编码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="inventory_id" type="text" class="form-control"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">存货类别编码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="classification_id" type="text" class="form-control"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">存货类别名称:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="inventory_name" type="text" class="form-control"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">颜色:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="colour" type="text" class="form-control"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">销售单价:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="sale_price" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">底价(元):</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="cost_price" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">销售数量(米数):</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="sale_quantity" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">发货数量(米数):</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="delivery_quantity" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">发货金额(元):</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="delivery_money" type="text" class="form-control validate[required]"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
+       	 				<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
+       	 			</div>
+       	 		</form>
+	      	</div>
+		</div>
+	</div>
+	
+	
+
+</block>
+<block name="script">
+	<script>
+		$(function(){
+			$("[li_function='AddData']").addClass("active");
+			$("#addContact_form").validationEngine('attach');
+			$("#addDetail_form").validationEngine('attach');
+			//工作区间切换
+			$('#myTab a').click(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show');
+			});
+			
+		})
+	</script>
+</block>
