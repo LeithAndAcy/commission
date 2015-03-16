@@ -27,11 +27,11 @@ class SpecialBusinessRatioModel extends Model {
 			$condition['salesman_id'] = $data['salesman_id'];
 			$condition['classification_id'] = $data['classification_id'];
 			$temp = $this -> where($condition) -> select();
-			foreach ($temp as $key => $value) {
-				if (($data['low_limit'] >= $value['low_limit'] && $data['low_limit'] <= $value['high_limit']) || ($data['high_limit'] <= $value['high_limit'] && $data['high_limit'] >= $value['low_limit'])) {
-					return false;
-				}
-			}
+			// foreach ($temp as $key => $value) {
+				// if (($data['low_limit'] >= $value['low_limit'] && $data['low_limit'] <= $value['high_limit']) || ($data['high_limit'] <= $value['high_limit'] && $data['high_limit'] >= $value['low_limit'])) {
+					// return false;
+				// }
+			// }
 			$this -> add($data);
 			return true;
 		}

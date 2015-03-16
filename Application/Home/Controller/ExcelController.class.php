@@ -66,7 +66,6 @@ class ExcelController extends Controller {
 		foreach ($arr_normal_profir_ratio as $key => $value) {
 			unset($arr_normal_profir_ratio[$key]);
 			$arr_price_float_ratio[$key]['classification_id'] = $value['B'];
-			$arr_price_float_ratio[$key]['classification_name'] = $value['C'];
 			$arr_price_float_ratio[$key]['low_price'] = $value['D'];
 			$arr_price_float_ratio[$key]['high_price'] = $value['E'];
 			$arr_price_float_ratio[$key]['low_length'] = $value['F'];

@@ -146,12 +146,11 @@ class SourceDataController extends Controller {
 		$this -> db_U8 = D("U8");
 		$contact_main = $this -> db_contact_main -> getSettlementContact();
 		$contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
-		$contact_detail = $this -> db_U8 -> getInventoryDetail($contact_detail);
+		//$contact_detail = $this -> db_U8 -> getInventoryDetail($contact_detail);
 		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$arr_ratio = array();
-		print_r($contact_detail);
 		foreach ($contact_detail as $key => $value) {
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];

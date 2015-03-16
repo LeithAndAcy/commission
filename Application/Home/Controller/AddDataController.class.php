@@ -32,5 +32,12 @@ class AddDataController extends Controller {
 		$this -> db_contact_detail -> addItem($data);
 		$this -> loadAddDataPage();
 	}
+	public function addSalesmanFundsBack(){
+		$data = array();
+		$data = $_POST;
+		$salesman_funds = M("SalesmanFunds");
+		$salesman_funds -> add($data);
+		$this -> loadAddDataPage();
+	}
 }
 ?>

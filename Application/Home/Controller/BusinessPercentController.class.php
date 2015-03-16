@@ -82,7 +82,6 @@ class BusinessPercentController extends Controller {
 			$contact_main[$key] = $this -> db_contact_main ->getContactByCondition($condition);
 			$contact_main[$key]['total_funds'] = $value['total_funds'];
 		}
-	//	print_r($contact_main);
 		foreach ($contact_main as $key => $value) {
 			foreach ($value as $kk => $vv) {
 				if($kk === "total_funds"){
@@ -157,7 +156,14 @@ class BusinessPercentController extends Controller {
 			}
 			//取回款，计算各种比例和金额    
 			$salesman_id = $value['salesman_id'];
-			$temp_total_funds = $this -> db_U8 -> getFundsBySalesmanAndDate($salesman_id);
+			//不能删除！！！
+			//$temp_total_funds = $this -> db_U8 -> getFundsBySalesmanAndDate($salesman_id);
+			//测试用
+			$salesman_funds = M("SalesmanFunds");
+			$condition = array();
+			$condition['salesman_id'] = $salesman_id;
+			$condition['date'] = date('Y-m',strtotime('-1 month'));
+			$temp_total_funds = $salesman_funds -> where($condition) -> field('funds') -> find();
 			$temp_special_business_ratio = $this -> db_special_business_ratio ->getSpecialBusinessRatio($salesman_id,$contact_detail[$key]['classification_id'],$temp_total_funds);
 			$arr_ratio[$key]['special_business_ratio'] = $temp_special_business_ratio;
 			$temp_special_profit_ratio = $this -> db_special_profit_ratio ->getSpecialProfitRatio($salesman_id,$temp_total_funds);
@@ -165,7 +171,7 @@ class BusinessPercentController extends Controller {
 			$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_money'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust'] );
 			$arr_ratio[$key]['special_business'] = $value['delivery_money'] * $arr_ratio[$key]['special_business_ratio'];
 			$arr_ratio[$key]['normal_profit'] = ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * $contact_detail[$key]['delivery_quantity'] *($arr_ratio[$key]['normal_profit_ratio'] + $contact_detail[$key]['profit_adjust']);
-			$arr_ratio[$key]['special_profit'] = $value['delivery_money'] * $arr_ratio[$key]['special_profit_ratio'];
+			$arr_ratio[$key]['special_profit'] = ($value['sale_price'] - $value['end_cost_price']) * $value['delivery_quantity'] * $arr_ratio[$key]['special_profit_ratio'];
 		}
 		$this -> db_contact_detail -> updateSettlingRatio($arr_ratio);
 	}
@@ -212,9 +218,11 @@ class BusinessPercentController extends Controller {
 			}
 		}
 		foreach ($all_salesman as $key => $value) {
+			if($value['salesman_id'] == "KS003" || $value['salesman_id'] == "RY01"){
+				continue;
+			}
 			$salary_of_last_month = $this -> db_salary -> getSalaryBySalesmanIdAndMonth($value['salesman_id'],$month_before_last_month);
 			$temp_human_wage = $this -> db_wage_deduction -> getHumanWage($value['salesman_id'],$last_month);
-		//	$temp_deduction_wage = $this -> db_wage_deduction -> getTotalDeduction($value['salesman_id'],$last_month);
 			$temp_arr_contact = $this -> db_contact_main -> getSettlingContactBySalesmanId($value['salesman_id']);
 			$temp_business_profit = $this -> db_contact_detail ->getBusinessAndProfit($temp_arr_contact);
 			$temp_fact_pay = $temp_human_wage+$temp_business_profit;

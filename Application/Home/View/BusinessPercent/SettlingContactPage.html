@@ -238,7 +238,7 @@
 		});
 		$("#btn_caculate").click(function() {
 			$.post("__CONTROLLER__/settleContact", {}, function(data) {
-
+				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});
 		});
 	}); 

@@ -9,6 +9,9 @@
 			  <li role="presentation">
 			  	<a href="#Detail" role="tab" id="detail-tab" data-toggle="tab" aria-expanded="false">添加明细</a>
 			  </li>
+			   <li role="presentation">
+			  	<a href="#SalesmanFundsBack" role="tab" id="detail-tab" data-toggle="tab" aria-expanded="false">添加业务员回款回款</a>
+			  </li>
 			</ul>
 		</div>
 		
@@ -45,12 +48,38 @@
        	 			</div>
        	 		</form>
       		</div>
+      		<div role="tabpanel" class="tab-pane fade col-xs-12" id="SalesmanFundsBack" aria-labelledby="changePWD-tab">
+       	 		<form id="addSalesmanFundsBack_form" class="form-horizontal" role="form" method="post" action="__CONTROLLER__/addSalesmanFundsBack">
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">业务员编码:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="salesman_id" type="text" class="form-control" required="required"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">回款(元):</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="funds" type="text" class="form-control" required="required"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<label class="col-sm-3 control-label">日期:</label>
+       	 				 <div class="col-sm-5">
+       	 					<input name="date" type="text" class="form-control" placeholder="2015-03" required="required"/>
+       	 				</div>
+       	 			</div>
+       	 			<div class="form-group col-xs-10">
+       	 				<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
+       	 				<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
+       	 			</div>
+       	 		</form>
+      		</div>
       		<div role="tabpanel" class="tab-pane fade col-xs-12" id="Detail" aria-labelledby="profile-tab">
 				<form id="addDetail_form" class="form-horizontal" role="form" method="post" action="__CONTROLLER__/addDetail">
        	 			<div class="form-group col-xs-10">
        	 				<label class="col-sm-3 control-label">合同编码:</label>
        	 				 <div class="col-sm-5">
-       	 					<input name="contact_id" type="text" class="form-control validate[required]"/>
+       	 					<input name="contact_id" type="text" class="form-control"/>
        	 				</div>
        	 			</div>
        	 			<div class="form-group col-xs-10">

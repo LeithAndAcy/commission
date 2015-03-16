@@ -125,16 +125,12 @@ class ContactDetailModel extends Model {
 		return $flag;
 	}
 	public function getBusinessAndProfit($contact_main){
-		$result = array();
+		$total_money = 0;
 		foreach ($contact_main as $key => $value) {
 			$condition = array();
 			$condition['contact_id'] = $value['contact_id'];
-			$res = $this -> where($condition)-> find();
-			$result['special_business'] += $res['special_business'];
-			$result['special_profit'] += $res['special_profit'];
-			$result['business_profit'] += $this -> where($condition)->sum('total_business_profit');
+			$total_money += $this -> where($condition)->sum('total_business_profit');
 		}
-		$total_money = $result['special_business'] + $result['special_profit'] + $result['business_profit'];
 		return $total_money;
 	}
 	public function searchByCondition($condition){
