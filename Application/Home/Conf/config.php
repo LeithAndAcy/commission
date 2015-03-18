@@ -7,7 +7,7 @@ return array(
 	'DB_HOST' => 'localhost', // 服务器地址
 	'DB_NAME' => 'commission', // 数据库名
 	'DB_USER' =>'sa',
-	'DB_PWD' =>'000000',
+	'DB_PWD' =>'000000',//密码
 	'DB_PORT' => 1433, // 端口
 	'DB_PREFIX' => 'commission_', // 数据库表前缀
 	'DB_CHARSET' => 'utf8', // 字符集

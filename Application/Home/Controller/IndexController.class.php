@@ -27,13 +27,9 @@ class IndexController extends Controller {
 		if($pwd == $pwd_md5){
 			//验证成功
 			$_SESSION['user_name'] = $user_name;
-			$data['status'] = 'success';
-			
-			$this -> ajaxReturn($data);
+			$this -> display('Public:basePage');
 		}else{
-			$data['status'] = 'failure';
-			$data['content'] = '账号或者密码错误';
-			$this -> ajaxReturn($data);
+			$this -> error("账号或密码错误");
 		}
 	}
 	

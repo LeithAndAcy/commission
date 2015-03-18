@@ -22,36 +22,31 @@
 							<table style="POSITION: relative"border=0 cellSpacing=0 cellPadding=4 width="100%">
 								<tbody>
 									<tr>
-										<div class="input-group form-group" style="width: 50%;margin-top: 5px">
-											<span class="input-group-addon" style="cursor: pointer;"><i class="glyphicon glyphicon-user "></i></span>
-											<input type="text" id="user_name" class="form-control" style="margin-top: 0px" placeholder="请输入账号">
-											<!-- <span class="input-group-addon" style="cursor: pointer">
-											<i class="glyphicon glyphicon-remove "></i>
-											</span> -->
-										</div>
-										<div class="input-group form-group" style="width: 50%">
-											<span class=" input-group-addon" style="cursor: pointer"><i class="glyphicon glyphicon-lock"></i></span>
-											<input type="password" id="user_pwd" class="form-control" style="margin-top: 0px" placeholder="请输入密码"/>
-											<!-- <span class="input-group-addon" style="cursor: pointer">
-											<i class="glyphicon glyphicon-remove"></i>
-											</span> -->
-										</div>
-										<div class="alert alert-danger" role="alert" style="display: none" id="login_error_area">
-											<button type="button" class="close" id=login_error_btn>
-												<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-											</button>
-											<span id="login_error"> </span>
-										</div>
-										<div class="form-group col-sm-offset-3" style="width: 50%">
-											<span style="float: left;width: 22%">
-												<button id= "submit" class="btn btn-primary">
-													登陆
-												</button> </span>
-											<span style="float: left;width: 22%">
-												<button id="reset" class="btn btn-primary">
-													重置
-												</button> </span>
-										</div>
+										<form method="post" action="__CONTROLLER__/checkLogin">
+											<div class="input-group form-group" style="width: 50%;margin-top: 5px">
+												<span class="input-group-addon" style="cursor: pointer;"><i class="glyphicon glyphicon-user"></i></span>
+												<input type="text" name="user_name" class="form-control" style="margin-top: 0px" placeholder="请输入账号">
+											</div>
+											<div class="input-group form-group" style="width: 50%">
+												<span class=" input-group-addon" style="cursor: pointer"><i class="glyphicon glyphicon-lock"></i></span>
+												<input type="password" name="user_pwd" class="form-control" style="margin-top: 0px" placeholder="请输入密码"/>
+											</div>
+											<div class="alert alert-danger" role="alert" style="display: none" id="login_error_area">
+												<button type="button" class="close" id=login_error_btn>
+													<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+												</button>
+												<span id="login_error"> </span>
+											</div>
+											<div class="form-group col-sm-offset-3" style="width: 50%">
+												<span style="float: left;width: 22%">
+													<input type="submit" class="btn btn-primary" value="登陆"/>
+													 </span>
+												<span style="float: left;width: 22%">
+													<input type="reset" class="btn btn-primary" value="重置"/>
+													</span>
+											</div>
+										</form>
+
 									</tr>
 								</tbody>
 							</table></td>
@@ -71,33 +66,8 @@
 		$(".glyphicon-remove").click(function() {
 			$(this).prev().val("");
 		});
-		$("#reset").click(function() {
-			$("#user_name").val("");
-			$("#user_pwd").val("");
-		});
 		$("#login_error_btn").click(function() {
 			$(this).parent().hide();
-		});
-		$("#submit").click(function() {
-			var user_name = $("#user_name").val();
-			var user_pwd = $("#user_pwd").val();
-			if (user_name == "" || user_pwd == "") {
-				$("#login_error").html("账号或密码不能为空！");
-				$("#login_error_area").show();
-			} else {
-				$.post("__CONTROLLER__/checkLogin", {
-					"user_name" : user_name,
-					"user_pwd" : user_pwd,
-				}, function(data) {
-					if (data.status == "success") {
-						window.location.href = "__CONTROLLER__/loadHomePage";
-					} else if (data.status == "failure") {
-						var content = data.content;
-						$("#login_error").html(content);
-						$("#login_error_area").show();
-					}
-				});
-			}
 		});
 		$(document).keydown(function(event) {
 			if (event.keyCode == 13) {

@@ -57,8 +57,6 @@ class BusinessPercentController extends Controller {
 		$settling_contact = $this -> db_customer -> addCustomerName($settling_contact);
 		$settling_contact = $this ->db_salesman -> addSalesmanName($settling_contact);
 		$settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
-	//	$settling_contact_detail = $this -> db_U8 -> getInventoryDetail($settling_contact_detail);
-		
 		$this -> assign("settling_contact_detail",$settling_contact_detail);
 		$this -> assign("page",$show);
 		$this -> display('SettlingContactPage');
@@ -71,6 +69,7 @@ class BusinessPercentController extends Controller {
 			$condition['customer_id'] = $value['customer_id'];
 			$temp = $this -> db_funds_back -> getFunds($condition);
 			$total_customer_funds[$key]['total_funds'] += $temp;
+			$this -> db_funds_back -> where($condition) -> delete();
 		}
 		$condition = array();
 		$contact_main = array();

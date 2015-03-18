@@ -463,8 +463,10 @@ class ExcelController extends Controller {
 	}
 	//export
 	public function generatePriceFloatRatioExcelFile(){
+		$this -> db_U8 = D("U8");
 		vendor('PHPExcel.PHPExcel');
 		$float_price_ratio = $this -> db_price_float_ratio ->getAllPriceFloatRatio();
+		$float_price_ratio = $this -> db_U8 ->getClassificationName($float_price_ratio);
 		$temp_trans = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', );
 		$objPHPExcel = new \PHPExcel();
 
@@ -488,9 +490,9 @@ class ExcelController extends Controller {
 		
 		$objPHPExcel -> getActiveSheet() -> getDefaultStyle() -> getFont() -> setSize(12);
 		
-		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '业务员编码') 
-		-> setCellValue('C1', '业务员姓名') -> setCellValue('D1', '存货编码') -> setCellValue('E1', '存货名称') 
-		-> setCellValue('F1', '存货类别') -> setCellValue('G1', '规格型号') -> setCellValue('H1', '基本业绩提成比例(%)');
+		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '存货类别编码') 
+		-> setCellValue('C1', '存货类别名称') -> setCellValue('D1', '底价下限') -> setCellValue('E1', '底价上限') 
+		-> setCellValue('F1', '长度下限') -> setCellValue('G1', '长度上限') -> setCellValue('H1', '浮动比例(%)');
 		
 		foreach ($float_price_ratio as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
@@ -507,6 +509,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "上浮底价调整比例表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -547,18 +550,19 @@ class ExcelController extends Controller {
 		
 
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '长度下限') 
-		-> setCellValue('C1', '长度上限') -> setCellValue('D1', '可结算发货数量比例(%)');
+		-> setCellValue('C1', '长度上限') -> setCellValue('D1', '可结算发货数量比例');
 		foreach ($length_limit as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['low_length']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('C' . ($key + 2), $value['high_length']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['limit']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['limit']."%");
 		}
 		
 		
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "合同结算长度限定表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -599,7 +603,7 @@ class ExcelController extends Controller {
 		
 
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '客户编码') 
-		-> setCellValue('C1', '客户名称') -> setCellValue('D1', '资金回笼调整金额');
+		-> setCellValue('C1', '客户名称') -> setCellValue('D1', '资金回笼调整金额(元)');
 		foreach ($all_funds_back as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['customer_id']);
@@ -611,6 +615,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "回笼资金调整表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -667,6 +672,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "未达标利润提成比例表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -720,6 +726,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "未达标利润提成比例表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -770,6 +777,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "客户信息表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -824,6 +832,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "社保及公积金表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -875,6 +884,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "个税基础表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -930,6 +940,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "人员工资基本信息表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -989,6 +1000,7 @@ class ExcelController extends Controller {
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "基本业绩提成比例表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
@@ -1031,7 +1043,7 @@ class ExcelController extends Controller {
 		
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '业务员编码') 
 		-> setCellValue('C1', '业务员姓名') -> setCellValue('D1', '存货类别编码') -> setCellValue('E1', '存货类别名称') 
-		-> setCellValue('F1', '回款下限') -> setCellValue('G1', '回款上限') -> setCellValue('H1', '回款达标业绩提成比例(%)');
+		-> setCellValue('F1', '回款下限') -> setCellValue('G1', '回款上限') -> setCellValue('H1', '回款达标业绩提成比例');
 		
 		foreach ($special_business_ratio as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
@@ -1041,13 +1053,14 @@ class ExcelController extends Controller {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['classification_name']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('F' . ($key + 2), $value['low_limit']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('G' . ($key + 2), $value['high_limit']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('H' . ($key + 2), $value['ratio']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('H' . ($key + 2), $value['ratio']."%");
 		}
 		
 		
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "达标业绩提成比例表".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
 		header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");

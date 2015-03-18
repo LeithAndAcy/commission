@@ -7,7 +7,7 @@ class U8Model extends Model {
 		'DB_HOST' => 'localhost', // 服务器地址
 		'DB_NAME' => 'U8', // 数据库名
 		'DB_USER' =>'sa',
-		'DB_PWD' =>'000000',
+		'DB_PWD' =>'000000',//密码
 		'DB_PORT' => 1433, // 端口
 		'tablePrefix' => ''
 	);
