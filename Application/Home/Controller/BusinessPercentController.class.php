@@ -162,7 +162,7 @@ class BusinessPercentController extends Controller {
 			$condition = array();
 			$condition['salesman_id'] = $salesman_id;
 			$condition['date'] = date('Y-m',strtotime('-1 month'));
-			$temp_total_funds = $salesman_funds -> where($condition) -> field('funds') -> find();
+			$temp_total_funds = $salesman_funds -> where($condition) -> getField('funds');
 			$temp_special_business_ratio = $this -> db_special_business_ratio ->getSpecialBusinessRatio($salesman_id,$contact_detail[$key]['classification_id'],$temp_total_funds);
 			$arr_ratio[$key]['special_business_ratio'] = $temp_special_business_ratio;
 			$temp_special_profit_ratio = $this -> db_special_profit_ratio ->getSpecialProfitRatio($salesman_id,$temp_total_funds);
