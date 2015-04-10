@@ -288,7 +288,7 @@
 			$("#edit_contact_id").val(contact_id);
 			$("#edit_inventory_id").val(inventory_id);
 		});
-		$("[btn_type='btn_manual']").click(function() {
+		$("#mainSourceTable tbody").on("click", "tr td [btn_type='btn_manual']", function() {
 			var temp = confirm("是否申请结算");
 			if (temp) {
 				var contact_id = $(this).attr("contact_id");
