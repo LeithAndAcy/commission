@@ -4,7 +4,7 @@ use Think\Model;
 class FundsBackModel extends Model {
 	
 	public function getAllItems(){
-		$res = $this -> query("select id,customer_id,ltrim(str(funds_back_money,12,2)) as funds_back_money from commission_funds_back");
+		$res = $this -> query("select id,customer_id,ltrim(str(funds_back_money,18,4)) as funds_back_money from commission_funds_back");
 		return $res;
 	}
 	public function editItem($id,$funds_back_money){

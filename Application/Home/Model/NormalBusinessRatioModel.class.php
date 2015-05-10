@@ -39,5 +39,16 @@ class NormalBusinessRatioModel extends Model {
 		// print_r($sql);
 		// print_r($res);exit;
 	}
+	public function getNormalBusinessRatio($salesman_id,$inventory_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$condition['inventory_id'] = $inventory_id;
+		$res = $this -> where($condition) -> getField('ratio');
+		if($res == null){
+			$condition['inventory_id'] = '其他';
+			$res = $this -> where($condition) -> getField('ratio');
+		}
+		return $res;
+	}
 }
 ?>

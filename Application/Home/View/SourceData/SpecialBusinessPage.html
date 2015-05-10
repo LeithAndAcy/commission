@@ -27,8 +27,7 @@
 					<tr>
 						<th>业务员编码</th>
 						<th>业务员姓名</th>
-						<th>存货类别编码</th>
-						<th>存货类别名称</th>
+						<th>存货大类</th>
 						<th>回款下限</th>
 						<th>回款上限</th>
 						<th>回款达标业绩提成比例</th>
@@ -40,8 +39,7 @@
 						<tr>
 							<td id="{$vo.id}_salesman_id">{$vo.salesman_id}</td>
 							<td id="{$vo.id}_name">{$vo.salesman_name}</td>
-							<td id="{$vo.id}_classification_id">{$vo.classification_id}</td>
-							<td id="{$vo.id}_classification_name">{$vo.classification_name}</td>
+							<td id="{$vo.id}_inventory_id">{$vo.inventory_id}</td>
 							<td id="{$vo.id}_low_limit">{$vo.low_limit}</td>
 							<td id="{$vo.id}_high_limit">{$vo.high_limit}</td>
 							<td id="{$vo.id}_ratio">{$vo.ratio}%</td>
@@ -75,15 +73,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">存货类别编码</label>
+								<label class="col-sm-4 control-label">存货大类</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_classification_id" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">存货类别名称</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_classification_name" disabled="disabled">
+									<input type="text" class="form-control" id="edit_inventory_id" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
@@ -140,9 +132,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">存货类别编码</label>
+								<label class="col-sm-4 control-label">存货大类</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]"  name="add_new_classification_id">
+									<input type="text" class="form-control validate[required]"  name="add_new_inventory_id">
 								</div>
 							</div>
 							<div class="form-group">
@@ -197,13 +189,11 @@
 			var edit_low_limit = $("#" + edit_id + "_low_limit").text();
 			var edit_high_limit = $("#" + edit_id + "_high_limit").text();
 			var edit_name = $("#" + edit_id + "_name").text();
-			var edit_classification_id = $("#" + edit_id + "_classification_id").text();
-			var edit_classification_name = $("#" + edit_id + "_classification_name").text();
+			var edit_inventory_id = $("#" + edit_id + "_inventory_id").text();
 			var edit_salesman_id = $("#" + edit_id + "_salesman_id").text();
 			var edit_collection_range = edit_low_limit + "元       至     " + edit_high_limit + "元";
 			$("#edit_id").val(edit_id);
-			$("#edit_classification_id").val(edit_classification_id);
-			$("#edit_classification_name").val(edit_classification_name);
+			$("#edit_inventory_id").val(edit_inventory_id);
 			$("#edit_salesman_id").val(edit_salesman_id);
 			$("#edit_salesman_name").val(edit_name);
 			$("#edit_collection_range").val(edit_collection_range);

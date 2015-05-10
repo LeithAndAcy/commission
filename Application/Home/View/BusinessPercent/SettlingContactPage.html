@@ -43,7 +43,7 @@
 						<th>基本业绩提成比例</th>
 						<th>达标业绩提成比例</th>
 						<th>基本利润提成比例</th>
-						<th>回款未达标利润提成比例</th>
+						<!-- <th>回款未达标利润提成比例</th> -->
 
 						<th>业务提成调整比例</th>
 						<th>利润提成调整比例</th>
@@ -53,7 +53,7 @@
 						<th>基本业绩提成(元)</th>
 						<th>回款达标业绩提成(元)</th>
 						<th>基本利润提成(元)</th>
-						<th>回款未达标利润提成(元)</th>
+						<!-- <th>回款未达标利润提成(元)</th> -->
 
 						<th>提成利润合计</th>
 						<th>调整比例修改人员</th>
@@ -83,7 +83,7 @@
 							<td>{$vo.normal_business_ratio}%</td>
 							<td>{$vo.special_business_ratio}%</td>
 							<td>{$vo.normal_profit_ratio}%</td>
-							<td>{$vo.special_profit_ratio}%</td>
+							<!-- <td>{$vo.special_profit_ratio}%</td> -->
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_business_adjust">{$vo.business_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_profit_adjust">{$vo.profit_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
@@ -91,7 +91,7 @@
 							<td>{$vo.normal_business}</td>
 							<td>{$vo.special_business}</td>
 							<td>{$vo.normal_profit}</td>
-							<td>{$vo.special_profit}</td>
+							<!-- <td>{$vo.special_profit}</td> -->
 							<td>{$vo.total_business_profit}</td>
 							<td>{$vo.operator}</td>
 							<td contact_id="{$vo.contact_id}" inventory_id="{$vo.inventory_id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#editDetail"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="删除" src="__PUBLIC__/img/delete.png"> </span></td>
@@ -208,7 +208,16 @@
 </html>
 <script>
 	$(function() {
-		$("#settlingContactTable").dataTable();
+		var table = $('#settlingContactTable').DataTable( {
+			scrollY:        "500px",
+			scrollX:        true,
+			scrollCollapse: true,
+			paging:         true
+		});
+		 new $.fn.dataTable.FixedColumns(table, {
+			leftColumns: 6
+			// rightColumns: 1
+		});
 		$("#get_settling_contact").click(function() {
 			$.post("__CONTROLLER__/getSettlingContact", {}, function(data) {
 				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";

@@ -44,7 +44,7 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['normal_business_ratio'] *= 100;
 				$contact_detail[$i]['normal_profit_ratio'] *= 100;
 				$contact_detail[$i]['special_business_ratio'] *= 100;
-				$contact_detail[$i]['special_profit_ratio'] *= 100;
+				// $contact_detail[$i]['special_profit_ratio'] *= 100;
 				$contact_detail[$i]['business_adjust'] *= 100;
 				$contact_detail[$i]['profit_adjust'] *= 100;
 				$i++;
@@ -58,17 +58,17 @@ class ContactDetailModel extends Model {
 		foreach ($arr_ratio as $key => $value) {
 			$condition['contact_id'] = $value['contact_id'];
 			$condition['inventory_id'] = $value['inventory_id'];
-			$data['normal_business_ratio'] = $value['normal_business_ratio']*0.01;
+			$data['normal_business_ratio'] = $value['normal_business_ratio'];
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio']*0.01;
 			$data['float_price'] = $value['float_price'];
 			$data['end_cost_price'] = $value['end_cost_price'];
 			$data['special_business_ratio'] = $value['special_business_ratio'];
-			$data['special_profit_ratio'] = $value['special_profit_ratio'];
-			$data['normal_business'] = $value['normal_business'] *0.01;
+			// $data['special_profit_ratio'] = $value['special_profit_ratio'];
+			$data['normal_business'] = $value['normal_business'];
 			$data['special_business'] = $value['special_business'] ;
-			$data['normal_profit'] = $value['normal_profit'] *0.01;
-			$data['special_profit'] = $value['special_profit'];
-			$data['total_business_profit'] = $data['normal_business'] + $data['normal_profit'] + $data['special_business'] + $data['special_profit'];
+			$data['normal_profit'] = $value['normal_profit'];
+			// $data['special_profit'] = $value['special_profit'];
+			$data['total_business_profit'] = $data['normal_business'] + $data['normal_profit'] + $data['special_business'];
 			$this -> where($condition) -> save($data);
 		}
 	}
@@ -78,19 +78,27 @@ class ContactDetailModel extends Model {
 		foreach ($arr_ratio as $key => $value) {
 			$condition['contact_id'] = $value['contact_id'];
 			$condition['inventory_id'] = $value['inventory_id'];
-			$data['normal_business_ratio'] = $value['normal_business_ratio']*0.01;
+			$data['normal_business_ratio'] = $value['normal_business_ratio'];
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio']*0.01;
 			$data['float_price'] = $value['float_price'];
 			$data['end_cost_price'] = $value['end_cost_price'];
 			$this -> where($condition) -> save($data);
 		}
 	}
-	
-
 	public function getContactTotalMoney($contact_id){
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
 		$total_money = $this -> where($condition) -> sum('delivery_money');
+		return $total_money;
+	}
+	public function getContactTotalCostPrice($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$res = $this -> where($condition) -> select();
+		foreach ($res as $key => $value) {
+			$total_money += ($value['cost_price'] * $value['delivery_quantity']);
+		}
+		
 		return $total_money;
 	}
 	public function updateAdjust($contact_id,$inventory_id,$business_adjust,$profit_adjust,$cost_price_adjust){

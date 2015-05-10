@@ -6,7 +6,7 @@ class CustomerFundsModel extends Model {
 		$condition = array();
 		foreach ($customer_funds as $key => $value) {
 			$condition['customer_id'] = $value['customer_id'];
-			$condition['salesman_id'] = $value['salesman_id'];
+			// $condition['salesman_id'] = $value['salesman_id'];
 			$res = $this -> where($condition) -> find();
 			if($res == null){
 				$this -> add($value);
@@ -22,22 +22,39 @@ class CustomerFundsModel extends Model {
 		}
 		return $res;
 	}
-	public function setCustomerFunds($customer_id,$salesman_id,$benefit){
+	public function setCustomerFunds($customer_id,$benefit){
 		$condition = array();
 		$condition['customer_id'] = $customer_id;
-		$condition['salesman_id'] = $salesman_id;
+		// $condition['salesman_id'] = $salesman_id;
 		$data['funds'] = 0;
 		$data['benefit'] = $benefit;
 		$this -> where($condition)->save($data);
 	}
-	public function subtractCustomerBenefit($customer_id,$salesman_id,$benefit){
+	public function subtractCustomerBenefit($customer_id,$benefit){
 		//减去手动结算合同的扣款
 		$condition = array();
 		$condition['customer_id'] = $customer_id;
-		$condition['salesman_id'] = $salesman_id;
+		// $condition['salesman_id'] = $salesman_id;
 		$data = $this -> where($condition) -> find();
-		$last_benefit = $data['benefit'] - $benefit;
-		$this -> where($condition)->setField('benefit',$last_benefit);
+		if($data == null){
+			$data['customer_id'] = $customer_id;
+			$data['benefit'] = $benefit*-1;
+			$this -> add($data);
+		}else{
+			$last_benefit = $data['benefit'] - $benefit;
+			$this -> where($condition)->setField('benefit',$last_benefit);
+		}
+		
+	}
+	public function addSomeCustomer($customer_id){
+		$condition = array();
+		$condition['customer_id'] = $customer_id;
+		$res = $this -> where($condition) -> find();
+		if($res == null){
+			$data = array();
+			$data['customer_id'] = $customer_id;
+			$this -> add($data);
+		}
 	}
 }
 ?>

@@ -21,9 +21,15 @@
 						<li role="presentation">
 							<a href="__CONTROLLER__/loadNormalProfitPage" target="workflow">基本利润提成比例表</a>
 						</li>
-						<li role="presentation">
-							<a href="__CONTROLLER__/loadSpecialProfitPage" target="workflow">未达标利润提成比例表</a>
+						<li>
+							<a href="__CONTROLLER__/loadFeeRatioPage" target="workflow">扣率表</a>
 						</li>
+						<li>
+							<a href="__CONTROLLER__/loadSaleExpensePage" target="workflow">销售费用表</a>
+						</li>
+						<!-- <li role="presentation">
+							<a href="__CONTROLLER__/loadSpecialProfitPage" target="workflow">未达标利润提成比例表</a>
+						</li> -->
 						<li role="presentation">
 							<a href="__CONTROLLER__/loadFundsBackPage" target="workflow">资金回笼调整表</a>
 						</li>
@@ -70,7 +76,7 @@
 	</div>
 </block>
 <block name="content">
-	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="800px" onLoad="iFrameHeight()"></iframe>
+	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="800px"></iframe>
 </block>
 <block name="script">
 	<script>

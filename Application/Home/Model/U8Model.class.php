@@ -6,8 +6,9 @@ class U8Model extends Model {
 		'DB_TYPE' => 'sqlsrv', // 数据库类型
 		'DB_HOST' => 'localhost', // 服务器地址
 		'DB_NAME' => 'U8', // 数据库名
+	//	'DB_NAME' => 'UFMeta_888', // 数据库名
 		'DB_USER' =>'sa',
-		'DB_PWD' =>'000000',//密码
+		'DB_PWD' =>'aaa111',//密码
 		'DB_PORT' => 1433, // 端口
 		'tablePrefix' => ''
 	);
@@ -97,6 +98,9 @@ class U8Model extends Model {
 		$total_funds = $res[0]['total_funds'];
 		return $total_funds;
 	}
-	
+	public function checkInventoryBPurchase($inventory_id){
+		$res = $this -> query("select bPurchase from inventory where cInvCode='$inventory_id'");
+		return $res[0]['bPurchase'];
+	}
 }
 ?>

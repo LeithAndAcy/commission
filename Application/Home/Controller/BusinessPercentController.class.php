@@ -20,8 +20,13 @@ class BusinessPercentController extends Controller {
 	private $db_salary;
 	private $db_U8;
 	private $db_funds_back;
+	private $db_fee_ratio;
+	private $db_sale_expense;
 	function _initialize() {
-		
+		if (!_checkLogin()) {
+			$this->error('登陆超时,请重新登陆。','/commission',2);
+			exit;
+		}
 		$this -> db_constomer_funds = D("CustomerFunds");
 		$this -> db_contact_main = D("ContactMain");
 		$this -> db_contact_detail = D("ContactDetail");
@@ -38,10 +43,8 @@ class BusinessPercentController extends Controller {
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_salary = D("Salary");
 		$this -> db_funds_back = D("FundsBack");
-		if (!_checkLogin()) {
-			$this->error('登陆超时,请重新登陆。','/commission',2);
-			exit;
-		}
+		$this -> db_fee_ratio = D("FeeRatio");
+		$this -> db_sale_expense = D("SaleExpense");
 	}
     public function loadBusinessPercentPage(){
     	$this -> display('BusinessPercentPage');
@@ -62,6 +65,12 @@ class BusinessPercentController extends Controller {
 		$this -> display('SettlingContactPage');
 	}
 	public function getSettlingContact(){
+		//由于回笼资金表的使用，呵呵呵！
+		$all_funds_back = $this -> db_funds_back -> getAllItems();
+		$condition = array();
+		foreach ($all_funds_back as $key => $value) {
+			$this -> db_constomer_funds -> addSomeCustomer($value['customer_id']);
+		}
 		//判断哪些合同可结算    先判断回款，再判断发货数量
 		$total_customer_funds = $this -> db_constomer_funds ->getTotalCustomerFunds();
 		foreach ($total_customer_funds as $key => $value) {
@@ -69,13 +78,13 @@ class BusinessPercentController extends Controller {
 			$condition['customer_id'] = $value['customer_id'];
 			$temp = $this -> db_funds_back -> getFunds($condition);
 			$total_customer_funds[$key]['total_funds'] += $temp;
-			$this -> db_funds_back -> where($condition) -> delete();
+		//	$this -> db_funds_back -> where($condition) -> delete();
 		}
 		$condition = array();
 		$contact_main = array();
 		foreach ($total_customer_funds as $key => $value) {
 			$condition['customer_id'] = $value['customer_id'];
-			$condition['salesman_id'] = $value['salesman_id'];
+		//	$condition['salesman_id'] = $value['salesman_id'];
 			$condition['settling'] = 0;
 			$condition['settled'] = 0;
 			$contact_main[$key] = $this -> db_contact_main ->getContactByCondition($condition);
@@ -84,12 +93,12 @@ class BusinessPercentController extends Controller {
 		foreach ($contact_main as $key => $value) {
 			foreach ($value as $kk => $vv) {
 				if($kk === "total_funds"){
-					$this -> db_constomer_funds ->setCustomerFunds($temp_customer_id,$temp_salesman_id,$contact_main[$key]['total_funds']);
+					$this -> db_constomer_funds ->setCustomerFunds($total_customer_funds[$key]['customer_id'],$contact_main[$key]['total_funds']);
 					break;
 				}
 				$contact_total_money = $this -> db_contact_detail -> getContactTotalMoney($vv['contact_id']);
 				if($contact_total_money > $contact_main[$key]['total_funds']){
-					$this -> db_constomer_funds ->setCustomerFunds($vv['customer_id'],$vv['salesman_id'],$contact_main[$key]['total_funds']);
+					$this -> db_constomer_funds ->setCustomerFunds($vv['customer_id'],$contact_main[$key]['total_funds']);
 					break;
 				}else{
 					//检测发货数量
@@ -121,21 +130,17 @@ class BusinessPercentController extends Controller {
 		$this -> db_U8 = D("U8");
 		$contact_main = $this -> db_contact_main -> getSettlingContact();
 		$contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
-		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			//取存货类别
+			
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
+			$arr_ratio[$key]['inventory_id'] = substr($value['inventory_id'], 0,1) ;
+			$arr_ratio[$key]['normal_business_ratio'] = $this -> db_normal_business_ratio -> getNormalBusinessRatio($value['salesman_id'],$arr_ratio[$key]['inventory_id']);
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
-			foreach ($normal_business_ratio as $kk => $vv) {
-				if($value['salesman_id'] == $vv['salesman_id'] && $value['inventory_id'] == $vv['inventory_id']){
-					$arr_ratio[$key]['normal_business_ratio'] = $vv['ratio'];
-					break;
-				}
-			}
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
 				if($value['salesman_id'] == $vvv['salesman_id']){
 					$arr_ratio[$key]['normal_profit_ratio'] = $vvv['ratio'];
@@ -148,29 +153,49 @@ class BusinessPercentController extends Controller {
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
 				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
 					$arr_ratio[$key]['float_price'] = $vvvv['ratio'] * 0.01 * $contact_detail[$key]['cost_price'];
-					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust'];
+					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
 					$arr_ratio[$key]['float_price_ratio'] = $vvvv['ratio']* 0.01; 
 					break;
+				}else{
+					$arr_ratio[$key]['float_price'] = 0 ;
+					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust']);
+					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
+				
 			}
 			//取回款，计算各种比例和金额    
 			$salesman_id = $value['salesman_id'];
 			//不能删除！！！
 			//$temp_total_funds = $this -> db_U8 -> getFundsBySalesmanAndDate($salesman_id);
 			//测试用
-			$salesman_funds = M("SalesmanFunds");
-			$condition = array();
-			$condition['salesman_id'] = $salesman_id;
-			$condition['date'] = date('Y-m',strtotime('-1 month'));
-			$temp_total_funds = $salesman_funds -> where($condition) -> getField('funds');
-			$temp_special_business_ratio = $this -> db_special_business_ratio ->getSpecialBusinessRatio($salesman_id,$contact_detail[$key]['classification_id'],$temp_total_funds);
+			$temp_total_funds = 0;
+			$settling_contact = $this -> db_contact_main -> getSettlingContactBySalesmanId($salesman_id);
+			foreach ($settling_contact as $kkkkk => $vvvvv) {
+				$temp_total_funds += $this -> db_contact_detail -> getContactTotalCostPrice($vvvvv['contact_id']);
+			}
+			$temp_special_business_ratio = $this -> db_special_business_ratio ->getSpecialBusinessRatio($salesman_id,substr($value['inventory_id'], 0,1) ,$temp_total_funds);
+			$temp_fee_ratio = $this -> db_fee_ratio -> getFeeRatio($salesman_id);
 			$arr_ratio[$key]['special_business_ratio'] = $temp_special_business_ratio;
-			$temp_special_profit_ratio = $this -> db_special_profit_ratio ->getSpecialProfitRatio($salesman_id,$temp_total_funds);
-			$arr_ratio[$key]['special_profit_ratio'] = $temp_special_profit_ratio;
-			$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_money'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust'] );
+			$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_quantity']* $arr_ratio[$key]['end_cost_price'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust']*0.01) *$temp_fee_ratio;
 			$arr_ratio[$key]['special_business'] = $value['delivery_money'] * $arr_ratio[$key]['special_business_ratio'];
-			$arr_ratio[$key]['normal_profit'] = ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * $contact_detail[$key]['delivery_quantity'] *($arr_ratio[$key]['normal_profit_ratio'] + $contact_detail[$key]['profit_adjust']);
-			$arr_ratio[$key]['special_profit'] = ($value['sale_price'] - $value['end_cost_price']) * $value['delivery_quantity'] * $arr_ratio[$key]['special_profit_ratio'];
+			$temp_bPurchase = $this -> db_U8 -> checkInventoryBPurchase($arr_ratio[$key]['inventory_id']);
+			$temp_sale_expense = $this -> db_sale_expense -> getSaleExpense($salesman_id,$arr_ratio[$key]['inventory_id']);
+			if($temp_bPurchase){
+				$arr_ratio[$key]['normal_profit_ratio'] = 100;
+			}else{
+				if($temp_sale_expense >0){
+					$arr_ratio[$key]['normal_profit_ratio'] = 50;
+				}
+			}
+			if($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)>=0){
+				$arr_ratio[$key]['normal_profit'] =$contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1) * ($arr_ratio[$key]['normal_profit_ratio']*0.01 +0.1)
+				 + $arr_ratio[$key]['end_cost_price']*0.1*$arr_ratio[$key]['normal_profit_ratio']*0.01);
+			}elseif($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)<0){
+				$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * 0.55;
+			}else{
+				$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense)
+				* ($arr_ratio[$key]['normal_profit_ratio'] + $contact_detail[$key]['profit_adjust']) * 0.01 * $temp_fee_ratio;
+			}
 		}
 		$this -> db_contact_detail -> updateSettlingRatio($arr_ratio);
 	}
@@ -217,9 +242,7 @@ class BusinessPercentController extends Controller {
 			}
 		}
 		foreach ($all_salesman as $key => $value) {
-			if($value['salesman_id'] == "KS003" || $value['salesman_id'] == "RY01"){
-				continue;
-			}
+			
 			$salary_of_last_month = $this -> db_salary -> getSalaryBySalesmanIdAndMonth($value['salesman_id'],$month_before_last_month);
 			$temp_human_wage = $this -> db_wage_deduction -> getHumanWage($value['salesman_id'],$last_month);
 			$temp_arr_contact = $this -> db_contact_main -> getSettlingContactBySalesmanId($value['salesman_id']);
@@ -357,7 +380,7 @@ class BusinessPercentController extends Controller {
 	
 	public function loadCommissionBuisnessPage(){
 		$count_contact_main = $this -> db_contact_main -> count();
-		$Page = new \Think\Page($count_contact_main,1000);
+		$Page = new \Think\Page($count_contact_main,100000000);
 		$show = $Page->show();// 分页显示输出
 		$contact_main = $this -> db_contact_main -> getContact($Page);
 		$contact_detail = $this -> db_contact_detail -> getContactDetail($contact_main);

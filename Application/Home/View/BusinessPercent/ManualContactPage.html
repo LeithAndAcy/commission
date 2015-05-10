@@ -191,7 +191,16 @@
 </html>
 <script>
 	$(function() {
-		$("#settlingContactTable").dataTable();
+		var table = $('#settlingContactTable').DataTable( {
+			scrollY:        "500px",
+			scrollX:        true,
+			scrollCollapse: true,
+			paging:         true
+		});
+		 new $.fn.dataTable.FixedColumns(table, {
+			leftColumns: 7
+			// rightColumns: 1
+		});
 		$("#get_settling_contact").click(function() {
 			$.post("__CONTROLLER__/getSettlingContact", {}, function(data) {
 				window.location.reload();

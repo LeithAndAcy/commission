@@ -20,6 +20,8 @@ class SourceDataController extends Controller {
 	private $db_funds_back;
 	private $db_tax_ratio;
 	private $db_wage_deduction;
+	private $db_fee_ratio;
+	private $db_sale_expense;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -41,6 +43,8 @@ class SourceDataController extends Controller {
 		$this -> db_funds_back = D("FundsBack");
 		$this -> db_tax_ratio = D("TaxRatio");
 		$this -> db_wage_deduction = D("WageDeduction");
+		$this -> db_fee_ratio = D("FeeRatio");
+		$this -> db_sale_expense = D("SaleExpense");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
@@ -147,20 +151,16 @@ class SourceDataController extends Controller {
 		$contact_main = $this -> db_contact_main -> getSettlementContact();
 		$contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
 		//$contact_detail = $this -> db_U8 -> getInventoryDetail($contact_detail);
-		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllNormalBusinessRatio();
+		
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
+			$arr_ratio[$key]['inventory_id'] = substr($value['inventory_id'], 0,1) ;
+			$arr_ratio[$key]['normal_business_ratio'] = $this -> db_normal_business_ratio -> getNormalBusinessRatio($value['salesman_id'],$arr_ratio[$key]['inventory_id']);
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
-			foreach ($normal_business_ratio as $kk => $vv) {
-				if($value['salesman_id'] == $vv['salesman_id'] && $value['inventory_id'] == $vv['inventory_id']){
-					$arr_ratio[$key]['normal_business_ratio'] = $vv['ratio'];
-					break;
-				}
-			}
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
 				if($value['salesman_id'] == $vvv['salesman_id']){
 					$arr_ratio[$key]['normal_profit_ratio'] = $vvv['ratio'];
@@ -176,6 +176,7 @@ class SourceDataController extends Controller {
 					break;
 				}
 			}
+		//	print_r($arr_ratio[$key]);
 		}
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
 	}
@@ -185,7 +186,7 @@ class SourceDataController extends Controller {
 		$res = $this -> _addSalesmanName($all_normal_business_ratio);
 		$all_normal_business_ratio = $res['data'];
 		$all_salesman = $res['salesman'];
-		$all_normal_business_ratio = $this -> db_U8 -> getInventoryDetail($all_normal_business_ratio);
+		// $all_normal_business_ratio = $this -> db_U8 -> getInventoryDetail($all_normal_business_ratio);
 		$this -> assign("all_normal_business_ratio",$all_normal_business_ratio);
 		$this -> assign("all_salesman",$all_salesman);
 		$this -> display('NormalBusinessPage');
@@ -209,11 +210,9 @@ class SourceDataController extends Controller {
 		$this -> db_normal_business_ratio -> deleteNormalBusinessRatioById($id);
 	}
 	public function loadSpecialBusinessPage(){
-		$this -> db_U8 = D("U8");
 		$all_special_business_ratio = $this -> db_special_business_ratio -> getAllSpecialBusinessRatio();
 		$res = $this -> _addSalesmanName($all_special_business_ratio);
 		$all_special_business_ratio = $res['data'];
-		$all_special_business_ratio = $this -> db_U8 -> getClassificationName($all_special_business_ratio);
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_special_business_ratio",$all_special_business_ratio);
 		$this -> assign("all_salesman",$all_salesman);
@@ -235,7 +234,7 @@ class SourceDataController extends Controller {
 		$data['low_limit'] = $_POST['add_new_low_limit'];
 		$data['high_limit'] = $_POST['add_new_high_limit'];
 		$data['ratio'] = $_POST['add_new_ratio'];
-		$data['classification_id'] = $_POST['add_new_classification_id'];
+		$data['inventory_id'] = $_POST['add_new_inventory_id'];
 		$temp = $this -> db_special_business_ratio -> addSpecialBusinessRatio($data);
 		if($temp == FALSE){
 			$this -> error("回款区间有重复，请重新输入!!",'/commission/index.php/Home/SourceData/loadSpecialBusinessPage',3);
@@ -270,6 +269,59 @@ class SourceDataController extends Controller {
 	public function deleteNormalProfitRatioById(){
 		$id = $_POST['delete_id'];
 		$this -> db_normial_profit_ratio -> deleteNormalProfitRatioById($id);
+	}
+	public function loadFeeRatioPage(){
+		$all_fee_ratio = $this -> db_fee_ratio -> getAllFeeRatio();
+		// $all_fee_ratio = $this -> db_salesman -> addSalesmanName($all_fee_ratio);
+		// $all_salesman = $this -> db_salesman -> getAllSalesman();
+		// $this -> assign("all_salesman",$all_salesman);
+		$this -> assign("all_fee_ratio",$all_fee_ratio);
+		$this -> display("AllFeeRatioPage");
+	}
+	public function editFeeRatio(){
+		$id = $_POST['edit_id'];
+		$fee_ratio = $_POST['edit_ratio'];
+		$this -> db_fee_ratio -> editItem($id,$fee_ratio);
+		$this -> loadFeeRatioPage();
+	}
+	public function addFeeRatio(){
+		$data = array();
+		$data['salesman_id'] = $_POST['add_new_salesman_id'];
+		$data['fee_ratio'] = $_POST['add_new_ratio'];
+		$this -> db_fee_ratio -> addItem($data);
+		$this -> loadFeeRatioPage();
+	}
+	public function deleteFeeRatioById(){
+		$id = $_POST['delete_id'];
+		$this -> db_fee_ratio -> deleteItem($id);
+	}
+	public function loadSaleExpensePage(){
+		$all_sale_expense = $this -> db_sale_expense -> getAllItems();
+		$res = $this ->  _addSalesmanName($all_sale_expense);
+		$all_sale_expense = $res['data'];
+		$all_salesman = $res['salesman'];
+		$this -> assign("all_salesman",$all_salesman);
+		$this -> assign("all_sale_expense",$all_sale_expense);
+		$this -> display('SaleExpensePage');
+		
+	}
+	public function editSaleExpense(){
+		$id = $_POST['edit_id'];
+		$sale_expense = $_POST['edit_sale_expense'];
+		$this -> db_sale_expense -> editItem($id,$sale_expense);
+		$this -> loadSaleExpensePage();
+	}
+	public function addSaleExpense(){
+		$data = array();
+		$data['salesman_id'] = $_POST['add_new_salesman_id'];
+		$data['inventory_id'] = $_POST['add_new_inventory_id'];
+		$data['sale_expense'] = $_POST['add_new_sale_expense'];
+		$this -> db_sale_expense -> addItem($data);
+		$this -> loadSaleExpensePage();
+	}
+	public function deleteSaleExpenseById(){
+		$id = $_POST['delete_id'];
+		$this -> db_sale_expense -> deleteItem($id);
 	}
 	public function loadSpecialProfitPage(){
 		$all_special_profit_ratio = $this -> db_special_profit_ratio ->getAllItems();
