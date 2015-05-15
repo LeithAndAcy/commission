@@ -6,7 +6,6 @@ class IndexController extends Controller {
     private $db_login;
 	
    	function _initialize() {
-		
 		$this -> db_login = D("Login");
 	}
     public function index(){

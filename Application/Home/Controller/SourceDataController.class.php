@@ -10,6 +10,7 @@ class SourceDataController extends Controller {
 	private $db_special_profit_ratio;
 	private $db_insurance_fund;
 	private $db_price_float_ratio;
+	private $db_area_price_float_ratio;
 	private $db_load_history;
 	private $db_customer;
 	private $db_U8;
@@ -33,6 +34,7 @@ class SourceDataController extends Controller {
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
+		$this -> db_area_price_float_ratio = D("AreaPriceFloatRatio");
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
 		$this -> db_load_history = D("LoadHistory");
 		$this -> db_customer = D("Customer");
@@ -411,6 +413,30 @@ class SourceDataController extends Controller {
 	public function deletePriceFloatRatio(){
 		$delete_id = $_POST['delete_id'];
 		$this -> db_price_float_ratio -> deleteItemById($delete_id);
+	}
+	public function loadAreaPriceFloatPage(){
+		$this -> db_U8 = D("U8");
+		$all_area_price_float_ratio = $this -> db_area_price_float_ratio ->getAllAreaPriceFloatRatio();
+		$all_area_price_float_ratio = $this -> db_U8 -> getClassificationName($all_area_price_float_ratio);
+		$this -> assign("all_area_price_ratio_ratio",$all_area_price_float_ratio);
+		$this -> display('AreaPriceFloatPage');
+	}
+	public function addAreaPriceFloatRatio(){
+		$data['classification_id'] = $_POST['add_new_classification_id'];
+		$data['area'] = $_POST['add_new_area'];
+		$data['ratio'] = $_POST['add_new_ratio'];
+		$this -> db_area_price_float_ratio -> addItem($data);
+		$this -> loadAreaPriceFloatPage();
+	}
+	public function editAreaPriceFloatRatio(){
+		$id = $_POST['edit_id'];
+		$data['ratio'] = $_POST['edit_ratio'];
+		$this -> db_area_price_float_ratio ->editItem($id,$data);
+		$this -> loadAreaPriceFloatPage();
+	}
+	public function deleteAreaPriceFloatRatio(){
+		$delete_id = $_POST['delete_id'];
+		$this -> db_area_price_float_ratio -> deleteItemById($delete_id);
 	}
 	public function loadLengthLimitPage(){
 		$all_length_limit = $this -> db_length_limit -> getAllItems();

@@ -44,7 +44,6 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['normal_business_ratio'] *= 100;
 				$contact_detail[$i]['normal_profit_ratio'] *= 100;
 				$contact_detail[$i]['special_business_ratio'] *= 100;
-				// $contact_detail[$i]['special_profit_ratio'] *= 100;
 				$contact_detail[$i]['business_adjust'] *= 100;
 				$contact_detail[$i]['profit_adjust'] *= 100;
 				$i++;

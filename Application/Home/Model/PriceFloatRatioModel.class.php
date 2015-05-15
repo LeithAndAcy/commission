@@ -35,7 +35,6 @@ class PriceFloatRatioModel extends Model {
 	}
 	public function getRatio($classification_id,$cost_price,$length){
 		$ratio = $this -> query("select ratio from commission_price_float_ratio where (classification_id = '$classification_id') AND (low_price <= '$cost_price') AND (high_price >= '$cost_price') AND (low_length <= '$length') AND (high_length>'$length') ");
-		print_r($ratio);exit;
 		return $ratio;
 	}
 	private function checkDuplicate($data){

@@ -102,5 +102,11 @@ class U8Model extends Model {
 		$res = $this -> query("select bPurchase from inventory where cInvCode='$inventory_id'");
 		return $res[0]['bPurchase'];
 	}
+	public function getCustomerArea($customer_id){
+		$res = $this -> query("select cDCCode from Customer where cCusCode='$customer_id'");
+		$area_code =  $res[0]['cDCCode'];
+		$res = $this -> query("select cDCName from DistrictClass where cDCCode='$area_code'");
+		return $res[0]['cDCName'];
+	}
 }
 ?>
