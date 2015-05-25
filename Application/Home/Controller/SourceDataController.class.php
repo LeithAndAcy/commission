@@ -169,18 +169,31 @@ class SourceDataController extends Controller {
 					break;
 				}
 			}
+			$area = $this -> db_customer -> getCustomerAreaById($value['customer_id']);
+			$area_price_float_ratio = $this -> db_area_price_float_ratio->getRatio($value['classification_id'],$area);
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
 				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
-					$arr_ratio[$key]['float_price'] = $vvvv['ratio'] * 0.01 * $contact_detail[$key]['cost_price'];
+					$arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
 					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust'];
+					$arr_ratio[$key]['float_price_ratio'] = $vvvv['ratio']* 0.01; 
 					break;
+				}else{
+					$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
+					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
+					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
 			}
 		//	print_r($arr_ratio[$key]);
 		}
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
+	}
+	public function deleteContact(){
+		$contact_id = $_POST['contact_id'];
+		$inventory_id = $_POST['inventory_id'];
+		$this -> db_contact_main -> deleteItem($contact_id);
+		$this -> db_contact_detail -> deleteItem($contact_id,$inventory_id);
 	}
 	public function loadNormalBusinessPage(){
 		$this -> db_U8 = D("U8");
@@ -564,6 +577,11 @@ class SourceDataController extends Controller {
 		$this -> assign("all_customer",$all_customer);
 		$this -> assign('page',$show);
 		$this -> display('CustomerPage');
+	}
+	public function renewCustomer(){
+		$this -> db_U8 = D("U8");
+		$all_customer_area = $this -> db_U8 -> getAllCustomerAndArea();
+		$this -> db_customer -> renewItems($all_customer_area);
 	}
 	public function editCustomer(){
 		$id = $_POST['edit_id'];

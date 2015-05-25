@@ -17,7 +17,6 @@
 				计算
 			</button>
 		</div>
-
 		<div class="col-xs-12">
 			<table id="settlingContactTable" class="table table-striped table-bordered table-hover datatable" width="300%" cellspacing="0" style="margin-top: 20px;overflow-x: auto">
 				<thead>
@@ -100,7 +99,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div>
+		<div align="right">
 			{$page}
 		</div>
 		<div class="modal fade" id="searchModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -244,6 +243,19 @@
 
 			$("#edit_contact_id").val(contact_id);
 			$("#edit_inventory_id").val(inventory_id);
+		});
+		$("#settlingContactTable tbody").on("click","tr td span img:odd",function() {
+			var temp = confirm("确认删除该条合同吗？");
+			if(temp){
+				var contact_id = $(this).parent().parent().attr('contact_id');
+				var inventory_id = $(this).parent().parent().attr('inventory_id');
+				$.post("__CONTROLLER__/deleteContact", {
+					"contact_id" : contact_id,
+					"inventory_id" : inventory_id,
+				}, function(data) {
+					window.location.href="/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
+				});
+			}
 		});
 		$("#btn_caculate").click(function() {
 			$.post("__CONTROLLER__/settleContact", {}, function(data) {

@@ -6,7 +6,7 @@ class U8Model extends Model {
 		'DB_TYPE' => 'sqlsrv', // 数据库类型
 		'DB_HOST' => 'localhost', // 服务器地址
 		'DB_NAME' => 'U8', // 数据库名
-	//	'DB_NAME' => 'UFMeta_888', // 数据库名
+	//	'DB_NAME' => 'UFDATA_888_2015', // 数据库名
 		'DB_USER' =>'sa',
 		'DB_PWD' =>'aaa111',//密码
 		'DB_PORT' => 1433, // 端口
@@ -102,11 +102,13 @@ class U8Model extends Model {
 		$res = $this -> query("select bPurchase from inventory where cInvCode='$inventory_id'");
 		return $res[0]['bPurchase'];
 	}
-	public function getCustomerArea($customer_id){
-		$res = $this -> query("select cDCCode from Customer where cCusCode='$customer_id'");
-		$area_code =  $res[0]['cDCCode'];
-		$res = $this -> query("select cDCName from DistrictClass where cDCCode='$area_code'");
-		return $res[0]['cDCName'];
+	// public function getCustomerArea($area_code){
+		// $res = $this -> query("select cDCName from DistrictClass where cDCCode='$area_code'");
+		// return $res[0]['cDCName'];
+	// }
+	public function getAllCustomerAndArea(){
+		$res = $this -> query("select Customer.cCusCode as customer_id, Customer.cCusName as customer_name, Customer.cDCCode as area_code, DistrictClass.cDCName as area from Customer left join DistrictClass on Customer.cDCCode=DistrictClass.cDCCode");
+		return $res;
 	}
 }
 ?>

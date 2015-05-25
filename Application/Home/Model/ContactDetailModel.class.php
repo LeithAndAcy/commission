@@ -144,5 +144,11 @@ class ContactDetailModel extends Model {
 		$res = $this -> where($condition) -> select();
 		return $res;
 	}
+	public function deleteItem($contact_id,$inventory_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$condition['inventory_id']= $inventory_id;
+		$this -> where($condition)->delete();
+	}
 }
 ?>

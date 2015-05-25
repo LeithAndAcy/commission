@@ -34,7 +34,6 @@ class AreaPriceFloatRatioModel extends Model {
 		$condition = array();
 		$condition['classification_id'] = $classification_id;
 		$condition['area'] = $area;
-		print_r($condition);
 		$res = $this -> where($condition) -> getField('ratio');
 		return $res;
 	}

@@ -52,5 +52,25 @@ class CustomerModel extends Model {
 			return false;
 		}
 	}
+	public function renewItems($array){
+		$this -> query("delete from commission_customer;");
+		$str_query = "insert into commission_customer (customer_id,customer_name,area_code,area) values";
+		foreach ($array as $key => $value) {
+			$id = $key +1;
+			$customer_id = $value['customer_id'];
+			$customer_name = $value['customer_name'];
+			$area_code = $value['area_code'];
+			$area = $value['area'];
+			$str_query .= " ('$customer_id','$customer_name','$area_code','$area'),";
+		}
+		$str_query = substr($str_query, 0,-1).';';
+		$this -> query($str_query);
+	}
+	public function getCustomerAreaById($customer_id){
+		$condition = array();
+		$condition['customer_id'] = $customer_id;
+		$res = $this -> where($condition) -> getField('area');
+		return $res;
+	}
 }
 ?>

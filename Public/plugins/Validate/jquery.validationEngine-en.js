@@ -67,6 +67,10 @@
                     "alertText": "* Please select ",
                     "alertText2": " options"
                 },
+                 "zipcode":{
+					 "regex":"/^[1-9]\d{5}$/",
+					 "alertText":"* 请输入有效的邮政编码."
+				 },
                 "equals": {
                     "regex": "none",
                     "alertText": "两次输入密码不一致"
@@ -131,7 +135,7 @@
                     "regex": /^[0-9a-zA-Z]+$/,
                     "alertText": "* No special characters allowed"
                 },
-                // --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings
+               // --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings
                 "ajaxUserCurrentPWD": {
                     "url": "checkCurrentPWD",
                     // you may want to pass extra data on the ajax call

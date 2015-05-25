@@ -209,5 +209,23 @@ class ContactMainModel extends Model {
 		$res = $this -> where($condition) -> find();
 		return $res;
 	}
+	public function getSettlingContactDetail(){
+		// $res = $this -> query("select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.cSOCode,commission_contact_main.contact_id,
+		// commission_contact_detail.inventory_id commission_contact_detail.classification commission_contact_detail.inventory_name commission_contact_detail.specification
+		// commission_contact_detail.colour commission_contact_detail.sale_price commission_contact_detail.cost_price commission_contact_detail.float_price
+		// commission_contact_detail.sale_quantity commission_contact_detail.delivery_quantity
+		// from commission_contact_main 
+		// left join commission_contact_detail on commission_contact_main.contact_id = commission_contact_detail.contact_id and commission_contact_main.settling=1 
+		// and commission_contact_main.settled=0 and commission_contact_main.settlement=1;");
+		$res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
+		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
+		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		return $res;
+	}
+	public function deleteItem($contact_id){
+		$condition = array();
+		$condition['contact_id'] = $contact_id;
+		$this -> where($condition)->delete();
+	}
 }
 ?>
