@@ -218,11 +218,13 @@
 			// rightColumns: 1
 		});
 		$("#get_settling_contact").click(function() {
+			$('#get_settling_contact').attr('disabled',"true");
 			$.post("__CONTROLLER__/getSettlingContact", {}, function(data) {
 				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});
 		});
 		$("#get_ratio_price").click(function() {
+			$('#get_ratio_price').attr('disabled',"true");
 			$.post("__CONTROLLER__/getSettlingRatioAndPrice", {}, function(data) {
 				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});
@@ -258,6 +260,7 @@
 			}
 		});
 		$("#btn_caculate").click(function() {
+			$('#btn_caculate').attr('disabled',"true");
 			$.post("__CONTROLLER__/settleContact", {}, function(data) {
 				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
 			});

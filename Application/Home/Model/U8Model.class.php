@@ -6,7 +6,7 @@ class U8Model extends Model {
 		'DB_TYPE' => 'sqlsrv', // 数据库类型
 		'DB_HOST' => 'localhost', // 服务器地址
 		'DB_NAME' => 'U8', // 数据库名
-	//	'DB_NAME' => 'UFDATA_888_2015', // 数据库名
+	//	'DB_NAME' => 'UFDATA_111_2015', // 数据库名
 		'DB_USER' =>'sa',
 		'DB_PWD' =>'aaa111',//密码
 		'DB_PORT' => 1433, // 端口
@@ -87,7 +87,7 @@ class U8Model extends Model {
 	
 	public function getCustomerFunds($begin_date,$end_date){
 		//Ap_Close_bill
-		$res = $this -> query("select cDwCode as customer_id,cPerson as salesman_id,iAmount as funds from Ap_CloseBill where (dVouchDate between '$begin_date' and '$end_date') AND (cVouchType = 48) AND (cCheckMan is not null)");
+		$res = $this -> query("select cDwCode as customer_id,iAmount as funds from Ap_CloseBill where (dVouchDate between '$begin_date' and '$end_date') AND (cVouchType = 48) AND (cCheckMan is not null)");
 		return $res;
 	}
 	public function getFundsBySalesmanAndDate($salesman_id){

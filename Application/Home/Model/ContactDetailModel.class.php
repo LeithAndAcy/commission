@@ -20,6 +20,9 @@ class ContactDetailModel extends Model {
 			$contact_detail = $value['contact_detail'];
 			foreach ($contact_detail as $kk => $vv) {
 				$vv['contact_id'] = $value['contact_id'];
+				if($vv['cost_price'] = null){
+					$vv['cost_price'] = 0;
+				}
 				unset($vv['cSOCode']);
 				$this -> add($vv);
 			}

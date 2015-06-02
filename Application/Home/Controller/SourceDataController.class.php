@@ -109,7 +109,6 @@ class SourceDataController extends Controller {
 		//插入contact_detail  
 		$all_contact_detail = $this -> db_U8 -> getContactDetail($all_contact_main);
 		$all_contact_detail = $this -> db_U8 -> getInventoryDetailOfConflictPage($all_contact_detail);
-		
 		//取得存货信息
 		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
 		// 取得客户回款金额

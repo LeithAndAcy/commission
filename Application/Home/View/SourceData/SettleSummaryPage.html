@@ -276,6 +276,7 @@
 			$(this).parent().prev().val("");
 		});
 		$("#get_ratio").click(function() {
+			$('#get_ratio').attr('disabled',"true");
 			$.post("__CONTROLLER__/getSettlementRatio", {}, function(data) {
 				window.location.href = "/commission/index.php/Home/SourceData/loadSettleSummaryPage";
 			});
