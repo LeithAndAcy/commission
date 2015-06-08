@@ -73,6 +73,11 @@ class SalesmanModel extends Model {
 		}
 		return $array_data;
 	}
-	
+	public function getStatus($salesman_id){
+		$condition = array();
+		$condition['salesman_id'] = $salesman_id;
+		$res = $this -> where($condition) -> getField('status');
+		return $res;
+	}
 }
 ?>

@@ -1,35 +1,92 @@
 <html>
 	<head>
 		<include file="Public:commonInclude"/>
+		<script src="__PUBLIC__/plugins/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" />
 	</head>
 	<body>
-		<div class="col-xs-12">
-			<table id="payrollTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0">
-				<thead>
-					<tr>
-						<th>业务员姓名</th>
-						<th>上海基本工资</th>
-						<th>昆山基本工资</th>
-						<th>费用</th>
-					</tr>
-				</thead>
-				<tbody>
-					<volist name="payroll" id="vo">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="form-group">
+						<label  class="col-sm-1 control-label">选择月份</label>
+						<div class="col-sm-4 input-group date form_datetime" data-date-format="yyyy-mm">
+							<input type="text" class="form-control"id="date" readonly="" >
+							<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+						</div>
+						<button class="btn btn-primary" id="caculate_wage">
+							计算工资
+						</button>
+					</div>
+				</div>	
+			</div>
+			<div class="col-xs-12">
+				<table id="payrollTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0">
+					<thead>
 						<tr>
-							<td>{$vo.salesman_name}</td>
-							<td>{$vo.shanghai_salary}</td>
-							<td>{$vo.kunshan_salary}</td>
-							<td>{$vo.bogus}</td>
+							<th>业务员姓名</th>
+							<th>上海基本工资</th>
+							<th>昆山基本工资</th>
+							<th>费用</th>
+							<th>日期</th>
 						</tr>
-					</volist>
-				</tbody>
-			</table>
-		</div>
+					</thead>
+					<tbody>
+						<volist name="payroll" id="vo">
+							<tr>
+								<td>{$vo.salesman_name}</td>
+								<td>{$vo.shanghai_salary}</td>
+								<td>{$vo.kunshan_salary}</td>
+								<td>{$vo.bogus}</td>
+								<td>{$vo.date}</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+			</div>
 	</body>
 </html>
 <script>
 	$(function() {
 		$("#payrollTable").dataTable();
+		$("#caculate_wage").click(function() {
+			var date = $("#date").val();
+			if(date == ""){
+				alert("请输入月份");
+			}else{
+				str = '是否结算' + date + '的薪资';
+				var temp = confirm(str);
+				if (temp) {
+					$.post("__CONTROLLER__/checkSalarySettled", {
+						"date":date
+					}, function(data) {
+						if(data == "settled"){
+							var recaculate =  confirm("该月份工资已结算，是否重新结算");
+							if(recaculate){
+								$.post("__CONTROLLER__/CaculateWageOfMonth",{
+									"date":date
+								},function(data){
+									window.location.href = "/commission/index.php/Home/CaculateWage/LoadPayrollPage";
+								});
+							}
+						}
+					});
+				}
+			}
+		});
+		$(".glyphicon-remove").click(function() {
+			$(this).parent().prev().val("");
+		});
+		$(".form_datetime").datetimepicker({
+			autoclose : true,
+			todayBtn : true,
+			minView : 2,
+			todayBtn : 1,
+			todayHighlight : 1,
+			pickerPosition : 'bottom-right',
+			language : 'cn',
+		});
 	}); 
 </script>
 

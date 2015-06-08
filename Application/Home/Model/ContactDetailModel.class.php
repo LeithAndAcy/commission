@@ -153,5 +153,15 @@ class ContactDetailModel extends Model {
 		$condition['inventory_id']= $inventory_id;
 		$this -> where($condition)->delete();
 	}
+	public function getTotalBusinessAndProfit($arr_contact_id){
+		$saleman_bogus = array();
+		foreach ($arr_contact_id as $key => $value) {
+			$condition = array();
+			$condition['contact_id'] = $value;
+			$res = $this -> where($condition) -> sum('total_business_profit');
+			$saleman_bogus[$key] += $res;
+		}
+		return $saleman_bogus;
+	}
 }
 ?>

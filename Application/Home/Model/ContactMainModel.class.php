@@ -3,6 +3,8 @@ namespace Home\Model;
 use Think\Model;
 class ContactMainModel extends Model {
 		
+		
+		
 	public function deleteItems($arr_check_list){
 		$condition = array();
 		foreach ($arr_check_list as $key => $value) {
@@ -11,7 +13,10 @@ class ContactMainModel extends Model {
 		}
 	}
 	public function addContactMain($all_contact_main){
+		$this_month = date('Y-m');
 		foreach ($all_contact_main as $key => $value) {
+			$last_month = date('Y-m',strtotime('-1 month'));
+			$value['date'] = $this_month;
 			$this -> add($value);
 		}
 	}
@@ -151,12 +156,15 @@ class ContactMainModel extends Model {
 		$res = $this -> where($condition) -> select();
 		return $res;
 	}
-	public function setContactSettled($salesman_id){
-		$condition = array();
-		$condition['salesman_id'] = $salesman_id;
-		$condition['settled'] = 0;
-		$condition['settling'] = 1;
-		$this -> where($condition) -> setField("settled",1);
+	public function setContactSettled($arr_contact_id){
+		$last_month = date('Y-m',strtotime('-1 month'));
+		$str_contact_id;
+		foreach ($arr_contact_id as $key => $value) {
+			$str_contact_id .= "'".$value."'".',';
+		}
+		$str_contact_id = substr($str_contact_id, 0,-1);
+		
+		$this -> query("update commission_contact_main set settled = 1 where date='$last_month' and contact_id in($str_contact_id)");
 	}
 	public function setContactEdited($contact_id){
 		$condition = array();
@@ -226,6 +234,13 @@ class ContactMainModel extends Model {
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
 		$this -> where($condition)->delete();
+	}
+	public function getSettledContactOfMonth($month){
+		$condition = array();
+		$condition['settled'] = 1;
+		$condition['date'] = $month;
+		$res = $this -> where($condition) -> getField('salesman_id,contact_id');
+		return $res;
 	}
 }
 ?>

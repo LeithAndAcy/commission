@@ -23,6 +23,7 @@ class SourceDataController extends Controller {
 	private $db_wage_deduction;
 	private $db_fee_ratio;
 	private $db_sale_expense;
+	private $db_salary;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -47,26 +48,26 @@ class SourceDataController extends Controller {
 		$this -> db_wage_deduction = D("WageDeduction");
 		$this -> db_fee_ratio = D("FeeRatio");
 		$this -> db_sale_expense = D("SaleExpense");
+		$this -> db_salary = D("Salary");
 	}
     public function loadSourceDataPage(){
     	$this -> display('SourceDataPage');
 	}
 	
 	public function loadData(){
-		$begin_date = $_POST['begin_date'];
-		$end_date = $_POST['end_date'];
+		$contact_date = $_POST['contact_date'];
+		
+		$begin_date = date('Y-m-01', strtotime($contact_date)); 
+		$end_date = date('Y-m-d', strtotime("$begin_date +1 month -1 day")); 
 		$last_end_date = $this -> db_load_history -> getLastEndDate();
 		$today = date("Y-m-d");
-		if($begin_date == "" || $end_date == ""){
-			$this -> error("起始日期或者结束日期为空");
-		}elseif($begin_date > $end_date){
-			$this -> error("起始日期大于结束日期");
-		}elseif($begin_date <= $last_end_date){
-			$this -> error("起始日期范围非法");
-		}elseif($end_date >= $today){
-			$this -> error("结束日期最大只能为昨天");
+		if($end_date >= $today){
+			$this -> error("日期不能选择当月");
 		}
-		
+		if($this -> db_salary->checkSalarySettled($contact_date)){
+			// return true; already settled
+			$this -> error("该月份工资已结算，不能重新导入");
+		}
 		$this -> db_U8 = D("U8");
 		$edited_contact_main = $this -> db_U8 ->getEditedContactMain($begin_date,$end_date);
 		if(count($edited_contact_main) == 0){
@@ -97,7 +98,6 @@ class SourceDataController extends Controller {
 		$this -> db_contact_main -> deleteItems($arr_check_list);
 		$this -> db_contact_detail -> deleteItems($arr_check_list);
 		$this -> _processData($begin_date, $end_date);
-		
 	}
 	
 	private function _processData($begin_date,$end_date){
@@ -106,10 +106,10 @@ class SourceDataController extends Controller {
 		$all_contact_main = $this -> db_U8 -> getAllContactMain($begin_date,$end_date);
 		// 插入 contact_main
 		$this -> db_contact_main -> addContactMain($all_contact_main);
-		//插入contact_detail  
+		//取得存货信息
 		$all_contact_detail = $this -> db_U8 -> getContactDetail($all_contact_main);
 		$all_contact_detail = $this -> db_U8 -> getInventoryDetailOfConflictPage($all_contact_detail);
-		//取得存货信息
+		//插入contact_detail
 		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
 		// 取得客户回款金额
 		$customer_funds =  $this -> db_U8 ->getCustomerFunds($begin_date,$end_date);

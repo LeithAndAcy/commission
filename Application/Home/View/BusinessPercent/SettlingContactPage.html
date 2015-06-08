@@ -14,7 +14,7 @@
 				取数
 			</button>
 			<button class="btn btn-info" id="btn_caculate">
-				计算
+				结算
 			</button>
 		</div>
 		<div class="col-xs-12">
@@ -260,10 +260,13 @@
 			}
 		});
 		$("#btn_caculate").click(function() {
-			$('#btn_caculate').attr('disabled',"true");
-			$.post("__CONTROLLER__/settleContact", {}, function(data) {
-				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
-			});
+			var temp = confirm("是否结算上月合同？");
+			if($temp){
+				$('#btn_caculate').attr('disabled',"true");
+				$.post("__CONTROLLER__/settleContact", {}, function(data) {
+					window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
+				});
+			}
 		});
 	}); 
 </script>

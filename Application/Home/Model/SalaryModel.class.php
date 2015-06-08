@@ -26,6 +26,7 @@ class SalaryModel extends Model {
 		}
 		return $temp;
 	}
+	
 	public function getShanghaiSalary($month){
 		$condition = array();
 		$condition['date'] = $month;
@@ -68,6 +69,19 @@ class SalaryModel extends Model {
 	public function getAllSalary($Page){
 		$res = $this -> order('date desc')->limit($Page->firstRow.','.$Page->listRows) -> select();
 		return $res;
+	}
+	public function deleteSalaryOfMonth($month){
+		$this -> query("delete from commission_salary where date='$month'");
+	}
+	public function checkSalarySettled($month){
+		$condition = array();
+		$condition['date'] = $month;
+		$res = $this -> where($condition) -> find();
+		if($res){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 ?>
