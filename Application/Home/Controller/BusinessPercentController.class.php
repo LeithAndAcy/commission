@@ -182,10 +182,10 @@ class BusinessPercentController extends Controller {
 			$temp_fee_ratio = $this -> db_fee_ratio -> getFeeRatio($salesman_id);
 			$arr_ratio[$key]['special_business_ratio'] = $temp_special_business_ratio;
 			if($arr_ratio[$key]['end_cost_price'] > $contact_detail[$key]['sale_price']){
-				$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_quantity']* $contact_detail[$key]['sale_price'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust']*0.01) *$temp_fee_ratio;
+				$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_quantity']* $contact_detail[$key]['sale_price'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust']) *$temp_fee_ratio;
 				$arr_ratio[$key]['special_business'] = $contact_detail[$key]['delivery_quantity']* $contact_detail[$key]['sale_price'] * $arr_ratio[$key]['special_business_ratio'] *$temp_fee_ratio;
 			}else{
-				$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_quantity']* $arr_ratio[$key]['end_cost_price'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust']*0.01) *$temp_fee_ratio;
+				$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_quantity']* $arr_ratio[$key]['end_cost_price'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust']) *$temp_fee_ratio;
 				$arr_ratio[$key]['special_business'] = $contact_detail[$key]['delivery_quantity']* $arr_ratio[$key]['end_cost_price'] * $arr_ratio[$key]['special_business_ratio'] *$temp_fee_ratio;
 			}
 			
@@ -200,19 +200,21 @@ class BusinessPercentController extends Controller {
 			}
 			if($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)>0){
 				$arr_ratio[$key]['normal_profit'] =$contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1) 
-				*(($arr_ratio[$key]['normal_profit_ratio']+$contact_detail[$key]['profit_adjust'])*0.01)
-				 + $arr_ratio[$key]['end_cost_price']*0.1*($arr_ratio[$key]['normal_profit_ratio']*0.01 + $contact_detail[$key]['profit_adjust']*0.01 + 0.1)) * $temp_fee_ratio;
+				*(($arr_ratio[$key]['normal_profit_ratio']*0.01+$contact_detail[$key]['profit_adjust']))
+				 + $arr_ratio[$key]['end_cost_price']*0.1*($arr_ratio[$key]['normal_profit_ratio']*0.01 + $contact_detail[$key]['profit_adjust'] + 0.1)) * $temp_fee_ratio;
 				
 				
 			}elseif($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)<=0){
 				$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'])
-				 * ($arr_ratio[$key]['normal_profit_ratio']+$contact_detail[$key]['profit_adjust'])*0.01 *$temp_fee_ratio;
+				 * ($arr_ratio[$key]['normal_profit_ratio']*0.01+$contact_detail[$key]['profit_adjust'])*$temp_fee_ratio;
 			
 			}else{
 				$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense)
-				* ($arr_ratio[$key]['normal_profit_ratio'] + $contact_detail[$key]['profit_adjust']) * 0.01 * $temp_fee_ratio;
+				* ($arr_ratio[$key]['normal_profit_ratio'] * 0.01+ $contact_detail[$key]['profit_adjust'])* $temp_fee_ratio;
 			}
 		}
+		print_r($arr_ratio);
+		print_r($contact_detail);
 		$this -> db_contact_detail -> updateSettlingRatio($arr_ratio);
 	}
 	public function deleteContact(){
@@ -242,9 +244,8 @@ class BusinessPercentController extends Controller {
 		$this -> db_contact_main -> setSettlingContact($contact_id);
 		$contact_total_money = $this -> db_contact_detail -> getContactTotalMoney($contact_id);
 		$temp = $this -> db_contact_main -> getContactSalemanAndCustomer($contact_id);
-		$salesman_id = $temp['salesman_id'];
 		$customer_id = $temp['customer_id'];
-		$this -> db_coustomer_funds -> subtractCustomerBenefit($customer_id,$salesman_id,$contact_total_money);
+		$this -> db_coustomer_funds -> subtractCustomerBenefit($customer_id,$contact_total_money);
 	}
 	
 	public function settleContact(){
