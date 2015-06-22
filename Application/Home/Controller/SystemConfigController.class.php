@@ -49,7 +49,8 @@ class SystemConfigController extends Controller {
 		
 		$new_user_name = $_POST['newUserName'];
 		$new_user_pwd = $_POST['newUserPWD'];
-		$this -> db_login -> addNewUser($new_user_name,$new_user_pwd);
+		$new_user_power = $_POST['power'];
+		$this -> db_login -> addNewUser($new_user_name,$new_user_pwd,$new_user_power);
 		$this ->loadSystemConfigPage();
 	}
 }

@@ -7,6 +7,7 @@ class LoginModel extends Model {
 		$condition = array();
 		$condition['name'] = $user_name;
 		$res = $this->where($condition)->find();
+		$_SESSION['admin'] = $res['admin'];
 		return $res['pwd'];
 	}
 	public function updatePWD($new_pwd){
@@ -14,7 +15,6 @@ class LoginModel extends Model {
 		$condition['name'] = session('user_name');
 		$data['pwd'] = md5($new_pwd);
 	 	$this -> where($condition)->save($data);
-		echo $this->getLastSql();
 		exit;
 	}
 	public function checkDuplicateName($user_name){
@@ -27,10 +27,11 @@ class LoginModel extends Model {
 			return true; //名字没重复，新名字能用	
 		}
 	}
-	public function addNewUser($user_name,$user_pwd){
+	public function addNewUser($user_name,$user_pwd,$power){
 		$data = array();
 		$data['name'] = $user_name;
 		$data['pwd'] = md5($user_pwd);
+		$data['admin'] = $power;
 		$this -> add($data);
 	}
 }

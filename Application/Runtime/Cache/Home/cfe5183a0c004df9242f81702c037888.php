@@ -30,12 +30,9 @@
 			   	<li li_function="SourceData"><a href="#">基本数据</a></li>
 			   	<li li_function="CaculateWage"><a href="#">薪资计算</a></li>
 			   	<li li_function="BusinessPercent"><a href="#">业务提成</a></li>
-			   	
-			   	<!-- <li li_function="EditData"><a href="#">修改数据</a></li> -->
 			   	<li li_function="SearchData"><a href="#">搜索数据</a></li>
-			   	<!-- <li li_function="Report"><a href="#">报表</a></li> -->
-			   	<!-- <li><a href="#">功能5</a></li> -->
-			   	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="AddData"><a href="#">手动添加数据</a></li>
 			  </ul>
 			    
 			  <button id="btn_logout" class="btn btn-danger navbar-btn navbar-right">退出</button>
@@ -49,13 +46,14 @@
 	<div class="panel-group " role="tablist" aria-multiselectable="true">
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingOne">
-				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 业务表 </a></h4>
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 业务表
+				&nbsp;<i class="glyphicon glyphicon-plus"></i> </a></h4>
 			</div>
-			<div id="collapseOne" class="panel-collapse collapse " role="tabpanel" aria-labelledby="headingOne">
+			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 				<div class="panel-body">
 					<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadSettleSummaryPage" target="workflow">汇总结算表</a>
+							<a href="/commission/index.php/Home/SourceData/loadSettleSummaryPage" target="workflow">待结算合同</a>
 						</li>
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadNormalBusinessPage" target="workflow">基本业绩提成比例表</a>
@@ -66,34 +64,45 @@
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadNormalProfitPage" target="workflow">基本利润提成比例表</a>
 						</li>
-						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadSpecialProfitPage" target="workflow">未达标利润提成比例表</a>
+						<li>
+							<a href="/commission/index.php/Home/SourceData/loadFeeRatioPage" target="workflow">扣率表</a>
 						</li>
+						<li>
+							<a href="/commission/index.php/Home/SourceData/loadSaleExpensePage" target="workflow">销售费用表</a>
+						</li>
+						<!-- <li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadSpecialProfitPage" target="workflow">未达标利润提成比例表</a>
+						</li> -->
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadFundsBackPage" target="workflow">资金回笼调整表</a>
 						</li>
 						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">上浮低价调整比例表</a>
+							<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">上浮底价调整比例表</a>
+						</li>
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadAreaPriceFloatPage" target="workflow">地区上浮底价表</a>
+						</li>
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadLengthLimitPage" target="workflow">合同结算长度限定表</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="panel-group" role="tablist" aria-multiselectable="true">
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingTwo">
-				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> 人事表 </a></h4>
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> 人事表
+				&nbsp;<i class="glyphicon glyphicon-plus"></i> </a></h4>
 			</div>
 			<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
 				<div class="panel-body">
 					<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 						<li role="presentation">
-							<a href="loadHumanWagePage" target="workflow">人事工资表</a>
+							<a href="loadHumanWagePage" target="workflow">人事工资以及扣款表</a>
 						</li>
-						<li role="presentation">
+						<!-- <li role="presentation">
 							<a href="loadIncidentalFeePage" target="workflow">杂费表</a>
-						</li>
+						</li> -->
 						<li role="presentation">
 							<a href="loadTaxPage" target="workflow">个税基础表</a>
 						</li>
@@ -102,6 +111,9 @@
 						</li>
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadInsuranceAndFundPage" target="workflow">社保及公积金表</a>
+						</li>
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadCustomerPage" target="workflow">客户信息表</a>
 						</li>
 					</ul>
 				</div>
@@ -112,7 +124,7 @@
         		</div>
         		<div id="container" class="row" style="padding-left:220px;padding-top: 5px">
         			
-	<iframe id="workflow" name="workflow" frameborder="false" width="99%" allowtransparency="true" height="600px"></iframe>
+	<iframe id="workflow" name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="800px"></iframe>
 
         		</div>
         	</div>

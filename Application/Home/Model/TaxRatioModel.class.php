@@ -21,9 +21,17 @@ class TaxRatioModel extends Model {
 	public function editTaxBeginningPoint($value){
 		$condition = array();
 		$condition['ratio'] = -100;
-		$data['low_limit'] = $value;
-		$data['high_limit'] = $value;
-		$this -> where($condition) -> save($data);
+		$res = $this -> where($condition)-> find();
+		if($res == null){
+			$data['low_limit'] = $value;
+			$data['high_limit'] = $value;
+			$data['ratio'] = -100;
+			$this -> add($data);
+		}else{
+			$data['low_limit'] = $value;
+			$data['high_limit'] = $value;
+			$this -> where($condition) -> save($data);
+		}
 	}
 	public function editItem($id,$ratio){
 		$condition = array();

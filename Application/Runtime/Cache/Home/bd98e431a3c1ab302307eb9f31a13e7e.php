@@ -6,6 +6,7 @@
 
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTable.fixedColumns.js"></script>
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/dataTables.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/bootstrap-responsiv.css">
 
@@ -21,6 +22,7 @@
 		table-layout: fixed;
 		word-break: break-all;
 		font-size: 13px;
+		
 	}
 	.datatable  th {
 		text-align: center;
@@ -166,7 +168,7 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required,ajax[ajaxSalesmanIdCall]]" name="add_new_salesman_id"  id="add_new_salesman_id" placeholder="人员编码">
+									<input type="text" class="form-control validate[required]" name="add_new_salesman_id"  id="add_new_salesman_id" placeholder="人员编码">
 								</div>
 							</div>
 							<div class="form-group">
