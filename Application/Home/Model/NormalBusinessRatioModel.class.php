@@ -50,5 +50,13 @@ class NormalBusinessRatioModel extends Model {
 		}
 		return $res;
 	}
+	public function getAllHandledNormalBusinessRatio(){
+		$arr = array();	
+		$res = $this -> select();
+		foreach ($res as $key => $value) {
+			$arr[$value['salesman_id']][$value['inventory_id']] = $value['ratio'];
+		}
+		return $arr;
+	}
 }
 ?>

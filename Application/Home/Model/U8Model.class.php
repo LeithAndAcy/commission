@@ -5,7 +5,7 @@ class U8Model extends Model {
 	protected $connection = array(
 		'DB_TYPE' => 'sqlsrv', // 数据库类型
 		'DB_HOST' => 'localhost', // 服务器地址
-		'DB_NAME' => 'U8', // 数据库名
+		'DB_NAME' => 'UFDATA', // 数据库名
 	//	'DB_NAME' => 'UFDATA_111_2015', // 数据库名
 		'DB_USER' =>'sa',
 		'DB_PWD' =>'aaa111',//密码
@@ -15,7 +15,7 @@ class U8Model extends Model {
 	protected $trueTableName;
 	public function getEditedContactMain($begin_date,$end_date){
 		// so_somain 取订单号，合同号，客户编码，业务员编码
-		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where dmodifysystime between '$begin_date' and '$end_date'");
+		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where (cCloser in not null) and ((dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date'))");
 		return $res;
 	}
 	public function getContactDetail($contact_main){
@@ -39,6 +39,24 @@ class U8Model extends Model {
 		}
 		return $contact_main;
 	}
+	
+	
+	public function getContactDetailByDate($begin_date,$end_date){
+		
+		$res = $this -> query("select SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
+		SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity,SO_SODetails.iFHMoney as delivery_money,
+		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
+		Inventory.cInvDefine1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name
+		from SO_SOMain left join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
+		and (cCloser is null and ((dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date') 
+		OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date')))
+		left join Inventory on SO_SODetails.cInvCode = Inventory.cInvCode
+		left join InventoryClass on Inventory.cInvCCode = InventoryClass.cInvCCode
+		");
+		return $res;
+	}
+	
+	
 	public function getInventoryDetail($contact_detail){
 		//Inventory Table  取商品的信息，存货类别编码，存货名称，规格型号，颜色
 		// $this -> trueTableName = "Inventory";
@@ -81,7 +99,8 @@ class U8Model extends Model {
 	
 	public function getAllContactMain($begin_date,$end_date){
 		// so_somain 取订单号，合同号，客户编码，业务员编码
-		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where (dmodifysystime between '$begin_date' and '$end_date') OR (dcreatesystime between '$begin_date' and '$end_date')");
+		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain 
+		where cCloser is null and ( (dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date'))");
 		return $res;
 	}
 	

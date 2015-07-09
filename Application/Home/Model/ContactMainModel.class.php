@@ -225,7 +225,7 @@ class ContactMainModel extends Model {
 		// from commission_contact_main 
 		// left join commission_contact_detail on commission_contact_main.contact_id = commission_contact_detail.contact_id and commission_contact_main.settling=1 
 		// and commission_contact_main.settled=0 and commission_contact_main.settlement=1;");
-		$res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
+		$res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
 		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
 		return $res;
@@ -240,6 +240,15 @@ class ContactMainModel extends Model {
 		$condition['settled'] = 1;
 		$condition['date'] = $month;
 		$res = $this -> where($condition) -> getField('salesman_id,contact_id');
+		return $res;
+	}
+	public function getSettlementContactDetail(){
+		$res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
+		commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
+		and commission_contact_main.contact_id = commission_contact_detail.contact_id
+		left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
 		return $res;
 	}
 }

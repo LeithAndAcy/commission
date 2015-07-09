@@ -61,16 +61,16 @@ class SourceDataController extends Controller {
 		$end_date = date('Y-m-d', strtotime("$begin_date +1 month -1 day")); 
 		$last_end_date = $this -> db_load_history -> getLastEndDate();
 		$today = date("Y-m-d");
-		if($end_date >= $today){
-			$this -> error("日期不能选择当月");
-		}
+		// if($end_date >= $today){
+			// $this -> error("日期不能选择当月");
+		// }
 		if($this -> db_salary->checkSalarySettled($contact_date)){
 			// return true; already settled
 			$this -> error("该月份工资已结算，不能重新导入");
 		}
 		$this -> db_U8 = D("U8");
 		$edited_contact_main = $this -> db_U8 ->getEditedContactMain($begin_date,$end_date);
-		if(count($edited_contact_main) == 0){
+		if($edited_contact_main == null){
 			$this -> _processData($begin_date,$end_date);
 		}else{
 			$edited_contact_main = $this -> db_customer -> addCustomerName($edited_contact_main);
@@ -105,10 +105,10 @@ class SourceDataController extends Controller {
 		$this -> db_U8 = D("U8");
 		$all_contact_main = $this -> db_U8 -> getAllContactMain($begin_date,$end_date);
 		// 插入 contact_main
-		$this -> db_contact_main -> addContactMain($all_contact_main);
+	//	$this -> db_contact_main -> addContactMain($all_contact_main);
 		//取得存货信息
-		$all_contact_detail = $this -> db_U8 -> getContactDetail($all_contact_main);
-		$all_contact_detail = $this -> db_U8 -> getInventoryDetailOfConflictPage($all_contact_detail);
+		$all_contact_detail = $this -> db_U8 -> getContactDetailByDate($begin_date,$end_date);
+		
 		//插入contact_detail
 		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
 		// 取得客户回款金额
@@ -125,7 +125,7 @@ class SourceDataController extends Controller {
 		$this -> db_U8 = D("U8");
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
 		$count_settlement_contact = $this -> db_contact_main -> countSettlementContact();
-		$Page = new \Think\Page($count_settlement_contact,1000);
+		$Page = new \Think\Page($count_settlement_contact,250);
 		$show = $Page->show();// 分页显示输出
 		$settlement_contact = $this -> db_contact_main -> getSettlementContact($Page);
 		$settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);
@@ -149,18 +149,23 @@ class SourceDataController extends Controller {
 	}
 	public function getSettlementRatio(){
 		$this -> db_U8 = D("U8");
-		$contact_main = $this -> db_contact_main -> getSettlementContact();
-		$contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
+		// $contact_main = $this -> db_contact_main -> getSettlementContact();
+		// $contact_detail = $this -> db_contact_detail ->getContactDetail($contact_main);
+		$contact_detail = $this -> db_contact_main -> getSettlementContactDetail();
 		//$contact_detail = $this -> db_U8 -> getInventoryDetail($contact_detail);
-		
+		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllHandledNormalBusinessRatio();
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
+			$salesman_id = $value['salesman_id'];
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
-			$arr_ratio[$key]['inventory_id'] = substr($value['inventory_id'], 0,1) ;
-			$arr_ratio[$key]['normal_business_ratio'] = $this -> db_normal_business_ratio -> getNormalBusinessRatio($value['salesman_id'],$arr_ratio[$key]['inventory_id']);
+			$temp_inventory_id = substr($value['inventory_id'], 0,1) ;
+			$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
+			if($arr_ratio[$key]['normal_business_ratio'] == null){
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
+			}
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
 				if($value['salesman_id'] == $vvv['salesman_id']){
@@ -168,8 +173,8 @@ class SourceDataController extends Controller {
 					break;
 				}
 			}
-			$area = $this -> db_customer -> getCustomerAreaById($value['customer_id']);
-			$area_price_float_ratio = $this -> db_area_price_float_ratio->getRatio($value['classification_id'],$area);
+			//使用left join直接查出来地区浮动比例
+			$area_price_float_ratio = $value['ratio'];
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
@@ -184,7 +189,6 @@ class SourceDataController extends Controller {
 					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
 			}
-		//	print_r($arr_ratio[$key]);
 		}
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
 	}
