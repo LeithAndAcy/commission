@@ -5,7 +5,7 @@ class SpecialBusinessRatioModel extends Model {
 
 	public function getAllSpecialBusinessRatio() {
 
-		$res = $this -> query("select id,salesman_id,inventory_id,ratio,ltrim(str(low_limit,12,2)) as low_limit,ltrim(str(high_limit,12,2)) as high_limit from commission_special_business_ratio");
+		$res = $this -> query("select id,salesman_id,inventory_id,ratio,ltrim(str(low_limit,12,4)) as low_limit,ltrim(str(high_limit,12,4)) as high_limit from commission_special_business_ratio");
 		foreach ($res as $key => $value) {
 			$res[$key]['ratio'] *= 100;
 		}
@@ -53,6 +53,11 @@ class SpecialBusinessRatioModel extends Model {
 		$res = $this -> query("select ratio from commission_special_business_ratio where (inventory_id = '$inventory_id') AND(salesman_id = '$salesman_id') AND(low_limit <= '$funds') AND(high_limit > '$funds')");
 		$ratio = $res[0]['ratio'];
 		return $ratio;
+	}
+	public function getAllHandledSpecialBusinessRatio(){
+		$arr = array();
+		$res = $this -> select();
+		return $res;
 	}
 
 }

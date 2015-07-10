@@ -105,7 +105,7 @@ class SourceDataController extends Controller {
 		$this -> db_U8 = D("U8");
 		$all_contact_main = $this -> db_U8 -> getAllContactMain($begin_date,$end_date);
 		// 插入 contact_main
-	//	$this -> db_contact_main -> addContactMain($all_contact_main);
+		$this -> db_contact_main -> addContactMain($all_contact_main);
 		//取得存货信息
 		$all_contact_detail = $this -> db_U8 -> getContactDetailByDate($begin_date,$end_date);
 		
@@ -125,7 +125,7 @@ class SourceDataController extends Controller {
 		$this -> db_U8 = D("U8");
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
 		$count_settlement_contact = $this -> db_contact_main -> countSettlementContact();
-		$Page = new \Think\Page($count_settlement_contact,250);
+		$Page = new \Think\Page($count_settlement_contact,100);
 		$show = $Page->show();// 分页显示输出
 		$settlement_contact = $this -> db_contact_main -> getSettlementContact($Page);
 		$settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);

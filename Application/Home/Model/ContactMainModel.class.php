@@ -163,7 +163,6 @@ class ContactMainModel extends Model {
 			$str_contact_id .= "'".$value."'".',';
 		}
 		$str_contact_id = substr($str_contact_id, 0,-1);
-		
 		$this -> query("update commission_contact_main set settled = 1 where date='$last_month' and contact_id in($str_contact_id)");
 	}
 	public function setContactEdited($contact_id){
@@ -218,16 +217,15 @@ class ContactMainModel extends Model {
 		return $res;
 	}
 	public function getSettlingContactDetail(){
-		// $res = $this -> query("select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.cSOCode,commission_contact_main.contact_id,
-		// commission_contact_detail.inventory_id commission_contact_detail.classification commission_contact_detail.inventory_name commission_contact_detail.specification
-		// commission_contact_detail.colour commission_contact_detail.sale_price commission_contact_detail.cost_price commission_contact_detail.float_price
-		// commission_contact_detail.sale_quantity commission_contact_detail.delivery_quantity
-		// from commission_contact_main 
-		// left join commission_contact_detail on commission_contact_main.contact_id = commission_contact_detail.contact_id and commission_contact_main.settling=1 
-		// and commission_contact_main.settled=0 and commission_contact_main.settlement=1;");
+		// $res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
+		// commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
+		// and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
 		$res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
-		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		and commission_contact_main.contact_id = commission_contact_detail.contact_id
+		left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
 		return $res;
 	}
 	public function deleteItem($contact_id){
@@ -250,6 +248,16 @@ class ContactMainModel extends Model {
 		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
 		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
 		return $res;
+	}
+	public function getSettlingContactTotalDeliveryMonry(){
+		$res = $this -> query("select commission_contact_main.salesman_id,SUM(commission_contact_detail.delivery_money) as total_delivery_money from commission_contact_detail right join commission_contact_main on 
+		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1 and commission_contact_main.contact_id = commission_contact_detail.contact_id
+		group by commission_contact_main.salesman_id;");
+		$arr = array();
+		foreach ($res as $key => $value) {
+			$arr[$value['salesman_id']] = $value['total_delivery_money'];
+		}
+		return $arr;
 	}
 }
 ?>

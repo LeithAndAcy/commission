@@ -99,7 +99,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div align="right">
+		<div align="left">
 			{$page}
 		</div>
 		<div class="modal fade" id="searchModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -261,7 +261,7 @@
 		});
 		$("#btn_caculate").click(function() {
 			var temp = confirm("是否结算上月合同？");
-			if($temp){
+			if(temp){
 				$('#btn_caculate').attr('disabled',"true");
 				$.post("__CONTROLLER__/settleContact", {}, function(data) {
 					window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";

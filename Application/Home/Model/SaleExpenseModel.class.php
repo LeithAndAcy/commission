@@ -31,5 +31,13 @@ class SaleExpenseModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition) -> delete();
 	}
+	public function getAllHandledSaleExpense(){
+		$arr = array();	
+		$res = $this->select();
+		foreach ($res as $key => $value) {
+			$arr[$value['salesman_id']][$value['inventory_id']] = $value['sale_expense'];
+		}
+		return $arr;
+	}
 }
 ?>
