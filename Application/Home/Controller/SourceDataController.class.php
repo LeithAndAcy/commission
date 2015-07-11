@@ -115,7 +115,7 @@ class SourceDataController extends Controller {
 		$customer_funds =  $this -> db_U8 ->getCustomerFunds($begin_date,$end_date);
 		$this -> db_constomer_funds -> updateItems($customer_funds);
 		// 插入load_history
-		$this -> db_load_history -> addItem($begin_date,$end_date);
+		$this -> db_load_history -> addItem($begin_date,$end_date,count($all_contact_main),count($all_contact_detail));
 	}
 	public function setManualContact(){
 		$contact_id = $_POST['contact_id'];
@@ -125,6 +125,7 @@ class SourceDataController extends Controller {
 		$this -> db_U8 = D("U8");
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
 		$count_settlement_contact = $this -> db_contact_main -> countSettlementContact();
+		$count_settlement_contact_detail = $this -> db_contact_main -> countSettlementContactDetail();
 		$Page = new \Think\Page($count_settlement_contact,100);
 		$show = $Page->show();// 分页显示输出
 		$settlement_contact = $this -> db_contact_main -> getSettlementContact($Page);
@@ -132,6 +133,8 @@ class SourceDataController extends Controller {
 		$settlement_contact = $this -> _addSalesmanName($settlement_contact);
 		$settlement_contact = $settlement_contact['data'];
 		$settlement_contact_detail = $this -> db_contact_detail -> getContactDetail($settlement_contact);
+		$this -> assign('count_settlement_contact',$count_settlement_contact);
+		$this -> assign('count_settlement_contact_detail',$count_settlement_contact_detail);
 		$this -> assign('settlement_contact_detail',$settlement_contact_detail);
 		$this -> assign('page',$show);
 		$this -> assign('load_history',$load_history);
@@ -628,7 +631,11 @@ class SourceDataController extends Controller {
 		$this -> db_salesman -> addItem($data);
 		$this -> loadSalesmanPage();
 	}
-	
+	public function loadLoadHistoryPage(){
+		$load_history = $this -> db_load_history -> getAllItems();
+		$this -> assign("load_history",$load_history);
+		$this -> display('LoadHistoryPage');
+	}
 	public function checkSalesmanId(){
 		$salesman_id = $_GET['fieldValue'];
 		if($this -> db_salesman ->checkDuplicateSalesmanId($salesman_id)){

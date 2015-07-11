@@ -220,11 +220,11 @@ class ContactMainModel extends Model {
 		// $res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
 		// commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
 		// and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
-		$res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
+		$res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
 		and commission_contact_main.contact_id = commission_contact_detail.contact_id
-		left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
-		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
 		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
 		return $res;
 	}
@@ -241,11 +241,11 @@ class ContactMainModel extends Model {
 		return $res;
 	}
 	public function getSettlementContactDetail(){
-		$res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
+		$res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
 		commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
 		and commission_contact_main.contact_id = commission_contact_detail.contact_id
-		left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
-		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
 		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
 		return $res;
 	}
@@ -258,6 +258,12 @@ class ContactMainModel extends Model {
 			$arr[$value['salesman_id']] = $value['total_delivery_money'];
 		}
 		return $arr;
+	}
+	public function countSettlementContactDetail(){
+		$res = $this -> query("select count (*) as count_contact_detail from commission_contact_main join commission_contact_detail on 
+		commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
+		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		return $res[0]['count_contact_detail'];
 	}
 }
 ?>

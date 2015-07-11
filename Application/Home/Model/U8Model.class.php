@@ -43,15 +43,15 @@ class U8Model extends Model {
 	
 	public function getContactDetailByDate($begin_date,$end_date){
 		
-		$res = $this -> query("select SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
+		$res = $this -> query("select distinct SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
 		SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity,SO_SODetails.iFHMoney as delivery_money,
 		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		Inventory.cInvDefine1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name
-		from SO_SOMain left join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
-		and (cCloser is null and ((dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date') 
-		OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date')))
-		left join Inventory on SO_SODetails.cInvCode = Inventory.cInvCode
-		left join InventoryClass on Inventory.cInvCCode = InventoryClass.cInvCCode
+		from SO_SOMain join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
+		and (SO_SOMain.cCloser is null and ((SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date') 
+		OR (SO_SOMain.dChangeVerifyDate is not null and SO_SOMain.dChangeVerifyDate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date')))
+		join Inventory on SO_SODetails.cInvCode = Inventory.cInvCode
+		join InventoryClass on Inventory.cInvCCode = InventoryClass.cInvCCode
 		");
 		return $res;
 	}

@@ -22,6 +22,12 @@
 					<button class="btn btn-primary" id="get_ratio">
 						取数
 					</button>
+					<span>
+						合同总数：{$count_settlement_contact}
+					</span>
+					<span>
+						合同明细总数：{$count_settlement_contact_detail}
+					</span>
 				</div>
 			</div>
 			<div class="container-fluid">
@@ -315,7 +321,7 @@
 			var temp = confirm("是否申请结算");
 			if (temp) {
 				var contact_id = $(this).attr("contact_id");
-				$.post("setManualContact", {
+				$.post("__CONTROLLER__/setManualContact", {
 					"contact_id" : contact_id,
 				}, function() {
 					window.location.href = "/commission/index.php/Home/SourceData/loadSettleSummaryPage";

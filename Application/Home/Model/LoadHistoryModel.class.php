@@ -13,11 +13,17 @@ class LoadHistoryModel extends Model {
 		return $res;
 	}
 	
-	public function addItem($begin_date,$end_date){
+	public function addItem($begin_date,$end_date,$count_contact_main,$count_contact_detail){
 		$data = array();
 		$data['begin_date'] = $begin_date;
 		$data['end_date'] =  $end_date;
+		$data['count_contact_main'] = $count_contact_main;
+		$data['count_contact_detail'] = $count_contact_detail;
 		$this -> add($data);
+	}
+	public function getAllItems(){
+		$res = $this->select();
+		return $res;
 	}
 }
 ?>
