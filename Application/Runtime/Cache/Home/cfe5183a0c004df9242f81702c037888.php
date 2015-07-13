@@ -85,6 +85,9 @@
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadLengthLimitPage" target="workflow">合同结算长度限定表</a>
 						</li>
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadLoadHistoryPage" target="workflow">导入数据历史记录</a>
+						</li>
 					</ul>
 				</div>
 			</div>

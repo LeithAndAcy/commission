@@ -4,8 +4,12 @@
 <script src="/commission/Public/bootstrap/js/bootstrap.min.js"></script>
 <link href="/commission/Public/bootstrap/css/bootstrap.css" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/jquery.dataTables.css">
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTable.fixedColumns.js"></script>
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/dataTables.bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/bootstrap-responsiv.css">
+
 <script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine-en.js"></script>
 <script type="text/javascript" src="/commission/Public/plugins/Validate/jquery.validationEngine.js"></script>
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Validate/validationEngine.jquery.css">
@@ -13,29 +17,65 @@
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.css">
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.bootstrap.css">
 <script type="text/javascript" src="/commission/Public/plugins/Select2/select2.js"></script>
+<style>
+	.datatable {
+		table-layout: fixed;
+		word-break: break-all;
+		font-size: 13px;
+		
+	}
+	.datatable  th {
+		text-align: center;
+	}
+	.datatable  td {
+		text-align: center;
+	}
+	.dataTables_wrapper{
+		margin-top:15px;
+	}
+	</style>
+<script>
+	$(function(){
+		$(".datatable tbody").on("dblclick","tr",function() {
+			$(this).children("td:last()").children("span:eq(0)").children("img").click();
+		});
+	})
+</script>
 	</head>
 	<body>
-
 		<div class="col-xs-12">
 			<div>
-				<button class="btn btn-info" data-toggle="modal" data-target="#addNew">
-					新增
-				</button>
+				<form class="form-inline" enctype="multipart/form-data" method="post" action="/commission/index.php/Home/Excel/importInsuranceAndFundExcel">
+					<div class="form-group">
+						<a><li data-toggle="modal" data-target="#addNew" class="btn btn-info">新增</li></a>
+					</div>
+					<div class="form-group">
+						<input type="file" id="normal_profit_ratio_excel" name="excel_file" class="btn btn-info" value="导入Excel文件" />
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary" value="提交" />
+					</div>
+				</form>
+				<form action="/commission/index.php/Home/Excel/exportInsurancrAndFundsExcelFile" method="post">
+					<div class="form-group">
+						<input type="submit" class="btn btn-info" value="导出" />
+					</div>
+				</form>
 			</div>
-			<table id="allInsuranceFundTable" class="display" width="100%" cellspacing="0" style="margin-top: 20px">
+			<table id="allInsuranceFundTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0" style="margin-top: 20px">
 				<thead>
 					<tr>
-						<th>人员编码</th>
-						<th>姓名</th>
-						<th>社保</th>
-						<th>公积金</th>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
+						<th>社保(元)</th>
+						<th>公积金(元)</th>
 						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php if(is_array($all_insurance_fund)): $i = 0; $__LIST__ = $all_insurance_fund;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
 							<td id="<?php echo ($vo["id"]); ?>_salesman_id"><?php echo ($vo["salesman_id"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["name"]); ?></td>
+							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["salesman_name"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_insurance"><?php echo ($vo["insurance"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_fund"><?php echo ($vo["fund"]); ?></td>
 							<td insurance_fund_id="<?php echo ($vo["id"]); ?>"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit"  alt="编辑" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#edit"> </span>
@@ -109,11 +149,7 @@
 									<select class="form-control" id="salesman_list" name="add_new_salesman_name">
 										<option></option>
 										<optgroup label="上海员工">
-											<?php if(is_array($shanghai_salesmen)): $i = 0; $__LIST__ = $shanghai_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-										</optgroup>
-
-										<optgroup label="昆山员工">
-											<?php if(is_array($kunshan_salesmen)): $i = 0; $__LIST__ = $kunshan_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+											<?php if(is_array($all_salesman)): $i = 0; $__LIST__ = $all_salesman;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["salesman_name"]); ?>"><?php echo ($vo["salesman_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
 										</optgroup>
 									</select>
 								</div>
@@ -121,21 +157,21 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]"   name="add_new_salesman_id"  id="add_new_salesman_id" placeholder="人员编码">
+									<input type="text" class="form-control validate[required]"   name="add_new_salesman_id"  id="add_new_salesman_id" readonly="">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">基本提成比例</label>
+								<label class="col-sm-4 control-label">社保</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
-									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_insurance" placeholder="在此输入" >
-									<span class="input-group-addon">%</span>
+									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_insurance"  >
+									<span class="input-group-addon">元</span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">基本提成比例</label>
+								<label class="col-sm-4 control-label">公积金</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
-									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_fund" placeholder="在此输入" >
-									<span class="input-group-addon">%</span>
+									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_fund"  >
+									<span class="input-group-addon">元</span>
 								</div>
 							</div>
 						</div>
@@ -182,7 +218,7 @@
 				$.post("/commission/index.php/Home/SourceData/deleteInsuranceFund", {
 					"delete_id" : delete_id,
 				}, function(data) {
-					window.location.reload();
+					window.location.href="/commission/index.php/Home/SourceData/loadInsuranceAndFundPage";
 				});
 			}
 		});

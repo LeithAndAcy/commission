@@ -30,12 +30,9 @@
 			   	<li li_function="SourceData"><a href="#">基本数据</a></li>
 			   	<li li_function="CaculateWage"><a href="#">薪资计算</a></li>
 			   	<li li_function="BusinessPercent"><a href="#">业务提成</a></li>
-			   	
-			   	<!-- <li li_function="EditData"><a href="#">修改数据</a></li> -->
 			   	<li li_function="SearchData"><a href="#">搜索数据</a></li>
-			   	<!-- <li li_function="Report"><a href="#">报表</a></li> -->
-			   	<!-- <li><a href="#">功能5</a></li> -->
-			   	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="AddData"><a href="#">手动添加数据</a></li>
 			  </ul>
 			    
 			  <button id="btn_logout" class="btn btn-danger navbar-btn navbar-right">退出</button>
@@ -48,32 +45,23 @@
         			
 	<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateNormalBusiness" target="workflow">基本业绩提成</a>
+			<a href="loadSettlingContactPage" target="workflow">可结算合同</a>
 		</li>
 		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateSpecialBusiness" target="workflow">达标业绩提成</a>
+			<a href="loadManualContactPage" target="workflow">手动结算合列表</a>
 		</li>
 		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateNormalProfit" target="workflow">基本利润提成</a>
+			<a href="loadSettledContactPage" target="workflow">已结算合同</a>
 		</li>
 		<li role="presentation">
-			<a href="/commission/index.php/Home/BusinessPercent/CaculateSpecialProfit" target="workflow">未达标利润提成</a>
-		</li>
-		<li role="presentation">
-			<a target="workflow">可结算合同</a>
-		</li>
-		<li role="presentation">
-			<a href="" target="workflow">已结算提成</a>
-		</li>
-		<li role="presentation">
-			<a href="" target="workflow">业务提成表</a>
+			<a href="loadCommissionBuisnessPage" target="workflow">业务提成表</a>
 		</li>
 	</ul>
 
         		</div>
         		<div id="container" class="row" style="padding-left:220px;padding-top: 5px">
         			
-	<iframe name="workflow" frameborder="false" width="99%" allowtransparency="true" height="740px"></iframe>
+	<iframe name="workflow" frameborder="false" width="100%" style="padding-left: 10px" allowtransparency="true" height="800px"></iframe>
 
         		</div>
         	</div>

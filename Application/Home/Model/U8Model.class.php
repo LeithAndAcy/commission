@@ -5,8 +5,8 @@ class U8Model extends Model {
 	protected $connection = array(
 		'DB_TYPE' => 'sqlsrv', // 数据库类型
 		'DB_HOST' => 'localhost', // 服务器地址
-		'DB_NAME' => 'UFDATA', // 数据库名
-	//	'DB_NAME' => 'UFDATA_111_2015', // 数据库名
+	//	'DB_NAME' => 'UFDATA', // 数据库名
+		'DB_NAME' => 'UFDATA_111_2015', // 数据库名
 		'DB_USER' =>'sa',
 		'DB_PWD' =>'aaa111',//密码
 		'DB_PORT' => 1433, // 端口
@@ -43,7 +43,7 @@ class U8Model extends Model {
 	
 	public function getContactDetailByDate($begin_date,$end_date){
 		
-		$res = $this -> query("select distinct SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
+		$res = $this -> query("select SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
 		SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity,SO_SODetails.iFHMoney as delivery_money,
 		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		Inventory.cInvDefine1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name

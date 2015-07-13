@@ -148,6 +148,13 @@ class ContactDetailModel extends Model {
 
 	public function searchByCondition($condition) {
 		$res = $this -> where($condition) -> select();
+		foreach ($res as $key => $value) {
+			$res[$key]['normal_business_ratio'] *= 100;
+			$res[$key]['special_business_ratio'] *= 100;
+			$res[$key]['normal_profit_ratio'] *= 100;
+			$res[$key]['business_adjust'] *= 100;
+			$res[$key]['profit_adjust'] *= 100;
+		}
 		return $res;
 	}
 

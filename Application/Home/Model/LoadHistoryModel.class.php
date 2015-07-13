@@ -25,5 +25,15 @@ class LoadHistoryModel extends Model {
 		$res = $this->select();
 		return $res;
 	}
+	public function checkLoadHistory($begin_date){
+		$condition = array();
+		$condition['begin_date'] = $begin_date;
+		$res = $this -> where($condition)->find();
+		if($res){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+	}
 }
 ?>

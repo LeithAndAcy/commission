@@ -30,12 +30,9 @@
 			   	<li li_function="SourceData"><a href="#">基本数据</a></li>
 			   	<li li_function="CaculateWage"><a href="#">薪资计算</a></li>
 			   	<li li_function="BusinessPercent"><a href="#">业务提成</a></li>
-			   	
-			   	<!-- <li li_function="EditData"><a href="#">修改数据</a></li> -->
 			   	<li li_function="SearchData"><a href="#">搜索数据</a></li>
-			   	<!-- <li li_function="Report"><a href="#">报表</a></li> -->
-			   	<!-- <li><a href="#">功能5</a></li> -->
-			   	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="SystemConfig"><a href="#">系统配置</a></li>
+			  	<li li_function="AddData"><a href="#">手动添加数据</a></li>
 			  </ul>
 			    
 			  <button id="btn_logout" class="btn btn-danger navbar-btn navbar-right">退出</button>
@@ -52,66 +49,85 @@
 	<div>
 		<div style="position:fixed; top:60px;left:10px;width: 150px;z-index: 100;">
 			<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
-			  <li role="presentation" class="active">
-			  	<a href="#changePWD" id="changePWD-tab" role="tab" data-toggle="tab" aria-controls="changePWD" aria-expanded="true">修改密码</a>
-			  </li>
-			  <li role="presentation">
-			  	<a href="#addUser" role="tab" id="addUser-tab" data-toggle="tab" aria-controls="addUser" aria-expanded="false">添加用户</a>
-			  </li>
+				<li role="presentation" class="active">
+					<a href="#changePWD" id="changePWD-tab" role="tab" data-toggle="tab" aria-controls="changePWD" aria-expanded="true">修改密码</a>
+				</li>
+				<?php if($_SESSION['admin'] == 1){ echo "
+					<li role='presentation'>
+						<a href='#addUser' role='tab' id='addUser-tab' data-toggle='tab' aria-controls='addUser' aria-expanded='false'>添加用户</a>
+					</li>"; } ?>
+				<!-- <li role="presentation">
+				<a href="#addUser" role="tab" id="addUser-tab" data-toggle="tab" aria-controls="addUser" aria-expanded="false">添加用户</a>
+				</li> -->
 			</ul>
 		</div>
-		
+
 		<div id="myTabContent" class="tab-content row " style="padding-left:170px;padding-top: 50px">
 			<div role="tabpanel" class="tab-pane fade in active col-xs-12" id="changePWD" aria-labelledby="changePWD-tab">
-       	 		<form id="changePWD_form" class="form-horizontal" role="form" method="post" action="/commission/index.php/Home/SystemConfig/changePWD">
-       	 			<div class="form-group col-xs-10">
-       	 				<label class="col-sm-3 control-label">当前密码:</label>
-       	 				 <div class="col-sm-5">
-       	 					<input name="currentPWD" id="currentPWD" type="password" class="form-control validate[required,ajax[ajaxUserCurrentPWD]]" placeholder="请输入当前密码"/>
-       	 				</div>
-       	 			</div>
-       	 			<div class="form-group col-xs-10">
-       	 				<label class="col-sm-3 control-label">新密码:</label>
-       	 				 <div class="col-sm-5">
-       	 					<input name="newPWD" id="newPWD" type="password" class="form-control validate[required]" placeholder="请输入新密码"/>
-       	 				</div>
-       	 			</div>
-       	 			<div class="form-group col-xs-10">
-       	 				<label class="col-sm-3 control-label">重复新密码:</label>
-       	 				 <div class="col-sm-5">
-       	 					<input name="newerPWD" id="newerPWD" type="password" class="form-control validate[required,equals[newPWD]]" placeholder="请重复输入新密码"/>
-       	 				</div>
-       	 			</div>
-       	 			<div class="form-group col-xs-10">
-       	 				<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
-       	 				<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
-       	 			</div>
-       	 		</form>
-      		</div>
-      		<div role="tabpanel" class="tab-pane fade col-xs-12" id="addUser" aria-labelledby="profile-tab">
+				<form id="changePWD_form" class="form-horizontal" role="form" method="post" action="/commission/index.php/Home/SystemConfig/changePWD">
+					<div class="form-group col-xs-10">
+						<label class="col-sm-3 control-label">当前密码:</label>
+						<div class="col-sm-5">
+							<!-- <input name="currentPWD" id="currentPWD" type="password" class="form-control validate[required,ajax[ajaxUserCurrentPWD]]" placeholder="请输入当前密码"/> -->
+							<input name="currentPWD" id="currentPWD" type="password" class="form-control validate[required]" placeholder="请输入当前密码"/>
+						</div>
+					</div>
+					<div class="form-group col-xs-10">
+						<label class="col-sm-3 control-label">新密码:</label>
+						<div class="col-sm-5">
+							<input name="newPWD" id="newPWD" type="password" class="form-control validate[required]" placeholder="请输入新密码"/>
+						</div>
+					</div>
+					<div class="form-group col-xs-10">
+						<label class="col-sm-3 control-label">重复新密码:</label>
+						<div class="col-sm-5">
+							<input name="newerPWD" id="newerPWD" type="password" class="form-control validate[required,equals[newPWD]]" placeholder="请重复输入新密码"/>
+						</div>
+					</div>
+					<div class="form-group col-xs-10">
+						<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
+						<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
+					</div>
+				</form>
+			</div>
+			<div role="tabpanel" class="tab-pane fade col-xs-12" id="addUser" aria-labelledby="profile-tab">
 				<form id="addUser_form" class="form-horizontal" role="form" method="post" action="/commission/index.php/Home/SystemConfig/addUser">
-       	 			<div class="form-group col-xs-10">
-       	 				<label class="col-sm-3 control-label">用户名称:</label>
-       	 				 <div class="col-sm-5">
-       	 					<input name="newUserName" id="newUserName" type="text" class="form-control validate[required,ajax[ajaxNameCall]]" placeholder="请输入用户账号"/>
-       	 				</div>
-       	 			</div>
-       	 			<div class="form-group col-xs-10">
-       	 				<label class="col-sm-3 control-label">用户密码:</label>
-       	 				 <div class="col-sm-5">
-       	 					<input name="newUserPWD" id="newUserPWD" type="password" class="form-control validate[required]" placeholder="请输入用户密码"/>
-       	 				</div>
-       	 			</div>
-       	 			<div class="form-group col-xs-10">
-       	 				<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
-       	 				<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
-       	 			</div>
-       	 		</form>
-	      	</div>
+					<div class="form-group col-xs-10">
+						<label class="col-sm-3 control-label">用户名称:</label>
+						<div class="col-sm-5">
+							<input name="newUserName" id="newUserName" type="text" class="form-control validate[required]" placeholder="请输入用户账号"/>
+						</div>
+					</div>
+					<div class="form-group col-xs-10">
+						<label class="col-sm-3 control-label">用户密码:</label>
+						<div class="col-sm-5">
+							<input name="newUserPWD" id="newUserPWD" type="password" class="form-control validate[required]" placeholder="请输入用户密码"/>
+						</div>
+					</div>
+					<div class="form-group col-xs-10">
+						<label class="col-sm-3 control-label">权限：</label>
+						<div class="col-md-6 col-sm-offset-1">
+							<div>
+								<span>
+									<input type="radio" name="power" value="1">
+									<label for="radio_shanghai" style="margin-left: 15px">管理权限</label> </span>
+								<span style="margin-left: 30px">
+									<input type="radio" name="power" value="0" checked="checked">
+									<label for="radio_kunshan" style="margin-left: 15px">普通权限</label> </span>
+							</div>
+							<div id ="text_area" style="display: none">
+								<input type="text" class="form-control validate[required" name="add_new_status_other" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-xs-10">
+						<input type="reset" class="btn btn-info col-sm-offset-4" value="重置" />
+						<input type="submit" class="btn btn-primary col-sm-offset-1" value="提交" />
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
-	
-	
 
 
         		</div>
@@ -137,15 +153,15 @@
 </script>
 
 	<script>
-		$(function(){
+		$(function() {
 			$("[li_function='SystemConfig']").addClass("active");
 			$("#changePWD_form").validationEngine('attach');
 			$("#addUser_form").validationEngine('attach');
 			//工作区间切换
-			$('#myTab a').click(function (e) {
-			  e.preventDefault();
-			  $(this).tab('show');
+			$('#myTab a').click(function(e) {
+				e.preventDefault();
+				$(this).tab('show');
 			});
-			
+
 		})
 	</script>

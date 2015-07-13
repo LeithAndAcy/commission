@@ -61,12 +61,16 @@ class SourceDataController extends Controller {
 		$end_date = date('Y-m-d', strtotime("$begin_date +1 month -1 day")); 
 		$last_end_date = $this -> db_load_history -> getLastEndDate();
 		$today = date("Y-m-d");
-		// if($end_date >= $today){
-			// $this -> error("日期不能选择当月");
-		// }
+		if($end_date >= $today){
+			$this -> error("日期只能选择之前月份");
+		}
 		if($this -> db_salary->checkSalarySettled($contact_date)){
 			// return true; already settled
 			$this -> error("该月份工资已结算，不能重新导入");
+		}
+		if($this -> db_load_history ->checkLoadHistory($begin_date)){
+			// return true; already loaded;
+			$this -> error("该月份合同已导入，不能重新导入");
 		}
 		$this -> db_U8 = D("U8");
 		$edited_contact_main = $this -> db_U8 ->getEditedContactMain($begin_date,$end_date);
@@ -159,6 +163,7 @@ class SourceDataController extends Controller {
 		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllHandledNormalBusinessRatio();
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
+		
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
@@ -176,7 +181,7 @@ class SourceDataController extends Controller {
 					break;
 				}
 			}
-			//使用left join直接查出来地区浮动比例
+			//使用 join直接查出来地区浮动比例
 			$area_price_float_ratio = $value['ratio'];
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
@@ -694,7 +699,6 @@ class SourceDataController extends Controller {
 		
 		$this -> db_U8 = D("U8");
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
-		$res = $this -> db_U8 -> getInventoryDetail($res);
 		$this -> assign('settlement_contact_detail',$res);
 		$this -> assign('load_history',$load_history);
 		$this -> display('SettleSummaryPage');

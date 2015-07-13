@@ -6,6 +6,7 @@
 
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTable.fixedColumns.js"></script>
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/dataTables.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/bootstrap-responsiv.css">
 
@@ -16,23 +17,56 @@
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.css">
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/Select2/select2.bootstrap.css">
 <script type="text/javascript" src="/commission/Public/plugins/Select2/select2.js"></script>
+<style>
+	.datatable {
+		table-layout: fixed;
+		word-break: break-all;
+		font-size: 13px;
+		
+	}
+	.datatable  th {
+		text-align: center;
+	}
+	.datatable  td {
+		text-align: center;
+	}
+	.dataTables_wrapper{
+		margin-top:15px;
+	}
+	</style>
+<script>
+	$(function(){
+		$(".datatable tbody").on("dblclick","tr",function() {
+			$(this).children("td:last()").children("span:eq(0)").children("img").click();
+		});
+	})
+</script>
 	</head>
 	<body>
 		<div class="col-xs-12">
 			<div>
-				<button class="btn btn-info" data-toggle="modal" data-target="#addNew">
-					新增
-				</button>
+				<form class="form-inline" enctype="multipart/form-data" method="post" action="/commission/index.php/Home/Excel/importNormalProfitRatioExcel">
+					<div class="form-group">
+						<a><li data-toggle="modal" data-target="#addNew" class="btn btn-info">新增</li></a>
+					</div>
+					<div class="form-group">
+						<input type="file" name="excel_file" class="btn btn-info" value="导入Excel文件" />
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary" value="提交" />
+					</div>
+				</form>
+				<form action="/commission/index.php/Home/Excel/exprotNormalProfitRatioExcelFile" method="post">
+					<div class="form-group">
+						<input type="submit" class="btn btn-info" value="导出" />
+					</div>
+				</form>
 			</div>
-			<table id="allNormalProfitRatioTable" class="display" width="100%" cellspacing="0" style="margin-top: 20px">
+			<table id="allNormalProfitRatioTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0" style="margin-top: 20px">
 				<thead>
 					<tr>
-						<th>人员编码</th>
-						<th>姓名</th>
-						<th>规格</th>
-						<th>型号</th>
-						<th>基本利润区间下限</th>
-						<th>基本利润区间上限</th>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
 						<th>基本利润提成比例</th>
 						<th>操作</th>
 					</tr>
@@ -40,11 +74,7 @@
 				<tbody>
 					<?php if(is_array($all_normal_profit_ratio)): $i = 0; $__LIST__ = $all_normal_profit_ratio;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
 							<td id="<?php echo ($vo["id"]); ?>_salesman_id"><?php echo ($vo["salesman_id"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["name"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_specification"><?php echo ($vo["specification"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_model"><?php echo ($vo["model"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_low_limit"><?php echo ($vo["low_limit"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_high_limit"><?php echo ($vo["high_limit"]); ?></td>
+							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["salesman_name"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_ratio"><?php echo ($vo["ratio"]); ?>%</td>
 							<td normal_profit_ratio_id="<?php echo ($vo["id"]); ?>"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="Edit" src="/commission/Public/img/edit.png" data-toggle="modal" data-target="#edit"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="/commission/Public/img/delete.png"> </span></td>
 						</tr><?php endforeach; endif; else: echo "" ;endif; ?>
@@ -63,37 +93,19 @@
 					<form id="edit_form" class="form-horizontal" role="form" action="editNormalProfitRatio" method="post">
 						<div class="modal-body">
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">人员编码</label>
+								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="edit_salesman_id" placeholder="人员编码" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">业务员姓名</label>
+								<label class="col-sm-4 control-label">业务员姓名</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="edit_salesman_name" placeholder="业务员姓名" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">货品规格</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_specification" placeholder="货品规格" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">货品型号</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_model" placeholder="货品型号" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">基本利润区间</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_profit_range" placeholder="基本利润区间" disabled="disabled">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="inputEmail3" class="col-sm-4 control-label">基本提成比例</label>
+								<label class="col-sm-4 control-label">基本提成比例</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
 									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="edit_ratio" id="edit_ratio" placeholder="基本提成比例">
 									<span class="input-group-addon">%</span>
@@ -125,12 +137,8 @@
 								<div class="col-sm-6">
 									<select class="form-control" id="salesman_list" name="add_new_salesman_name">
 										<option></option>
-										<optgroup label="上海员工">
-											<?php if(is_array($shanghai_salesmen)): $i = 0; $__LIST__ = $shanghai_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-										</optgroup>
-
-										<optgroup label="昆山员工">
-											<?php if(is_array($kunshan_salesmen)): $i = 0; $__LIST__ = $kunshan_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+										<optgroup label="员工">
+											<?php if(is_array($all_salesman)): $i = 0; $__LIST__ = $all_salesman;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["salesman_name"]); ?>"><?php echo ($vo["salesman_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
 										</optgroup>
 									</select>
 								</div>
@@ -138,40 +146,13 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" id="add_new_salesman_id" name="add_new_salesman_id" placeholder="人员编码">
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品规格</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_model" placeholder="货品规格">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">货品型号</label>
-								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_specification" placeholder="货品型号">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">基本利润区间下限</label>
-								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
-									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_low_limit" placeholder="回款区间下限">
-									<span class="input-group-addon">元</span>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">基本利润区间上限</label>
-								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
-									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_high_limit" placeholder="回款区间下限">
-									<span class="input-group-addon">元</span>
+									<input type="text" class="form-control validate[required]" id="add_new_salesman_id" name="add_new_salesman_id" readonly="readonly">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">基本利润提成比例</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
-									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_ratio" placeholder="在此输入" >
+									<input type="text" class="form-control validate[required,[custom[number],min[0]]" name="add_new_ratio" value="65">
 									<span class="input-group-addon">%</span>
 								</div>
 							</div>
@@ -203,19 +184,10 @@
 			var edit_id = $(this).parent().parent().attr('normal_profit_ratio_id');
 			var edit_ratio = $("#" + edit_id + "_ratio").text();
 			edit_ratio = edit_ratio.slice(0, -1);
-			var edit_low_limit = $("#" + edit_id + "_low_limit").text();
-			var edit_high_limit = $("#" + edit_id + "_high_limit").text();
 			var edit_name = $("#" + edit_id + "_name").text();
 			var edit_salesman_id = $("#" + edit_id + "_salesman_id").text();
-			var edit_profit_range = edit_low_limit + "元       至     " + edit_high_limit + "元";
-			var edit_specification = $("#" + edit_id + "_specification").text();
-			var edit_model = $("#" + edit_id + "_model").text();
 			$("#edit_id").val(edit_id);
 			$("#edit_salesman_id").val(edit_salesman_id);
-			$("#edit_salesman_name").val(edit_name);
-			$("#edit_specification").val(edit_specification);
-			$("#edit_model").val(edit_model);
-			$("#edit_profit_range").val(edit_profit_range);
 			$("#edit_ratio").val(edit_ratio);
 		});
 		$("#allNormalProfitRatioTable tbody").on("click", "tr td span img:odd", function() {
@@ -225,7 +197,7 @@
 				$.post("/commission/index.php/Home/SourceData/deleteNormalProfitRatioById", {
 					"delete_id" : delete_id,
 				}, function(data) {
-					window.location.reload();
+					window.location.href="/commission/index.php/Home/SourceData/loadNormalProfitPage";
 				});
 			}
 		});

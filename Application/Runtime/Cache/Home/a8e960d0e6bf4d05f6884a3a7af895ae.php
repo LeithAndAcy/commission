@@ -6,6 +6,7 @@
 
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/jquery.dataTables.js"></script>
 <script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="/commission/Public/plugins/DataTables/dataTable.fixedColumns.js"></script>
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/dataTables.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/commission/Public/plugins/DataTables/bootstrap-responsiv.css">
 
@@ -21,6 +22,7 @@
 		table-layout: fixed;
 		word-break: break-all;
 		font-size: 13px;
+		
 	}
 	.datatable  th {
 		text-align: center;
@@ -28,20 +30,44 @@
 	.datatable  td {
 		text-align: center;
 	}
-</style>
+	.dataTables_wrapper{
+		margin-top:15px;
+	}
+	</style>
+<script>
+	$(function(){
+		$(".datatable tbody").on("dblclick","tr",function() {
+			$(this).children("td:last()").children("span:eq(0)").children("img").click();
+		});
+	})
+</script>
 	</head>
 	<body>
 		<div class="col-xs-12">
 			<div>
-				<button class="btn btn-info" data-toggle="modal" data-target="#addNew">
-					新增
-				</button>
+				<form class="form-inline" enctype="multipart/form-data" method="post" action="/commission/index.php/Home/Excel/importSpecialBusinessRatioExcel">
+					<div class="form-group">
+						<a><li data-toggle="modal" data-target="#addNew" class="btn btn-info">新增</li></a>
+					</div>
+					<div class="form-group">
+						<input type="file" id="normal_profit_ratio_excel" name="excel_file" class="btn btn-info" value="导入Excel文件" />
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary" value="提交" />
+					</div>
+				</form>
+				<form action="/commission/index.php/Home/Excel/exportSpecialBusinessRatioExcelFile" method="post">
+					<div class="form-group">
+						<input type="submit" class="btn btn-info" value="导出" />
+					</div>
+				</form>
 			</div>
 			<table id="allSpecialBusinessRatioTable" class="table table-striped table-bordered table-hover datatable" width="100%" cellspacing="0" style="margin-top: 20px">
 				<thead>
 					<tr>
-						<th>人员编码</th>
-						<th>姓名</th>
+						<th>业务员编码</th>
+						<th>业务员姓名</th>
+						<th>存货编码首字母</th>
 						<th>回款下限</th>
 						<th>回款上限</th>
 						<th>回款达标业绩提成比例</th>
@@ -51,7 +77,8 @@
 				<tbody>
 					<?php if(is_array($all_special_business_ratio)): $i = 0; $__LIST__ = $all_special_business_ratio;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
 							<td id="<?php echo ($vo["id"]); ?>_salesman_id"><?php echo ($vo["salesman_id"]); ?></td>
-							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["name"]); ?></td>
+							<td id="<?php echo ($vo["id"]); ?>_name"><?php echo ($vo["salesman_name"]); ?></td>
+							<td id="<?php echo ($vo["id"]); ?>_inventory_id"><?php echo ($vo["inventory_id"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_low_limit"><?php echo ($vo["low_limit"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_high_limit"><?php echo ($vo["high_limit"]); ?></td>
 							<td id="<?php echo ($vo["id"]); ?>_ratio"><?php echo ($vo["ratio"]); ?>%</td>
@@ -72,15 +99,21 @@
 					<form id="edit_form" class="form-horizontal" role="form" action="editSpecialBusinessRatio" method="post">
 						<div class="modal-body">
 							<div class="form-group">
-								<label class="col-sm-4 control-label">人员编码</label>
+								<label class="col-sm-4 control-label">业务员编码</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="edit_salesman_id" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">姓名</label>
+								<label class="col-sm-4 control-label">业务员姓名</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="edit_salesman_name" disabled="disabled">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">存货编码首字母</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="edit_inventory_id" disabled="disabled">
 								</div>
 							</div>
 							<div class="form-group">
@@ -122,12 +155,8 @@
 								<div class="col-sm-6">
 									<select class="form-control" id="salesman_list" name="add_new_salesman_name">
 										<option></option>
-										<optgroup label="上海员工">
-											<?php if(is_array($shanghai_salesmen)): $i = 0; $__LIST__ = $shanghai_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-										</optgroup>
-
-										<optgroup label="昆山员工">
-											<?php if(is_array($kunshan_salesmen)): $i = 0; $__LIST__ = $kunshan_salesmen;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+										<optgroup label="员工">
+											<?php if(is_array($all_salesman)): $i = 0; $__LIST__ = $all_salesman;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option salesman_id="<?php echo ($vo["salesman_id"]); ?>" value="<?php echo ($vo["salesman_name"]); ?>"><?php echo ($vo["salesman_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
 										</optgroup>
 									</select>
 								</div>
@@ -135,7 +164,13 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">人员编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]"  name="add_new_salesman_id" id="add_new_salesman_id" placeholder="人员编码">
+									<input type="text" class="form-control" name="add_new_salesman_id" id="add_new_salesman_id" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">存货编码首字母</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control validate[required]"  name="add_new_inventory_id">
 								</div>
 							</div>
 							<div class="form-group">
@@ -153,7 +188,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">基本提成比例</label>
+								<label class="col-sm-4 control-label">浮动比例</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
 									<input type="text" class="form-control validate[required,[custom[number]]" name="add_new_ratio" placeholder="在此输入" >
 									<span class="input-group-addon">%</span>
@@ -190,9 +225,11 @@
 			var edit_low_limit = $("#" + edit_id + "_low_limit").text();
 			var edit_high_limit = $("#" + edit_id + "_high_limit").text();
 			var edit_name = $("#" + edit_id + "_name").text();
+			var edit_inventory_id = $("#" + edit_id + "_inventory_id").text();
 			var edit_salesman_id = $("#" + edit_id + "_salesman_id").text();
 			var edit_collection_range = edit_low_limit + "元       至     " + edit_high_limit + "元";
 			$("#edit_id").val(edit_id);
+			$("#edit_inventory_id").val(edit_inventory_id);
 			$("#edit_salesman_id").val(edit_salesman_id);
 			$("#edit_salesman_name").val(edit_name);
 			$("#edit_collection_range").val(edit_collection_range);
@@ -206,7 +243,7 @@
 				$.post("/commission/index.php/Home/SourceData/deleteSpecialBusinessRatioById", {
 					"delete_id" : delete_id,
 				}, function(data) {
-					window.location.reload();
+					window.location.href="/commission/index.php/Home/SourceData/loadSpecialBusinessPage";
 				});
 			}
 		});

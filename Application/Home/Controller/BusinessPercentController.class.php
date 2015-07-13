@@ -144,6 +144,7 @@ class BusinessPercentController extends Controller {
 		$all_salesman_delivery_money = $this -> db_contact_main -> getSettlingContactTotalDeliveryMonry();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
+			$salesman_id = $value['salesman_id'];
 			//取存货类别
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
@@ -178,7 +179,6 @@ class BusinessPercentController extends Controller {
 				
 			}
 			//取回款，计算各种比例和金额    
-			$salesman_id = $value['salesman_id'];
 			$temp_total_funds = $all_salesman_delivery_money[$salesman_id];
 			
 			$temp_special_business_ratio = 0; //没有匹配的就默认为0

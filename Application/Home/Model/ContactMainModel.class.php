@@ -217,15 +217,31 @@ class ContactMainModel extends Model {
 		return $res;
 	}
 	public function getSettlingContactDetail(){
-		// $res = $this -> query("select * from commission_contact_main left join commission_contact_detail on 
+		// $res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
 		// commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
-		// and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
-		$res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
+		// and commission_contact_main.contact_id = commission_contact_detail.contact_id
+		// join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		// join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		// and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
+		$res = $this -> query("
+		select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.salesman_id,
+		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
+		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
+		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
+		commission_contact_detail.sale_price,commission_contact_detail.cost_price,commission_contact_detail.float_price,
+		commission_contact_detail.sale_quantity,commission_contact_detail.delivery_quantity,commission_contact_detail.normal_business_ratio,
+		commission_contact_detail.special_business_ratio,commission_contact_detail.normal_profit_ratio,commission_contact_detail.business_adjust,
+		commission_contact_detail.profit_adjust,commission_contact_detail.cost_price_adjust,commission_contact_detail.normal_business,
+		commission_contact_detail.special_business,commission_contact_detail.normal_profit,commission_contact_detail.end_cost_price,
+		commission_contact_detail.total_business_profit,commission_customer.customer_name,commission_customer.area_code,
+		commission_customer.area,commission_area_price_float_ratio.ratio
+		from commission_contact_main join commission_contact_detail on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
 		and commission_contact_main.contact_id = commission_contact_detail.contact_id
-		join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
-		join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
-		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
+		left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id
+		");
 		return $res;
 	}
 	public function deleteItem($contact_id){
@@ -241,12 +257,32 @@ class ContactMainModel extends Model {
 		return $res;
 	}
 	public function getSettlementContactDetail(){
-		$res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
+		// $res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
+		// commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
+		// and commission_contact_main.contact_id = commission_contact_detail.contact_id
+		// left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		// left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		// and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;
+		// ");
+		$res = $this -> query("
+		select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.salesman_id,
+		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
+		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
+		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
+		commission_contact_detail.sale_price,commission_contact_detail.cost_price,commission_contact_detail.float_price,
+		commission_contact_detail.sale_quantity,commission_contact_detail.delivery_quantity,commission_contact_detail.normal_business_ratio,
+		commission_contact_detail.special_business_ratio,commission_contact_detail.normal_profit_ratio,commission_contact_detail.business_adjust,
+		commission_contact_detail.profit_adjust,commission_contact_detail.cost_price_adjust,commission_contact_detail.normal_business,
+		commission_contact_detail.special_business,commission_contact_detail.normal_profit,commission_contact_detail.end_cost_price,
+		commission_contact_detail.total_business_profit,commission_customer.customer_name,commission_customer.area_code,
+		commission_customer.area,commission_area_price_float_ratio.ratio
+		from commission_contact_main join commission_contact_detail on 
 		commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
 		and commission_contact_main.contact_id = commission_contact_detail.contact_id
-		join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
-		join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
-		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
+		left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
+		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
+		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id
+		");
 		return $res;
 	}
 	public function getSettlingContactTotalDeliveryMonry(){
