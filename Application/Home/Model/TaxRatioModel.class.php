@@ -47,15 +47,17 @@ class TaxRatioModel extends Model {
 			$this -> where($condition) -> save($data);
 			return true;
 		}else{
-			$temp_low_limit = $data['low_limit'];
-			$temp_high_limit = $data['high_limit'];
-			$temp = $this -> query("select id,ratio from commission_tax_ratio where(('$temp_low_limit' <= low_limit AND  '$temp_high_limit' > low_limit ) OR ('$temp_high_limit' < high_limit AND '$temp_high_limit' >= low_limit))");
-			if($temp){
-				return false;
-			}else{
-				$this -> add($data);
-				return true;
-			}
+			// $temp_low_limit = $data['low_limit'];
+			// $temp_high_limit = $data['high_limit'];
+			// $temp = $this -> query("select id,ratio from commission_tax_ratio where(('$temp_low_limit' < low_limit AND  '$temp_high_limit' > low_limit ) OR ('$temp_high_limit' < high_limit AND '$temp_high_limit' > low_limit))");
+			// if($temp){
+				// return false;
+			// }else{
+				// $this -> add($data);
+				// return true;
+			// }
+			$this -> add($data);
+			return true;
 		}
 	}
 	public function deleteItem($id){

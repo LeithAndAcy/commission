@@ -16,6 +16,12 @@
 			<button class="btn btn-info" id="btn_caculate">
 				结算
 			</button>
+			<span>
+				合同总数：{$count_settling_contact}
+			</span>
+			<span>
+				合同明细总数：{$count_settling_contact_detail}
+			</span>
 		</div>
 		<div class="col-xs-12">
 			<table id="settlingContactTable" class="table table-striped table-bordered table-hover datatable" width="300%" cellspacing="0" style="margin-top: 20px;overflow-x: auto">
@@ -260,13 +266,10 @@
 			}
 		});
 		$("#btn_caculate").click(function() {
-			var temp = confirm("是否结算上月合同？");
-			if(temp){
-				$('#btn_caculate').attr('disabled',"true");
-				$.post("__CONTROLLER__/settleContact", {}, function(data) {
-					window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
-				});
-			}
+			$('#btn_caculate').attr('disabled',"true");
+			$.post("__CONTROLLER__/settleContact", {}, function(data) {
+				window.location.href = "/commission/index.php/Home/BusinessPercent/loadSettlingContactPage";
+			});
 		});
 	}); 
 </script>

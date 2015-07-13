@@ -163,6 +163,7 @@ class SourceDataController extends Controller {
 		$normal_business_ratio = $this -> db_normal_business_ratio -> getAllHandledNormalBusinessRatio();
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
+		$all_sale_expense = $this -> db_sale_expense -> getAllHandledSaleExpense();
 		
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
@@ -195,6 +196,15 @@ class SourceDataController extends Controller {
 					$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
 					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
 					$arr_ratio[$key]['float_price_ratio'] = 0;
+				}
+			}
+			$temp_bPurchase = $value['purchase'];
+			$temp_sale_expense =$all_sale_expense[$salesman_id][$value['inventory_id']];
+			if($temp_bPurchase){
+				$arr_ratio[$key]['normal_profit_ratio'] = 100;
+			}else{
+				if($temp_sale_expense >0){
+					$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
 		}

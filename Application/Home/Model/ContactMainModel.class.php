@@ -157,13 +157,13 @@ class ContactMainModel extends Model {
 		return $res;
 	}
 	public function setContactSettled($arr_contact_id){
-		$last_month = date('Y-m',strtotime('-1 month'));
+		$this_month = date('Y-m',strtotime("now"));
 		$str_contact_id;
 		foreach ($arr_contact_id as $key => $value) {
 			$str_contact_id .= "'".$value."'".',';
 		}
 		$str_contact_id = substr($str_contact_id, 0,-1);
-		$this -> query("update commission_contact_main set settled = 1 where date='$last_month' and contact_id in($str_contact_id)");
+		$this -> query("update commission_contact_main set settled = 1 where date<>'$this_month' and contact_id in($str_contact_id)");
 	}
 	public function setContactEdited($contact_id){
 		$condition = array();
@@ -300,6 +300,26 @@ class ContactMainModel extends Model {
 		commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
 		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
 		return $res[0]['count_contact_detail'];
+	}
+	public function countSettlingContactDetail(){
+		$res = $this -> query("select count (*) as count_contact_detail from commission_contact_main join commission_contact_detail on 
+		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
+		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		return $res[0]['count_contact_detail'];
+	}
+	public function countSettledContactDetail(){
+		$res = $this -> query("select count (*) as count_contact_detail from commission_contact_main join commission_contact_detail on 
+		commission_contact_main.settling=1 and commission_contact_main.settled=1 and commission_contact_main.settlement=1
+		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		return $res[0]['count_contact_detail'];
+	}
+	public function getSettlingContactGroupByDate(){
+		$res = $this -> query("select date,contact_id from commission_contact_main where settling = 1 and settled = 0 and settlement = 1 order by date");
+		$arr = array();
+		foreach ($res as $key => $value) {
+			$arr[$value['date']][$key] = $value['contact_id'];
+		}
+		return $arr;
 	}
 }
 ?>

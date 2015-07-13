@@ -57,7 +57,10 @@ class BusinessPercentController extends Controller {
 		$count_settling_contact = $this -> db_contact_main -> countSettlingContact();
 		$Page = new \Think\Page($count_settling_contact,100);
 		$show = $Page->show();// 分页显示输出
+		$count_settling_contact_detail = $this -> db_contact_main -> countSettlingContactDetail();
 		
+		$this -> assign('count_settling_contact',$count_settling_contact);
+		$this -> assign('count_settling_contact_detail',$count_settling_contact_detail);
 		$settling_contact = $this -> db_contact_main ->getSettlingContact($Page);
 		$settling_contact = $this -> db_customer -> addCustomerName($settling_contact);
 		$settling_contact = $this ->db_salesman -> addSalesmanName($settling_contact);
@@ -257,16 +260,21 @@ class BusinessPercentController extends Controller {
 	}
 	
 	public function settleContact(){
-		$contact_main = $this -> db_contact_main -> getSettlingContact();
+		$contact_main = $this -> db_contact_main -> getSettlingContactGroupByDate();
 		foreach ($contact_main as $key => $value) {
-			$arr_contact_id[$key] = $value['contact_id'];
+			$date = $key;
+			if($this -> db_salary ->checkSalarySettled($date)){
+				//return true 已结算 do nothing
+			}else{
+				$this -> db_contact_main -> setContactSettled($value);
+			}
 		}
-		$this -> db_contact_main -> setContactSettled($arr_contact_id);
 	}
 	
 	public function loadSettledContactPage(){
 		$this -> db_U8 = D("U8");
 		$count_settled_contact = $this -> db_contact_main -> countSettledContact();
+		$count_settled_contact_detail = $this -> db_contact_main -> countSettledContactDetail();
 		$Page = new \Think\Page($count_settled_contact,100);
 		$show = $Page->show();// 分页显示输出
 		
@@ -275,6 +283,8 @@ class BusinessPercentController extends Controller {
 		$settled_contact = $this ->db_salesman -> addSalesmanName($settled_contact);
 		$settled_contact_detail = $this -> db_contact_detail ->getContactDetail($settled_contact);
 	//	$settled_contact_detail = $this -> db_U8 -> getInventoryDetail($settled_contact_detail);
+		$this -> assign('count_settled_contact',$count_settled_contact);
+		$this -> assign('count_settled_contact_detail',$count_settled_contact_detail);
 		$this -> assign("page",$show);
 		$this -> assign("settled_contact_detail",$settled_contact_detail);
 		$this -> display('BusinessPercent:SettledContactPage');
