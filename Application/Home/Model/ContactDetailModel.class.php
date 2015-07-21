@@ -147,6 +147,9 @@ class ContactDetailModel extends Model {
 	}
 
 	public function searchByCondition($condition) {
+		if($condition == null){
+			return null;
+		}
 		$res = $this -> where($condition) -> select();
 		foreach ($res as $key => $value) {
 			$res[$key]['normal_business_ratio'] *= 100;

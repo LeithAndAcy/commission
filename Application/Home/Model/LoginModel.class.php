@@ -10,12 +10,19 @@ class LoginModel extends Model {
 		$_SESSION['admin'] = $res['admin'];
 		return $res['pwd'];
 	}
-	public function updatePWD($new_pwd){
+	public function updatePWD($current_pwd,$new_pwd){
 		$condition = array();
 		$condition['name'] = session('user_name');
-		$data['pwd'] = md5($new_pwd);
-	 	$this -> where($condition)->save($data);
-		exit;
+		$md5_current_pwd = md5($current_pwd);
+		$res = $this -> where($condition) -> getField('pwd');
+		if($md5_current_pwd == $res){
+			$data['pwd'] = md5($new_pwd);
+	 		$this -> where($condition)->save($data);
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+		
 	}
 	public function checkDuplicateName($user_name){
 		$condition = array();

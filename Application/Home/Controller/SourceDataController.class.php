@@ -682,6 +682,7 @@ class SourceDataController extends Controller {
 	}
 	public function complicateSearch(){
 		$condition = array();
+		$temp_array = array();
 		$condition['contact_id'] = $_POST['search_contact_id'];
 		$condition['classification_id'] = $_POST['search_classification_id'];
 		$condition['inventory_id'] = $_POST['search_inventory_id'];
@@ -694,8 +695,16 @@ class SourceDataController extends Controller {
 			}
 		}
 		$res = $this -> db_contact_detail -> searchByCondition($condition);
+		if($res == null){
+			$this -> error("无符合的数据");
+		}
+		$count_settlement_contact = 0;
+		$count_settlement_contact_detail = count($res);
 		foreach ($res as $key => $value) {
-			$temp =  $this -> db_contact_main -> getSettlementContactByContactId( $value['contact_id']);
+			if(!in_array($value['contact_id'], $temp_array)){
+				array_push($temp_array,$value['contact_id']);
+			}
+			$temp =  $this -> db_contact_main -> getSettlementContactByContactId($value['contact_id']);
 			if($temp == null){
 				unset($res[$key]);
 			}else{
@@ -706,9 +715,10 @@ class SourceDataController extends Controller {
 		}
 		$res = $this -> db_salesman -> addSalesmanName($res);
 		$res = $this -> db_customer -> addCustomerName($res);
-		
-		$this -> db_U8 = D("U8");
+		$count_settlement_contact = count($temp_array);
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
+		$this -> assign('count_settlement_contact',$count_settlement_contact);
+		$this -> assign('count_settlement_contact_detail',$count_settlement_contact_detail);
 		$this -> assign('settlement_contact_detail',$res);
 		$this -> assign('load_history',$load_history);
 		$this -> display('SettleSummaryPage');

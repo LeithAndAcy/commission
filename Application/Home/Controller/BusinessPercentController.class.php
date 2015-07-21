@@ -306,6 +306,7 @@ class BusinessPercentController extends Controller {
 	
 	public function complicateSearch(){
 		$condition = array();
+		$temp_array = array();
 		$condition['contact_id'] = $_POST['search_contact_id'];
 		$condition['classification_id'] = $_POST['search_classification_id'];
 		$condition['inventory_id'] = $_POST['search_inventory_id'];
@@ -319,6 +320,9 @@ class BusinessPercentController extends Controller {
 		}
 		$res = $this -> db_contact_detail -> searchByCondition($condition);
 		foreach ($res as $key => $value) {
+			if(!in_array($value['contact_id'], $temp_array)){
+				array_push($temp_array,$value['contact_id']);
+			}
 			if($type == "settling"){
 				$temp =  $this -> db_contact_main -> getSettlingContactByContactId($value['contact_id']);
 			}elseif($type == "settled"){
@@ -335,9 +339,17 @@ class BusinessPercentController extends Controller {
 		$res = $this -> db_salesman -> addSalesmanName($res);
 		$res = $this -> db_customer -> addCustomerName($res);
 		if($type == "settling"){
+			$count_settling_contact_detail = count($res);
+			$count_settling_contact = count($temp_array);
+			$this -> assign('count_settling_contact',$count_settling_contact);
+			$this -> assign('count_settling_contact_detail',$count_settling_contact_detail);
 			$this -> assign('settling_contact_detail',$res);
 			$this -> display('SettlingContactPage');
 		}elseif($type == "settled"){
+			$count_settled_contact_detail = count($res);
+			$count_settled_contact = count($temp_array);
+			$this -> assign('count_settling_contact',$count_settled_contact);
+			$this -> assign('count_settling_contact_detail',$count_settled_contact_detail);
 			$this -> assign("settled_contact_detail",$res);
 			$this -> display('BusinessPercent:SettledContactPage');
 		}else{

@@ -31,9 +31,15 @@ class SystemConfigController extends Controller {
 	}
 	
 	public function changePWD(){
+		$current_pwd = $_POST['currentPWD'];
+		$user_name = $_SESSION['user_name'];
 		$new_pwd = $_POST['newPWD'];
-		$this -> db_login ->updatePWD($new_pwd);
-		$this -> loadSystemConfigPage();
+		if($this -> db_login ->updatePWD($current_pwd,$new_pwd)){
+			$this -> success("修改成功");
+		}else{
+			$this -> error("当前密码错误");
+		}
+		
 	}
 	public function checkUserName(){
 		$new_user_name = $_GET['fieldValue'];
@@ -46,7 +52,6 @@ class SystemConfigController extends Controller {
 		echo $json_data;
 	}
 	public function addUser(){
-		
 		$new_user_name = $_POST['newUserName'];
 		$new_user_pwd = $_POST['newUserPWD'];
 		$new_user_power = $_POST['power'];
