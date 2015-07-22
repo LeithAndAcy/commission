@@ -61,9 +61,9 @@ class SourceDataController extends Controller {
 		$end_date = date('Y-m-d', strtotime("$begin_date +1 month -1 day")); 
 		$last_end_date = $this -> db_load_history -> getLastEndDate();
 		$today = date("Y-m-d");
-		if($end_date >= $today){
-			$this -> error("日期只能选择之前月份");
-		}
+		// if($end_date >= $today){
+			// $this -> error("日期只能选择之前月份");
+		// }
 		if($this -> db_salary->checkSalarySettled($contact_date)){
 			// return true; already settled
 			$this -> error("该月份工资已结算，不能重新导入");
@@ -133,9 +133,11 @@ class SourceDataController extends Controller {
 		$Page = new \Think\Page($count_settlement_contact,100);
 		$show = $Page->show();// 分页显示输出
 		$settlement_contact = $this -> db_contact_main -> getSettlementContact($Page);
-		$settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);
-		$settlement_contact = $this -> _addSalesmanName($settlement_contact);
-		$settlement_contact = $settlement_contact['data'];
+		
+		// $settlement_contact = $this -> db_customer -> addCustomerName($settlement_contact);
+		// $settlement_contact = $this -> _addSalesmanName($settlement_contact);
+		// $settlement_contact = $settlement_contact['data'];
+		
 		$settlement_contact_detail = $this -> db_contact_detail -> getContactDetail($settlement_contact);
 		$this -> assign('count_settlement_contact',$count_settlement_contact);
 		$this -> assign('count_settlement_contact_detail',$count_settlement_contact_detail);
@@ -684,6 +686,11 @@ class SourceDataController extends Controller {
 		$condition = array();
 		$temp_array = array();
 		$condition['contact_id'] = $_POST['search_contact_id'];
+		$condition['cSOCode'] = $_POST['search_cSOCode'];
+		$condition['salesman_id'] = $_POST['search_salesman_id'];
+		$condition['salesman_name'] = $_POST['search_salesman_name'];
+		$condition['customer_id'] = $_POST['search_customer_id'];
+		$condition['customer_name'] = $_POST['search_customer_name'];
 		$condition['classification_id'] = $_POST['search_classification_id'];
 		$condition['inventory_id'] = $_POST['search_inventory_id'];
 		$condition['specification'] = $_POST['search_specification'];

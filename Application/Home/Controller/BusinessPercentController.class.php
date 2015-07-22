@@ -62,8 +62,8 @@ class BusinessPercentController extends Controller {
 		$this -> assign('count_settling_contact',$count_settling_contact);
 		$this -> assign('count_settling_contact_detail',$count_settling_contact_detail);
 		$settling_contact = $this -> db_contact_main ->getSettlingContact($Page);
-		$settling_contact = $this -> db_customer -> addCustomerName($settling_contact);
-		$settling_contact = $this ->db_salesman -> addSalesmanName($settling_contact);
+		// $settling_contact = $this -> db_customer -> addCustomerName($settling_contact);
+		// $settling_contact = $this ->db_salesman -> addSalesmanName($settling_contact);
 		$settling_contact_detail = $this -> db_contact_detail ->getContactDetail($settling_contact);
 		$this -> assign("settling_contact_detail",$settling_contact_detail);
 		$this -> assign("page",$show);
@@ -241,8 +241,8 @@ class BusinessPercentController extends Controller {
 		$show = $Page->show();// 分页显示输出 
 		
 		$manual_contact = $this -> db_contact_main -> getManualContact($Page);
-		$manual_contact = $this -> db_customer -> addCustomerName($manual_contact);
-		$manual_contact = $this ->db_salesman -> addSalesmanName($manual_contact);
+		// $manual_contact = $this -> db_customer -> addCustomerName($manual_contact);
+		// $manual_contact = $this ->db_salesman -> addSalesmanName($manual_contact);
 		$manual_contact_detail = $this -> db_contact_detail -> getContactDetail($manual_contact);
 		$manual_contact_detail = $this -> db_U8 -> getInventoryDetail($manual_contact_detail);
 		$this -> assign("manual_contact_detail",$manual_contact_detail);
@@ -279,8 +279,8 @@ class BusinessPercentController extends Controller {
 		$show = $Page->show();// 分页显示输出
 		
 		$settled_contact = $this -> db_contact_main ->getSettledContact($Page);
-		$settled_contact = $this -> db_customer -> addCustomerName($settled_contact);
-		$settled_contact = $this ->db_salesman -> addSalesmanName($settled_contact);
+		// $settled_contact = $this -> db_customer -> addCustomerName($settled_contact);
+		// $settled_contact = $this ->db_salesman -> addSalesmanName($settled_contact);
 		$settled_contact_detail = $this -> db_contact_detail ->getContactDetail($settled_contact);
 	//	$settled_contact_detail = $this -> db_U8 -> getInventoryDetail($settled_contact_detail);
 		$this -> assign('count_settled_contact',$count_settled_contact);
@@ -308,6 +308,11 @@ class BusinessPercentController extends Controller {
 		$condition = array();
 		$temp_array = array();
 		$condition['contact_id'] = $_POST['search_contact_id'];
+		$condition['cSOCode'] = $_POST['search_cSOCode'];
+		$condition['salesman_id'] = $_POST['search_salesman_id'];
+		$condition['salesman_name'] = $_POST['search_salesman_name'];
+		$condition['customer_id'] = $_POST['search_customer_id'];
+		$condition['customer_name'] = $_POST['search_customer_name'];
 		$condition['classification_id'] = $_POST['search_classification_id'];
 		$condition['inventory_id'] = $_POST['search_inventory_id'];
 		$condition['specification'] = $_POST['search_specification'];

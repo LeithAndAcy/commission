@@ -205,6 +205,36 @@
 										</div>
 									</div>
 									<div class="form-group">
+										<label class="col-sm-4 control-label">销售订单号</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="search_cSOCode">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label">业务员编码</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="search_salesman_id">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label">业务员姓名</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="search_salesman_name">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label">客户编码</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="search_customer_id">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label">客户姓名</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="search_customer_name">
+										</div>
+									</div>
+									<div class="form-group">
 										<label  class="col-sm-4 control-label">存货编码</label>
 										<div class="col-sm-6">
 											<input type="text" class="form-control" name="search_inventory_id" >

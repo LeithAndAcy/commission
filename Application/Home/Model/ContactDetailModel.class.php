@@ -17,7 +17,6 @@ class ContactDetailModel extends Model {
 	//插入数据
 	public function addContactDetail($all_contact_detail) {
 		foreach ($all_contact_detail as $key => $value) {
-			unset($value['cSOCode']);
 			$this -> add($value);
 		}
 
@@ -35,9 +34,9 @@ class ContactDetailModel extends Model {
 			foreach ($value['contact_detail'] as $kk => $vv) {
 				$contact_detail[$i] = $vv;
 				$contact_detail[$i]['customer_id'] = $value['customer_id'];
-				$contact_detail[$i]['customer_name'] = $value['customer_name'];
+				// $contact_detail[$i]['customer_name'] = $value['customer_name'];
 				$contact_detail[$i]['salesman_id'] = $value['salesman_id'];
-				$contact_detail[$i]['salesman_name'] = $value['salesman_name'];
+				// $contact_detail[$i]['salesman_name'] = $value['salesman_name'];
 				$contact_detail[$i]['cSOCode'] = $value['cSOCode'];
 				$contact_detail[$i]['normal_business_ratio'] *= 100;
 				$contact_detail[$i]['normal_profit_ratio'] *= 100;

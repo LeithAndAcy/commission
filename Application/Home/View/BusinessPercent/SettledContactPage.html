@@ -107,13 +107,43 @@
 						</button>
 						<h4 class="modal-title" id="myModalLabel">复杂搜索</h4>
 					</div>
-					<form class="form-horizontal" role="form" method="post" action="complicateSearch" >
+					<form class="form-horizontal" role="form" method="post" action="__CONTROLLER__/complicateSearch" >
 						<div class="modal-body">
 							<div class="modal-body">
 								<div class="form-group">
 									<label class="col-sm-4 control-label">合同号</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" name="search_contact_id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">销售订单号</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_cSOCode">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">业务员编码</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_salesman_id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">业务员姓名</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_salesman_name">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">客户编码</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_customer_id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">客户姓名</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_customer_name">
 									</div>
 								</div>
 								<div class="form-group">
@@ -157,11 +187,12 @@
 </html>
 <script>
 	$(function() {
-		 var table = $('#settledCommissionTable').DataTable( {
+		 var table = $('#settledCommissionTable').DataTable({
 			scrollY:        "500px",
 			scrollX:        true,
 			scrollCollapse: true,
-			paging:         true
+			paging:         true,
+			searching:      false,
 		});
 		 new $.fn.dataTable.FixedColumns(table, {
 			leftColumns: 6
