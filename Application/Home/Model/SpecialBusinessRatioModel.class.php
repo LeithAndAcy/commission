@@ -16,7 +16,7 @@ class SpecialBusinessRatioModel extends Model {
 		$data['ratio'] *= 0.01;
 		$condition = array();
 		$condition['salesman_id'] = $data['salesman_id'];
-	//	$condition['classification_id'] = $data['classification_id'];
+		$condition['inventory_id'] = $data['inventory_id'];
 		$condition['low_limit'] = $data['low_limit'];
 		$condition['high_limit'] = $data['high_limit'];
 		if ($this -> where($condition) -> find()) {
@@ -25,7 +25,7 @@ class SpecialBusinessRatioModel extends Model {
 		} else {
 			$condition = array();
 			$condition['salesman_id'] = $data['salesman_id'];
-			$temp = $this -> where($condition) -> select();
+			// $temp = $this -> where($condition) -> select();
 			// foreach ($temp as $key => $value) {
 				// if (($data['low_limit'] >= $value['low_limit'] && $data['low_limit'] <= $value['high_limit']) || ($data['high_limit'] <= $value['high_limit'] && $data['high_limit'] >= $value['low_limit'])) {
 					// return false;

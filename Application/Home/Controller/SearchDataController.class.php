@@ -127,7 +127,13 @@ class SearchDataController extends Controller {
 	
 	public function complicateSearch(){
 		$condition = array();
+		$temp_array = array();
 		$condition['contact_id'] = $_POST['search_contact_id'];
+		$condition['cSOCode'] = $_POST['search_cSOCode'];
+		$condition['salesman_id'] = $_POST['search_salesman_id'];
+		$condition['salesman_name'] = $_POST['search_salesman_name'];
+		$condition['customer_id'] = $_POST['search_customer_id'];
+		$condition['customer_name'] = $_POST['search_customer_name'];
 		$condition['classification_id'] = $_POST['search_classification_id'];
 		$condition['inventory_id'] = $_POST['search_inventory_id'];
 		$condition['specification'] = $_POST['search_specification'];
@@ -140,29 +146,37 @@ class SearchDataController extends Controller {
 		}
 		$res = $this -> db_contact_detail -> searchByCondition($condition);
 		foreach ($res as $key => $value) {
-			if($type == "manualSettled"){
+			if($type == "settled"){
+				$temp =  $this -> db_contact_main -> getSettledContactByContactId($value['contact_id']);
+			}elseif($type == "manualSettled"){
 				$temp =  $this -> db_contact_main -> getManualSettledContactByContactId($value['contact_id']);
 			}elseif($type == "editedSettled"){
 				$temp =  $this -> db_contact_main -> getEditedSettledContactByContactId($value['contact_id']);
 			}
-			if($temp == null){
+			if($temp == null && $type != "commission_business"){
 				unset($res[$key]);
 			}else{
-				$res[$key]['salesman_id'] = $temp['salesman_id'];
-				$res[$key]['customer_id'] = $temp['customer_id'];
-				$res[$key]['cSOCode'] = $temp['cSOCode'];
+				if(!in_array($value['contact_id'], $temp_array)){
+					array_push($temp_array,$value['contact_id']);
+				}
 			}
 		}
-		$res = $this -> db_salesman -> addSalesmanName($res);
-		$res = $this -> db_customer -> addCustomerName($res);
-		if($type == "manualSettled"){
+		if($type == "settled"){
+			$count_settled_contact_detail = count($res);
+			$count_settled_contact = count($temp_array);
+			$this -> assign('count_settled_contact',$count_settled_contact);
+			$this -> assign('count_settled_contact_detail',$count_settled_contact_detail);
+			$this -> assign("settled_contact_detail",$res);
+			$this -> display('BusinessPercent:SettledContactPage');
+		}elseif($type == "manualSettled"){
 			$this -> assign('manual_settled_contact_detail',$res);
 			$this -> display('ManualSettledContactPage');
 		}elseif($type == "editedSettled"){
 			$this -> assign("edited_settled_contact_detail",$res);
 			$this -> display('EditedSettledContactPage');
-		}else{
-			
+		}elseif($type == "commission_business"){
+			$this -> assign("contact_detail",$res);
+			$this -> display('BusinessPercent:CommissionBusinessPage');
 		}
 		
 	}

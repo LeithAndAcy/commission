@@ -299,7 +299,6 @@ class BusinessPercentController extends Controller {
 		$show = $Page->show();// 分页显示输出
 		$contact_main = $this -> db_contact_main -> getContact($Page);
 		$contact_detail = $this -> db_contact_detail -> getContactDetail($contact_main);
-		$contact_detail = $this -> db_salesman -> addSalesmanName($contact_detail);
 		$this -> assign('page',$show);
 		$this -> assign("contact_detail",$contact_detail);
 		$this -> display('BusinessPercent:CommissionBusinessPage');
@@ -326,25 +325,20 @@ class BusinessPercentController extends Controller {
 		}
 		$res = $this -> db_contact_detail -> searchByCondition($condition);
 		foreach ($res as $key => $value) {
-			if(!in_array($value['contact_id'], $temp_array)){
-				array_push($temp_array,$value['contact_id']);
-			}
 			if($type == "settling"){
 				$temp =  $this -> db_contact_main -> getSettlingContactByContactId($value['contact_id']);
 			}elseif($type == "settled"){
 				$temp =  $this -> db_contact_main -> getSettledContactByContactId($value['contact_id']);
 			}
-			if($temp == null){
+			if($temp == null && $type != "commission_business"){
 				unset($res[$key]);
 			}else{
-				$res[$key]['salesman_id'] = $temp['salesman_id'];
-				$res[$key]['customer_id'] = $temp['customer_id'];
-				$res[$key]['cSOCode'] = $temp['cSOCode'];
+				if(!in_array($value['contact_id'], $temp_array)){
+					array_push($temp_array,$value['contact_id']);
+				}
 			}
 		}
-		// $res = $this -> db_salesman -> addSalesmanName($res);
-		// $res = $this -> db_customer -> addCustomerName($res);
-		if($type == "settling"){
+	if($type == "settling"){
 			$count_settling_contact_detail = count($res);
 			$count_settling_contact = count($temp_array);
 			$this -> assign('count_settling_contact',$count_settling_contact);
@@ -358,8 +352,9 @@ class BusinessPercentController extends Controller {
 			$this -> assign('count_settled_contact_detail',$count_settled_contact_detail);
 			$this -> assign("settled_contact_detail",$res);
 			$this -> display('BusinessPercent:SettledContactPage');
-		}else{
-			
+		}elseif($type == "commission_business"){
+			$this -> assign("contact_detail",$res);
+			$this -> display('BusinessPercent:CommissionBusinessPage');
 		}
 		
 	}

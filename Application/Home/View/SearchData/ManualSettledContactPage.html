@@ -104,7 +104,7 @@
 						</button>
 						<h4 class="modal-title" id="myModalLabel">复杂搜索</h4>
 					</div>
-					<form class="form-horizontal" role="form" method="post" action="complicateSearch" >
+					<form class="form-horizontal" role="form" method="post" action="__CONTROLLER__/complicateSearch" >
 						<div class="modal-body">
 							<div class="modal-body">
 								<div class="form-group">
@@ -114,13 +114,43 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="col-sm-4 control-label">销售订单号</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_cSOCode">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">业务员编码</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_salesman_id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">业务员姓名</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_salesman_name">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">客户编码</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_customer_id">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">客户姓名</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control" name="search_customer_name">
+									</div>
+								</div>
+								<div class="form-group">
 									<label  class="col-sm-4 control-label">存货编码</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" name="search_inventory_id" >
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label">存货类别编码</label>
+									<label class="col-sm-4 control-label">存货分类编码</label>
 									<div class="col-sm-6">
 										<input type="text" class="form-control" name="search_classification_id">
 									</div>
@@ -138,7 +168,7 @@
 									</div>
 								</div>
 								<div class="hidden">
-									<input type="text" name="search_type" value="editedSettled" />
+									<input type="text" name="search_type" value="manualSettled" />
 								</div>
 							</div>
 							<div class="modal-footer">

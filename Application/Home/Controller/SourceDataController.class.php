@@ -121,6 +121,7 @@ class SourceDataController extends Controller {
 		$this -> db_constomer_funds -> updateItems($customer_funds);
 		// 插入load_history
 		$this -> db_load_history -> addItem($begin_date,$end_date,count($all_contact_main),count($all_contact_detail));
+		$this -> loadSettleSummaryPage();
 	}
 	public function setManualContact(){
 		$contact_id = $_POST['contact_id'];
@@ -709,16 +710,13 @@ class SourceDataController extends Controller {
 		$count_settlement_contact = 0;
 		$count_settlement_contact_detail = count($res);
 		foreach ($res as $key => $value) {
-			if(!in_array($value['contact_id'], $temp_array)){
-				array_push($temp_array,$value['contact_id']);
-			}
 			$temp =  $this -> db_contact_main -> getSettlementContactByContactId($value['contact_id']);
 			if($temp == null){
 				unset($res[$key]);
 			}else{
-				$res[$key]['salesman_id'] = $temp['salesman_id'];
-				$res[$key]['customer_id'] = $temp['customer_id'];
-				$res[$key]['cSOCode'] = $temp['cSOCode'];
+				if(!in_array($value['contact_id'], $temp_array)){
+					array_push($temp_array,$value['contact_id']);
+				}
 			}
 		}
 		$res = $this -> db_salesman -> addSalesmanName($res);
