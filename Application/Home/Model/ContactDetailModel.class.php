@@ -119,15 +119,19 @@ class ContactDetailModel extends Model {
 
 	public function checkContactSettable($contact_id) {
 		//判断一个合同发货数量够不够结算，要用到表commission_length_limit
+		//normal_business_ratio
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
-		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity');
+		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity,normal_business_ratio');
 		$flag = 1;
 		foreach ($arr_contacat as $key => $value) {
 			$delivery_rate = $value['delivery_quantity'] / $value['sale_quantity'];
 			$sale_quantity = $value['sale_quantity'];
 			$temp = $this -> query("select limit from commission_length_limit where '$sale_quantity' >= low_length AND '$sale_quantity'<high_length");
-			if ($delivery_rate < $temp[0]['limit']) {
+			if($temp == null){
+				return 0;
+			}
+			if ($delivery_rate < $temp[0]['limit'] || $value['normal_business_ratio'] == 0) {
 				$flag = 0;
 				break;
 			}

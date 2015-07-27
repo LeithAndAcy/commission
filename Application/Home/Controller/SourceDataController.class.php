@@ -109,7 +109,7 @@ class SourceDataController extends Controller {
 		$this -> db_U8 = D("U8");
 		$all_contact_main = $this -> db_U8 -> getAllContactMain($begin_date,$end_date);
 		// 插入 contact_main
-		$this -> db_contact_main -> addContactMain($all_contact_main);
+		$this -> db_contact_main -> addContactMain($all_contact_main,$begin_date);
 		//取得存货信息
 		$all_contact_detail = $this -> db_U8 -> getContactDetailByDate($begin_date,$end_date);
 		
@@ -117,6 +117,7 @@ class SourceDataController extends Controller {
 		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
 		// 取得客户回款金额
 		$customer_funds =  $this -> db_U8 ->getCustomerFunds($begin_date,$end_date);
+		
 		$this -> db_constomer_funds -> updateItems($customer_funds);
 		// 插入load_history
 		$this -> db_load_history -> addItem($begin_date,$end_date,count($all_contact_main),count($all_contact_detail));
@@ -203,10 +204,10 @@ class SourceDataController extends Controller {
 			$temp_bPurchase = $value['purchase'];
 			$temp_sale_expense =$all_sale_expense[$salesman_id][$value['inventory_id']];
 			if($temp_bPurchase){
-				$arr_ratio[$key]['normal_profit_ratio'] = 100;
+			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
 				if($temp_sale_expense >0){
-					$arr_ratio[$key]['normal_profit_ratio'] = 50;
+			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
 		}

@@ -110,8 +110,16 @@ class U8Model extends Model {
 	
 	public function getCustomerFunds($begin_date,$end_date){
 		//Ap_Close_bill
-		$res = $this -> query("select cDwCode as customer_id,iAmount as funds from Ap_CloseBill where (dVouchDate between '$begin_date' and '$end_date') AND (cVouchType = 48) AND (cCheckMan is not null)");
-		return $res;
+		$res_plus = $this -> query("select cDwCode as customer_id,iAmount as funds from Ap_CloseBill where (dVouchDate between '$begin_date' and '$end_date') AND (cVouchType = 48) AND (cCheckMan is not null) AND (cFlag = 'AR')");
+		$res_minus = $this -> query("select cDwCode as customer_id,iAmount as funds from Ap_CloseBill where (dVouchDate between '$begin_date' and '$end_date') AND (cVouchType = 49) AND (cCheckMan is not null) AND (cFlag = 'AR')");
+		$arr_funds = array();
+		foreach ($res_plus as $key => $value) {
+			$arr_funds[$value['customer_id']] += $value['funds'];
+		}
+		foreach ($res_minus as $key => $value) {
+			$arr_funds[$value['customer_id']] -= $value['funds'];
+		}
+		return $arr_funds;
 	}
 	public function getFundsBySalesmanAndDate($salesman_id){
 		//某个员工上个月的总回款

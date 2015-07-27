@@ -77,6 +77,7 @@ class BusinessPercentController extends Controller {
 			$this -> db_constomer_funds -> addSomeCustomer($value['customer_id']);
 		}
 		//判断哪些合同可结算    先判断回款，再判断发货数量
+		//  add condition:  normal_business_ratil > 0 
 		$total_customer_funds = $this -> db_constomer_funds ->getTotalCustomerFunds();
 		foreach ($total_customer_funds as $key => $value) {
 			$condition = array();
@@ -105,7 +106,7 @@ class BusinessPercentController extends Controller {
 					$this -> db_constomer_funds ->setCustomerFunds($vv['customer_id'],$contact_main[$key]['total_funds']);
 					break;
 				}else{
-					//检测发货数量
+					//检测发货数量  and normal business ratio >0
 					if($this -> db_contact_detail -> checkContactSettable($vv['contact_id'])){
 						$this -> db_contact_main -> setSettlingContact($vv['contact_id']);
 						$contact_main[$key]['total_funds'] = $contact_main[$key]['total_funds'] - $contact_total_money;
@@ -205,10 +206,10 @@ class BusinessPercentController extends Controller {
 			$temp_sale_expense =$all_sale_expense[$salesman_id][$value['inventory_id']];
 			
 			if($temp_bPurchase){
-				$arr_ratio[$key]['normal_profit_ratio'] = 100;
+			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
 				if($temp_sale_expense >0){
-					$arr_ratio[$key]['normal_profit_ratio'] = 50;
+			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
 			if($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)>0){
@@ -341,8 +342,8 @@ class BusinessPercentController extends Controller {
 				$res[$key]['cSOCode'] = $temp['cSOCode'];
 			}
 		}
-		$res = $this -> db_salesman -> addSalesmanName($res);
-		$res = $this -> db_customer -> addCustomerName($res);
+		// $res = $this -> db_salesman -> addSalesmanName($res);
+		// $res = $this -> db_customer -> addCustomerName($res);
 		if($type == "settling"){
 			$count_settling_contact_detail = count($res);
 			$count_settling_contact = count($temp_array);
@@ -353,8 +354,8 @@ class BusinessPercentController extends Controller {
 		}elseif($type == "settled"){
 			$count_settled_contact_detail = count($res);
 			$count_settled_contact = count($temp_array);
-			$this -> assign('count_settling_contact',$count_settled_contact);
-			$this -> assign('count_settling_contact_detail',$count_settled_contact_detail);
+			$this -> assign('count_settled_contact',$count_settled_contact);
+			$this -> assign('count_settled_contact_detail',$count_settled_contact_detail);
 			$this -> assign("settled_contact_detail",$res);
 			$this -> display('BusinessPercent:SettledContactPage');
 		}else{

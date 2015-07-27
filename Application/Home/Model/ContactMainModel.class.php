@@ -12,11 +12,11 @@ class ContactMainModel extends Model {
 			$this -> where($condition)->delete();
 		}
 	}
-	public function addContactMain($all_contact_main){
-		$this_month = date('Y-m');
+	public function addContactMain($all_contact_main,$begin_date){
+		$month = date('Y-m',strtotime($begin_date));
 		foreach ($all_contact_main as $key => $value) {
-			$last_month = date('Y-m',strtotime('-1 month'));
-			$value['date'] = $this_month;
+			// $last_month = date('Y-m',strtotime('-1 month'));
+			$value['date'] = $month;
 			$this -> add($value);
 		}
 	}

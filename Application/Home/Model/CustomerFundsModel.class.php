@@ -5,13 +5,16 @@ class CustomerFundsModel extends Model {
 	public function updateItems($customer_funds=array()){
 		$condition = array();
 		foreach ($customer_funds as $key => $value) {
-			$condition['customer_id'] = $value['customer_id'];
+			$condition['customer_id'] = $key;
+			//$condition['customer_id'] = $value['customer_id'];
 			// $condition['salesman_id'] = $value['salesman_id'];
 			$res = $this -> where($condition) -> find();
 			if($res == null){
-				$this -> add($value);
+				$data['customer_id'] = $key;
+				$data['funds'] = $value;
+				$this -> add($data);
 			}else{
-				$this -> where($condition)->setInc('funds',$value['funds']);
+				$this -> where($condition)->setInc('funds',$value);
 			}
 		}
 	}
