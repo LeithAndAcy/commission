@@ -123,6 +123,7 @@ class CaculateWageController extends Controller {
 			$salary['salesman_id'] = $salesman_id;
 			$salary['status'] = $status;
 			$salary['date'] = $month;
+			$salary['salesman_name'] = $salesman_info['salesman_name'];
 			if($status == "上海"){
 				$kunshan_bogus = $temp_fact_pay - $shanghai_salary;
 				if($kunshan_bogus <= 0){

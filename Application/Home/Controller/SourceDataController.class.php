@@ -655,6 +655,12 @@ class SourceDataController extends Controller {
 		$this -> assign("load_history",$load_history);
 		$this -> display('LoadHistoryPage');
 	}
+	public function loadTotalCustomerFundsPage(){
+		$total_customer_funds = $this -> db_constomer_funds -> getTotalCustomerFunds();
+		$total_customer_funds = $this -> db_customer -> addCustomerName($total_customer_funds);
+		$this -> assign("total_customer_funds",$total_customer_funds);
+		$this -> display('TotalCustomerFundsPage');
+	}
 	public function checkSalesmanId(){
 		$salesman_id = $_GET['fieldValue'];
 		if($this -> db_salesman ->checkDuplicateSalesmanId($salesman_id)){
@@ -719,8 +725,8 @@ class SourceDataController extends Controller {
 				}
 			}
 		}
-		$res = $this -> db_salesman -> addSalesmanName($res);
-		$res = $this -> db_customer -> addCustomerName($res);
+		// $res = $this -> db_salesman -> addSalesmanName($res);
+		// $res = $this -> db_customer -> addCustomerName($res);
 		$count_settlement_contact = count($temp_array);
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
 		$this -> assign('count_settlement_contact',$count_settlement_contact);

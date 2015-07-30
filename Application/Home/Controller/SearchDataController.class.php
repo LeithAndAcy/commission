@@ -67,7 +67,7 @@ class SearchDataController extends Controller {
 		$Page = new \Think\Page($count_payroll,1000);
 		$show = $Page->show();// 分页显示输出
 		$payroll = $this -> db_salary -> getAllShanghaiSalary($Page);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+	//	$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
@@ -80,7 +80,7 @@ class SearchDataController extends Controller {
 		$Page = new \Think\Page($count_payroll,1000);
 		$show = $Page->show();// 分页显示输出
 		$payroll = $this -> db_salary -> getAllKunshanSalary($Page);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+	//	$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
@@ -93,7 +93,7 @@ class SearchDataController extends Controller {
 		$Page = new \Think\Page($count_payroll,1000);
 		$show = $Page->show();// 分页显示输出
 		$payroll = $this -> db_salary -> getAllSalary($Page);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+	//	$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		$this -> assign("payroll",$payroll);
 		$this -> assign('page',$show);
 		$this -> display('IncidentalFeePage');
@@ -116,7 +116,7 @@ class SearchDataController extends Controller {
 		$Page = new \Think\Page($count_payroll,1000);
 		$show = $Page->show();// 分页显示输出
 		$payroll = $this -> db_salary -> getAllSalary($Page);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+	//	$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
@@ -179,6 +179,53 @@ class SearchDataController extends Controller {
 			$this -> display('BusinessPercent:CommissionBusinessPage');
 		}
 		
+	}
+	
+	public function salarySearch(){
+		$condition = array();
+		$condition['salesman_id'] = $_POST['search_salesman_id'];
+		$condition['salesman_name'] = $_POST['search_salesman_name'];
+		$condition['date'] = $_POST['search_date'];
+		$type = $_POST['search_type'];
+		if($type == "上海"){
+			$condition['status'] = "上海";
+		}elseif($type == "昆山"){
+			$condition['status'] = "昆山";
+		}
+		foreach ($condition as $key => $value) {
+			if($value == ""){
+				unset($condition[$key]);
+			}
+		}
+		$res = $this -> db_salary -> searchByCondition($condition);
+		if($type == "上海"){
+			foreach ($res as $key => $value) {
+				$res[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
+			}
+			$this -> assign("payroll",$res);
+			$this -> display('ShanghaiSalaryPage');
+		}elseif($type == "昆山"){
+			foreach ($res as $key => $value) {
+				$res[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
+			}
+			$this -> assign("payroll",$res);
+			$this -> display('KunshanSalaryPage');
+		}elseif($type == "incidentalFee"){
+			$this -> assign("payroll",$res);
+			$this -> display('IncidentalFeePage');
+		}elseif($type == "totalSalary"){
+			foreach ($res as $key => $value) {
+				$res[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
+			}
+			$this -> assign("payroll",$res);
+			$this -> display('TotalSalaryPage');
+		}elseif($type == "salaryDetail"){
+			foreach ($res as $key => $value) {
+				$res[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
+			}
+			$this -> assign("payroll",$res);
+			$this -> display('SalaryDetailPage');
+		}
 	}
 	
 }

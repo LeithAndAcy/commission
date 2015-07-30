@@ -83,5 +83,9 @@ class SalaryModel extends Model {
 			return false;
 		}
 	}
+	public function searchByCondition($condition){
+		$res = $this -> where($condition) -> select();
+		return $res;
+	}
 }
 ?>

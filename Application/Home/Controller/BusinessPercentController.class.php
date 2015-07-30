@@ -180,7 +180,12 @@ class BusinessPercentController extends Controller {
 					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
 					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
-				
+			}
+			//没配置比例表的情况
+			if($price_float_ratio == null){
+				$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
+				$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
+				$arr_ratio[$key]['float_price_ratio'] = 0;
 			}
 			//取回款，计算各种比例和金额    
 			$temp_total_funds = $all_salesman_delivery_money[$salesman_id];
