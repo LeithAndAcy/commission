@@ -9,6 +9,15 @@ class InsuranceFundModel extends Model {
 		return $res;
 	}
 	
+	public function getHandledInsuranceFund(){
+		$res = $this -> select();
+		$arr_insurance_fund = array();
+		foreach ($res as $key => $value) {
+			$arr_insurance_fund[$value['salesman_id']] = $value;
+		}
+		return $arr_insurance_fund;
+	}
+	
 	public function addItem($data){
 		if(($this ->checkDuplicate($data['salesman_id']))){
 			$condition = array();

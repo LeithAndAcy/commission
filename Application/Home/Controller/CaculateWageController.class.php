@@ -38,29 +38,30 @@ class CaculateWageController extends Controller {
 	}
 	
 	public function LoadPayrollPage(){
-		$last_month = date("Y-m",strtotime("-1 month"));
+		// $last_month = date("Y-m",strtotime("-1 month"));
+		$last_month = _getLastMonth();
 		$payroll = $this -> db_salary -> getSalary($last_month);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+		// $payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		$this -> assign("payroll",$payroll);
 		$this -> display('PayrollPage');
 	}
 	
 	public function LoadShanghaiSalaryPage(){
-		$last_month = date("Y-m",strtotime("-1 month"));
+		$last_month = _getLastMonth();
 		$payroll = $this -> db_salary -> getShanghaiSalary($last_month);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		$this -> assign("payroll",$payroll);
 		$this -> display('ShanghaiSalaryPage');
 	}
 	public function LoadKunshanSalaryPage(){
-		$last_month = date("Y-m",strtotime("-1 month"));
+		$last_month = _getLastMonth();
 		$payroll = $this -> db_salary -> getKunshanSalary($last_month);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		$this -> assign("payroll",$payroll);
 		$this -> display('KunshanSalaryPage');
 	}
 	public function LoadIncidentalFeePage(){
-		$last_month = date("Y-m",strtotime("-1 month"));
+		$last_month = _getLastMonth();
 		$payroll = $this -> db_salary -> getSalary($last_month);
 		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		$this -> assign("payroll",$payroll);
@@ -102,28 +103,38 @@ class CaculateWageController extends Controller {
 		$settled_contact_of_month = $this -> db_contact_main->getSettledContactOfMonth($month);
 		
 		$settled_contact_of_month_tatal_business_profit = $this -> db_contact_detail -> getTotalBusinessAndProfit($settled_contact_of_month);
+		
+		$salary_of_last2_month = $this -> db_salary -> getHandledSalaryByMonth($month_before_the_month);
+		
+		$human_wage = $this -> db_wage_deduction -> getHandledHumanWageByMonth($month);
+		
+		$insurance_fund = $this -> db_insurance_fund -> getHandledInsuranceFund();
+		
+		$all_salesman_info = $this -> db_salesman -> getAllHandledSalesmanInfo();
+		
 		foreach ($settled_contact_of_month_tatal_business_profit as $key => $value) {
 			$salesman_id = $key;
+			
 			$total_business_profit = $value;
-			$salary_of_last2_month = $this -> db_salary -> getSalaryBySalesmanIdAndMonth($salesman_id,$month_before_the_month);
-			$temp_human_wage = $this -> db_wage_deduction -> getHumanWage($salesman_id,$month);
+			$temp_salary_of_last2_month = $salary_of_last2_month[$salesman_id];
+			$temp_human_wage = $human_wage[$salesman_id];
 			$temp_fact_pay = $temp_human_wage+$total_business_profit;
-			if($salary_of_last_month < 0){
+			if($temp_salary_of_last2_month < 0){
 				$temp_fact_pay += $salary_of_last2_month;
 			}
-			$temp_insurance_fund = $this -> db_insurance_fund -> getInsuranceFund($salesman_id);
+			$temp_insurance_fund = $insurance_fund[$salesman_id];
 			$temp_insurance = $temp_insurance_fund['insurance'];
 			$temp_fund = $temp_insurance_fund['fund'];
 			
-			$salesman_info = $this -> db_salesman -> getSalesmanInfo($salesman_id);
-			$status = $salesman_info['status'];
-			$shanghai_salary = $salesman_info['shanghai_salary'];
-			$kunshan_salary = $salesman_info['kunshan_salary'];
+			$temp_salesman_info = $all_salesman_info[$salesman_id];
+			$status = $temp_salesman_info['status'];
+			$shanghai_salary = $temp_salesman_info['shanghai_salary'];
+			$kunshan_salary = $temp_salesman_info['kunshan_salary'];
 			$salary = array();
 			$salary['salesman_id'] = $salesman_id;
 			$salary['status'] = $status;
 			$salary['date'] = $month;
-			$salary['salesman_name'] = $salesman_info['salesman_name'];
+			$salary['salesman_name'] = $temp_salesman_info['salesman_name'];
 			if($status == "上海"){
 				$kunshan_bogus = $temp_fact_pay - $shanghai_salary;
 				if($kunshan_bogus <= 0){
@@ -140,6 +151,7 @@ class CaculateWageController extends Controller {
 					$salary['insurance'] = $temp_insurace;
 					$salary['fund']= $temp_fund;
 					$salary['tax'] = $temp_tax;
+					// print_r($salary);exit;
 					$this -> db_salary -> addItem($salary);
 				}else{
 					$temp_left = $shanghai_salary - $temp_insurance - $temp_fund;
@@ -182,7 +194,6 @@ class CaculateWageController extends Controller {
 					$salary['insurance'] = $temp_insurance;
 					$salary['fund']= $temp_fund;
 					$salary['tax'] = $temp_tax;
-					
 					// print_r($salary);exit;
 					$this -> db_salary -> addItem($salary);
 				}else{
@@ -194,12 +205,14 @@ class CaculateWageController extends Controller {
 							break;
 						}
 					}
+					$temp_kunshan_salary = $temp_left - $temp_tax;
 					$salary['kunshan_salary'] = $temp_kunshan_salary;
 					if($shanghai_bogus <= $shanghai_salary){
 						$salary['shanghai_salary'] = $shanghai_bogus;
+						$salary['bogus'] = 0;
 					}else{
-						$salary['shanghai_salary'] = $kunshan_salary;
-						$salary['bogus'] = $shanghai_bogus - $kunshan_salary;
+						$salary['shanghai_salary'] = $shanghai_salary;
+						$salary['bogus'] = $shanghai_bogus - $shanghai_salary;
 					}
 					$salary['insurance'] = $temp_insurance;
 					$salary['fund']= $temp_fund;

@@ -12,6 +12,24 @@ class SalaryModel extends Model {
 		$res = $this -> where($condition) -> select();
 		return $res;
 	}
+	
+	public function getHandledSalaryByMonth($month){
+		$condition = array();
+		$condition['date'] = $month;
+		$arr_salary = array();
+		$res = $this -> where($condition) -> select();
+		foreach ($res as $key => $value) {
+			if($value['status'] == "上海"){
+				$arr_salary[$value['salesman_id']] = $value['shanghai_salary'];
+			}elseif($value['status'] == "昆山"){
+				$arr_salary[$value['salesman_id']] = $value['kunshan_salary'];
+			}else{
+				$arr_salary[$value['salesman_id']] = 0;
+			}
+		}
+		return $arr_salary;
+	}
+	
 	public function getSalaryBySalesmanIdAndMonth($salesman_id,$month){
 		$condition = array();
 		$condition['salesman_id'] = $salesman_id;

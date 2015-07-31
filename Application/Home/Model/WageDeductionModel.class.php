@@ -6,9 +6,19 @@ class WageDeductionModel extends Model {
 	public function getItemsByMonth($month){
 		$condition = array();
 		$condition['date'] = $month;
-		$res = $this->where($condition) ->select();
-		
+		$res = $this->select();
 		return $res;
+	}
+	
+	public function getHandledHumanWageByMonth($month){
+		$condition = array();
+		$condition['date'] = $month;
+		$arr_wage = array();
+		$res = $this->select();
+		foreach ($res as $key => $value) {
+			$arr_wage[$value['salesman_id']] = $value['total'];
+		}
+		return $arr_wage;
 	}
 	
 	public function addItem($data){

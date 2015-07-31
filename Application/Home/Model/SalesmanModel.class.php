@@ -13,6 +13,16 @@ class SalesmanModel extends Model {
 		$res = $this -> select();
 		return $res;
 	}
+	
+	public function getAllHandledSalesmanInfo(){
+		$res = $this -> select();
+		$arr_salesman = array();
+		foreach ($res as $key => $value) {
+			$arr_salesman[$value['salesman_id']] = $value;
+		}
+		return $arr_salesman;
+	}
+	
 	public function getOnboardSalesmanInfo(){
 		$condition = array();
 		$condition['onboard_status'] = "在职";
