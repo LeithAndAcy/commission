@@ -77,7 +77,7 @@ class BusinessPercentController extends Controller {
 			$this -> db_constomer_funds -> addSomeCustomer($value['customer_id']);
 		}
 		//判断哪些合同可结算    先判断回款，再判断发货数量
-		//  add condition:  normal_business_ratil > 0 
+		//  add condition:  normal_business_ratio > 0 
 		$total_customer_funds = $this -> db_constomer_funds ->getTotalCustomerFunds();
 		foreach ($total_customer_funds as $key => $value) {
 			$condition = array();
@@ -145,7 +145,7 @@ class BusinessPercentController extends Controller {
 		$all_sale_expense = $this -> db_sale_expense -> getAllHandledSaleExpense();
 		
 		//取所有员工的发货金额综合
-		$all_salesman_delivery_money = $this -> db_contact_main -> getSettlingContactTotalDeliveryMonry();
+		$all_salesman_delivery_money = $this -> db_contact_main -> getSettlingContactTotalDeliveryMoney();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
@@ -219,8 +219,8 @@ class BusinessPercentController extends Controller {
 			}
 			if($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)>0){
 				$arr_ratio[$key]['normal_profit'] =$contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1) 
-				*(($arr_ratio[$key]['normal_profit_ratio']*0.01+$contact_detail[$key]['profit_adjust']))
-				 + $arr_ratio[$key]['end_cost_price']*0.1*($arr_ratio[$key]['normal_profit_ratio']*0.01 + $contact_detail[$key]['profit_adjust'] + 0.1)) * $temp_fee_ratio;
+				*(($arr_ratio[$key]['normal_profit_ratio']*0.01+$contact_detail[$key]['profit_adjust']-0.1))
+				 + $arr_ratio[$key]['end_cost_price']*0.1*($arr_ratio[$key]['normal_profit_ratio']*0.01 + $contact_detail[$key]['profit_adjust'])) * $temp_fee_ratio;
 				
 				
 			}elseif($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)<=0){
@@ -329,7 +329,22 @@ class BusinessPercentController extends Controller {
 			}
 		}
 		$res = $this -> db_contact_detail -> searchByCondition($condition);
+		$search_begin_date = $_POST['search_begin_date'];
+		$search_end_date = $_POST['search_end_date'];		
+		if($res == null){
+			$count_settled_contact_detail = $this -> db_contact_detail -> searchCountByDate($search_begin_date,$search_end_date);
+			$count_settled_contact = $this -> db_contact_main -> searchCountByDate($search_begin_date,$search_end_date);
+			$Page = new \Think\Page($count_settled_contact_detail,1500);
+			$show = $Page->show();// 分页显示输出
+			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page);
+		}
 		foreach ($res as $key => $value) {
+			if($search_begin_date != null && $search_end_date != null){
+				if($value['date'] < $search_begin_date || $value['date']> $search_end_date){
+					unset($res[$key]);
+					continue;
+				}
+			}
 			if($type == "settling"){
 				$temp =  $this -> db_contact_main -> getSettlingContactByContactId($value['contact_id']);
 			}elseif($type == "settled"){
@@ -351,11 +366,14 @@ class BusinessPercentController extends Controller {
 			$this -> assign('settling_contact_detail',$res);
 			$this -> display('SettlingContactPage');
 		}elseif($type == "settled"){
-			$count_settled_contact_detail = count($res);
-			$count_settled_contact = count($temp_array);
+		//	$count_settled_contact_detail = count($res);
+			if($count_settled_contact == null){
+				$count_settled_contact = count($temp_array);
+			}
 			$this -> assign('count_settled_contact',$count_settled_contact);
 			$this -> assign('count_settled_contact_detail',$count_settled_contact_detail);
 			$this -> assign("settled_contact_detail",$res);
+			$this -> assign('page',$show);
 			$this -> display('BusinessPercent:SettledContactPage');
 		}elseif($type == "commission_business"){
 			$this -> assign("contact_detail",$res);

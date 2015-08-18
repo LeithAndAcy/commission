@@ -102,6 +102,8 @@ class CaculateWageController extends Controller {
 		
 		$settled_contact_of_month = $this -> db_contact_main->getSettledContactOfMonth($month);
 		
+		
+		
 		$settled_contact_of_month_tatal_business_profit = $this -> db_contact_detail -> getTotalBusinessAndProfit($settled_contact_of_month);
 		
 		$salary_of_last2_month = $this -> db_salary -> getHandledSalaryByMonth($month_before_the_month);

@@ -251,10 +251,26 @@ class ContactMainModel extends Model {
 	}
 	public function getSettledContactOfMonth($month){
 		$condition = array();
+		$arr = array();
+		$arr_contact_list = array();
 		$condition['settled'] = 1;
 		$condition['date'] = $month;
-		$res = $this -> where($condition) -> getField('salesman_id,contact_id');
-		return $res;
+		// $res = $this -> where($condition) -> getField('salesman_id,contact_id');
+		$res = $this -> where($condition) -> select();
+		foreach ($res as $key => $value) {
+			$arr[$value['salesman_id']] .= $value['contact_id'].',';
+		}
+		foreach ($arr as $key => $value) {
+			$arr_contact_list[$key] = explode(',', $value);
+		}
+		foreach ($arr_contact_list as $key => $value) {
+			foreach ($value as $kk => $vv) {
+				if($vv == null){
+					unset($arr_contact_list[$key][$kk]);
+				}
+			}	
+		}
+		return $arr_contact_list;
 	}
 	public function getSettlementContactDetail(){
 		// $res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
@@ -285,7 +301,7 @@ class ContactMainModel extends Model {
 		");
 		return $res;
 	}
-	public function getSettlingContactTotalDeliveryMonry(){
+	public function getSettlingContactTotalDeliveryMoney(){
 		$res = $this -> query("select commission_contact_main.salesman_id,SUM(commission_contact_detail.delivery_money) as total_delivery_money from commission_contact_detail right join commission_contact_main on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1 and commission_contact_main.contact_id = commission_contact_detail.contact_id
 		group by commission_contact_main.salesman_id;");
@@ -320,6 +336,11 @@ class ContactMainModel extends Model {
 			$arr[$value['date']][$key] = $value['contact_id'];
 		}
 		return $arr;
+	}
+	public function searchCountByDate($search_begin_date,$search_end_date){
+		$res = $this -> where("date between '$search_begin_date' and '$search_end_date'") -> count();
+		
+		return $res;
 	}
 }
 ?>

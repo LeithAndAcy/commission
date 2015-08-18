@@ -61,9 +61,9 @@ class SourceDataController extends Controller {
 		$end_date = date('Y-m-d', strtotime("$begin_date +1 month -1 day")); 
 		$last_end_date = $this -> db_load_history -> getLastEndDate();
 		$today = date("Y-m-d");
-		// if($end_date >= $today){
-			// $this -> error("日期只能选择之前月份");
-		// }
+		if($end_date >= $today){
+			$this -> error("日期只能选择之前月份");
+		}
 		if($this -> db_salary->checkSalarySettled($contact_date)){
 			// return true; already settled
 			$this -> error("该月份工资已结算，不能重新导入");
@@ -114,7 +114,7 @@ class SourceDataController extends Controller {
 		$all_contact_detail = $this -> db_U8 -> getContactDetailByDate($begin_date,$end_date);
 		
 		//插入contact_detail
-		$this -> db_contact_detail -> addContactDetail($all_contact_detail);
+		$this -> db_contact_detail -> addContactDetail($all_contact_detail,$begin_date);
 		// 取得客户回款金额
 		$customer_funds =  $this -> db_U8 ->getCustomerFunds($begin_date,$end_date);
 		

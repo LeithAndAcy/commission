@@ -15,8 +15,10 @@ class ContactDetailModel extends Model {
 	}
 
 	//插入数据
-	public function addContactDetail($all_contact_detail) {
+	public function addContactDetail($all_contact_detail,$begin_date) {
+		$month = date('Y-m',strtotime($begin_date));
 		foreach ($all_contact_detail as $key => $value) {
+			$value['date'] = $month;
 			$this -> add($value);
 		}
 
@@ -122,7 +124,7 @@ class ContactDetailModel extends Model {
 		//normal_business_ratio
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
-		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity,normal_business_ratio');
+		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity,normal_business_ratio,cost_price');
 		$flag = 1;
 		foreach ($arr_contacat as $key => $value) {
 			$delivery_rate = $value['delivery_quantity'] / $value['sale_quantity'];
@@ -131,7 +133,7 @@ class ContactDetailModel extends Model {
 			if($temp == null){
 				return 0;
 			}
-			if ($delivery_rate < $temp[0]['limit'] || $value['normal_business_ratio'] == 0) {
+			if ($delivery_rate < $temp[0]['limit'] || ($value['normal_business_ratio'] == 0 && $value['cost_price'] !=0)) {
 				$flag = 0;
 				break;
 			}
@@ -163,7 +165,22 @@ class ContactDetailModel extends Model {
 		}
 		return $res;
 	}
-
+	
+	public function searchCountByDate($search_begin_date,$search_end_date){
+		// $res = $this -> query("
+			// select * from commission_contact_detail where date >='$search_begin_date' AND date <= '$search_end_date'
+		// ");
+		$res = $this -> where("date between '$search_begin_date' and '$search_end_date'") -> count();
+		
+		return $res;
+	}
+	
+	public function searchByDate($search_begin_date,$search_end_date,$Page){
+		$res = $this -> where("date between '$search_begin_date' and '$search_end_date'")->limit($Page->firstRow.','.$Page->listRows) -> select();
+		// $res = $this ->limit($Page->firstRow.','.$Page->listRows) -> select();
+		return $res;
+	}
+	
 	public function deleteItem($contact_id, $inventory_id) {
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
@@ -174,10 +191,12 @@ class ContactDetailModel extends Model {
 	public function getTotalBusinessAndProfit($arr_contact_id) {
 		$saleman_bogus = array();
 		foreach ($arr_contact_id as $key => $value) {
-			$condition = array();
-			$condition['contact_id'] = $value;
-			$res = $this -> where($condition) -> sum('total_business_profit');
-			$saleman_bogus[$key] += $res;
+			foreach ($value as $kk => $vv) {
+				$condition = array();
+				$condition['contact_id'] = $vv;
+				$res = $this -> where($condition) -> sum('total_business_profit');
+				$saleman_bogus[$key] += $res;
+			}
 		}
 		return $saleman_bogus;
 	}

@@ -60,7 +60,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)
 			{
-				$arr_normal_profir_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_normal_profir_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_normal_profir_ratio as $key => $value) {
@@ -96,7 +96,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)
 			{
-				$arr_customers_info[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_customers_info[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_customers_info as $key => $value) {
@@ -128,7 +128,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_salesman_info[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_salesman_info[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_salesman_info as $key => $value) {
@@ -164,7 +164,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_insurance_fund[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_insurance_fund[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_insurance_fund as $key => $value) {
@@ -197,7 +197,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_tax_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_tax_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_tax_ratio as $key => $value) {
@@ -230,7 +230,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_length_limit[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_length_limit[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_length_limit as $key => $value) {
@@ -263,7 +263,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_funds_back[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_funds_back[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_funds_back as $key => $value) {
@@ -295,7 +295,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_special_profit_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_special_profit_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_special_profit_ratio as $key => $value) {
@@ -329,7 +329,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_normal_profit_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_normal_profit_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_normal_profit_ratio as $key => $value) {
@@ -361,7 +361,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_normal_business_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_normal_business_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_normal_business_ratio as $key => $value) {
@@ -394,13 +394,13 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
 			{
-				$arr_special_business_ratio[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_special_business_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_special_business_ratio as $key => $value) {
 			unset($arr_special_business_ratio[$key]);
 			$arr_special_business_ratio[$key]['salesman_id'] = $value['B'];
-			$arr_special_business_ratio[$key]['classification_id'] = $value['C'];
+			$arr_special_business_ratio[$key]['inventory_id'] = $value['C'];
 			$arr_special_business_ratio[$key]['low_limit'] = $value['D'];
 			$arr_special_business_ratio[$key]['high_limit'] = $value['E'];
 			$arr_special_business_ratio[$key]['ratio'] = $value['F'];
@@ -433,7 +433,7 @@ class ExcelController extends Controller {
 		{
 			for ($k = 'D'; $k <= $highestColumn; $k++)
 			{
-				$arr_wage_deduction[$j][$k] = $PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+				$arr_wage_deduction[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
 		foreach ($arr_wage_deduction as $key => $value) {
