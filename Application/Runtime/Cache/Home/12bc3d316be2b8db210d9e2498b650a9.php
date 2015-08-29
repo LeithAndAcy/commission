@@ -327,7 +327,8 @@
 			scrollY:        "500px",
 			scrollX:        true,
 			scrollCollapse: true,
-			paging:         true
+			paging:         true,
+			searching:      false,
 		});
 		 new $.fn.dataTable.FixedColumns(table, {
 			leftColumns: 7

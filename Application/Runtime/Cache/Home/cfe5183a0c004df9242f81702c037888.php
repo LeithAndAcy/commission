@@ -88,6 +88,9 @@
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadLoadHistoryPage" target="workflow">导入数据历史记录</a>
 						</li>
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadTotalCustomerFundsPage" target="workflow">客户回款金额汇总表</a>
+						</li>
 					</ul>
 				</div>
 			</div>
