@@ -49,14 +49,14 @@ class CaculateWageController extends Controller {
 	public function LoadShanghaiSalaryPage(){
 		$last_month = _getLastMonth();
 		$payroll = $this -> db_salary -> getShanghaiSalary($last_month);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+		$payroll = $this -> db_salesman -> addSalesmanNameAndBasicSalary($payroll);
 		$this -> assign("payroll",$payroll);
 		$this -> display('ShanghaiSalaryPage');
 	}
 	public function LoadKunshanSalaryPage(){
 		$last_month = _getLastMonth();
 		$payroll = $this -> db_salary -> getKunshanSalary($last_month);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+		$payroll = $this -> db_salesman -> addSalesmanNameAndBasicSalary($payroll);
 		$this -> assign("payroll",$payroll);
 		$this -> display('KunshanSalaryPage');
 	}
@@ -114,6 +114,8 @@ class CaculateWageController extends Controller {
 		
 		$all_salesman_info = $this -> db_salesman -> getAllHandledSalesmanInfo();
 		
+		$all_end_sale_expense = $this -> db_contact_detail -> getTotalEndSaleExpense($month);
+		
 		foreach ($settled_contact_of_month_tatal_business_profit as $key => $value) {
 			$salesman_id = $key;
 			
@@ -136,6 +138,7 @@ class CaculateWageController extends Controller {
 			$salary['salesman_id'] = $salesman_id;
 			$salary['status'] = $status;
 			$salary['date'] = $month;
+			$salary['end_sale_expense'] = $all_end_sale_expense[$salesman_id];
 			$salary['salesman_name'] = $temp_salesman_info['salesman_name'];
 			if($status == "上海"){
 				$kunshan_bogus = $temp_fact_pay - $shanghai_salary;

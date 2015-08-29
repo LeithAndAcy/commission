@@ -45,6 +45,7 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['special_business_ratio'] *= 100;
 				$contact_detail[$i]['business_adjust'] *= 100;
 				$contact_detail[$i]['profit_adjust'] *= 100;
+				$contact_detail[$i]['sale_expense_ratio'] *= 100;
 				$i++;
 			}
 		}
@@ -61,6 +62,9 @@ class ContactDetailModel extends Model {
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio'] * 0.01;
 			$data['float_price'] = $value['float_price'];
 			$data['end_cost_price'] = $value['end_cost_price'];
+			$data['sale_expense'] = $value['sale_expense'];
+			$data['sale_expense_ratio'] = $value['sale_expense_ratio'];
+			$data['end_sale_expense'] = $value['end_sale_expense'];
 			$data['special_business_ratio'] = $value['special_business_ratio'];
 			// $data['special_profit_ratio'] = $value['special_profit_ratio'];
 			$data['normal_business'] = $value['normal_business'];
@@ -82,6 +86,8 @@ class ContactDetailModel extends Model {
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio'] * 0.01;
 			$data['float_price'] = $value['float_price'];
 			$data['end_cost_price'] = $value['end_cost_price'];
+			$data['sale_expense'] = $value['sale_expense'];
+			$data['sale_expense_ratio'] = $value['sale_expense_ratio'];
 			$this -> where($condition) -> save($data);
 			unset($condition);unset($data);
 		}
@@ -200,6 +206,15 @@ class ContactDetailModel extends Model {
 		}
 		return $saleman_bogus;
 	}
-
+	public function getTotalEndSaleExpense($month){
+		$arr_end_sale_expense = array();
+		$condition = array();
+		$condition['date'] = $month;
+		$res = $this -> where($condition) -> field('salesman_id,end_sale_expense')->select();
+		foreach ($res as $key => $value) {
+			$arr_end_sale_expense[$value['salesman_id']] += $value['end_sale_expense'];
+		}
+		return $arr_end_sale_expense;
+	}
 }
 ?>

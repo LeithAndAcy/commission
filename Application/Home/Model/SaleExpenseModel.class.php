@@ -5,6 +5,9 @@ class SaleExpenseModel extends Model {
 	
 	public function getAllItems(){
 		$res = $this->select();
+		foreach ($res as $key => $value) {
+			$res[$key]['ratio'] *= 100;
+		}
 		return $res;
 	}
 	public function getSaleExpense($salesman_id,$inventory_id){
@@ -18,12 +21,15 @@ class SaleExpenseModel extends Model {
 			return $res;	
 		}
 	}
-	public function editItem($id,$sale_expense){
+	public function editItem($id,$sale_expense,$ratio){
 		$condition = array();
 		$condition['id'] = $id;
-		$this -> where($condition) -> setField('sale_expense',$sale_expense);
+		$data['sale_expense'] = $sale_expense;
+		$data['ratio'] = $ratio * 0.01;
+		$this -> where($condition) -> save($data);
 	}
 	public function addItem($data){
+		$data['ratio'] *= 0.01;
 		$this -> add($data);
 	}
 	public function deleteItem($id){
@@ -35,7 +41,8 @@ class SaleExpenseModel extends Model {
 		$arr = array();	
 		$res = $this->select();
 		foreach ($res as $key => $value) {
-			$arr[$value['salesman_id']][$value['inventory_id']] = $value['sale_expense'];
+			$arr[$value['salesman_id']][$value['contact_id']][$value['inventory_id']]['sale_expense'] = $value['sale_expense'];
+			$arr[$value['salesman_id']][$value['contact_id']][$value['inventory_id']]['sale_expense_ratio'] = $value['ratio'];
 		}
 		return $arr;
 	}

@@ -14,6 +14,7 @@
 						<th>公积金</th>
 						<th>个税</th>
 						<th>昆山实发工资</th>
+						<th>销售费用总和</th>
 						<th>日期</th>
 					</tr>
 				</thead>
@@ -22,11 +23,12 @@
 						<tr>
 							<td>{$vo.salesman_id}</td>
 							<td>{$vo.salesman_name}</td>
-							<td>8000</td>
+							<td>{$vo.basic_kunshan_salary}</td>
 							<td>{$vo.insurance}</td>
 							<td>{$vo.fund}</td>
 							<td>{$vo.tax}</td>
-							<td>{$vo.shanghai_salary}</td>
+							<td>{$vo.kunshan_salary}</td>
+							<td>{$vo.end_sale_expense}</td>
 							<td>{$vo.date}</td>
 						</tr>
 					</volist>

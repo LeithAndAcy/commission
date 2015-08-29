@@ -181,6 +181,10 @@ class BusinessPercentController extends Controller {
 					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
 			}
+			//取销售费用以及销售费用比例
+			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense'];
+			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense_ratio'];
+			
 			//没配置比例表的情况
 			if($price_float_ratio == null){
 				$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
@@ -208,12 +212,13 @@ class BusinessPercentController extends Controller {
 			}
 			
 			$temp_bPurchase = $value['purchase'];
-			$temp_sale_expense =$all_sale_expense[$salesman_id][$value['inventory_id']];
-			
+			//销售费用= 发货米数*销售费用单价*销售费用比例；
+			$temp_sale_expense =$value['delivery_quantity'] * $arr_ratio[$key]['sale_expense'] * $arr_ratio[$key]['sale_expense_ratio'];
+			$arr_ratio[$key]['end_sale_expense'] = $temp_sale_expense;
 			if($temp_bPurchase){
 			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
-				if($temp_sale_expense >0){
+				if($arr_ratio[$key]['sale_expense'] >0){
 			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}

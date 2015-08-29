@@ -20,6 +20,7 @@ class ExcelController extends Controller {
 	private $db_tax_ratio;
 	private $db_U8;
 	private $db_wage_deduction;
+	private $db_sale_expense;
 	function _initialize() {
 		$this -> db_salesman = D("Salesman");
 		$this -> db_normal_business_ratio = D("NormalBusinessRatio");
@@ -37,6 +38,7 @@ class ExcelController extends Controller {
 		$this -> db_funds_back = D("FundsBack");
 		$this -> db_tax_ratio = D("TaxRatio");
 		$this -> db_wage_deduction = D("WageDeduction");
+		$this -> db_sale_expense = D("SaleExpense");
 	}
 	//import
 	public function loadPriceFloatExcel() {
@@ -405,6 +407,41 @@ class ExcelController extends Controller {
 			$arr_special_business_ratio[$key]['high_limit'] = $value['E'];
 			$arr_special_business_ratio[$key]['ratio'] = $value['F'];
 			$this -> db_special_business_ratio -> addSpecialBusinessRatio($arr_special_business_ratio[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importSaleExpenseExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_special_business_ratio = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_sale_expense[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_sale_expense as $key => $value) {
+			unset($arr_sale_expense[$key]);
+			$arr_sale_expense[$key]['salesman_id'] = $value['B'];
+			$arr_sale_expense[$key]['contact_id'] = $value['C'];
+			$arr_sale_expense[$key]['inventory_id'] = $value['D'];
+			$arr_sale_expense[$key]['sale_expense'] = $value['E'];
+			$arr_sale_expense[$key]['ratio'] = $value['F'];
+			$this -> db_sale_expense -> addItem($arr_sale_expense[$key]);
 		}
 		$this -> success("添加成功！");
 	}

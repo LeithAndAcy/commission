@@ -168,7 +168,6 @@ class SourceDataController extends Controller {
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$all_sale_expense = $this -> db_sale_expense -> getAllHandledSaleExpense();
-		
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
@@ -203,11 +202,13 @@ class SourceDataController extends Controller {
 				}
 			}
 			$temp_bPurchase = $value['purchase'];
-			$temp_sale_expense =$all_sale_expense[$salesman_id][$value['inventory_id']];
+			//取销售费用以及销售费用比例
+			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense'];
+			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense_ratio'];
 			if($temp_bPurchase){
 			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
-				if($temp_sale_expense >0){
+				if($arr_ratio[$key]['sale_expense'] >0){
 			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
@@ -348,7 +349,8 @@ class SourceDataController extends Controller {
 	public function editSaleExpense(){
 		$id = $_POST['edit_id'];
 		$sale_expense = $_POST['edit_sale_expense'];
-		$this -> db_sale_expense -> editItem($id,$sale_expense);
+		$ratio = $_POST['edit_ratio'];
+		$this -> db_sale_expense -> editItem($id,$sale_expense,$ratio);
 		$this -> loadSaleExpensePage();
 	}
 	public function addSaleExpense(){
@@ -356,6 +358,8 @@ class SourceDataController extends Controller {
 		$data['salesman_id'] = $_POST['add_new_salesman_id'];
 		$data['inventory_id'] = $_POST['add_new_inventory_id'];
 		$data['sale_expense'] = $_POST['add_new_sale_expense'];
+		$data['contact_id'] = $_POST['add_new_contact_id'];
+		$data['ratio'] = $_POST['add_new_ratio'];
 		$this -> db_sale_expense -> addItem($data);
 		$this -> loadSaleExpensePage();
 	}

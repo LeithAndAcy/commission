@@ -101,5 +101,19 @@ class SalesmanModel extends Model {
 		$res = $this -> where($condition) -> getField('salesman_name');
 		return $res;
 	}
+	public function addSalesmanNameAndBasicSalary($array_data){
+		$all_salesmen = $this-> select();
+		foreach ($array_data as $key => $value) {
+			foreach ($all_salesmen as $kk => $vv) {
+				if($value['salesman_id'] == $vv['salesman_id']){
+					$array_data[$key]['salesman_name'] = $vv['salesman_name'];
+					$array_data[$key]['basic_shanghai_salary'] = $vv['shasnghai_salary'];
+					$array_data[$key]['basic_kunshan_salary'] = $vv['kunshan_salary'];
+					break;
+				}
+			}
+		}
+		return $array_data;
+	}
 }
 ?>
