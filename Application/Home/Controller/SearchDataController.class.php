@@ -67,7 +67,6 @@ class SearchDataController extends Controller {
 		$Page = new \Think\Page($count_payroll,1000);
 		$show = $Page->show();// 分页显示输出
 		$payroll = $this -> db_salary -> getAllShanghaiSalary($Page);
-	//	$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}
@@ -80,7 +79,6 @@ class SearchDataController extends Controller {
 		$Page = new \Think\Page($count_payroll,1000);
 		$show = $Page->show();// 分页显示输出
 		$payroll = $this -> db_salary -> getAllKunshanSalary($Page);
-	//	$payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		foreach ($payroll as $key => $value) {
 			$payroll[$key]['total'] = $value['shanghai_salary'] + $value['kunshan_salary'] + $value['bogus']; 
 		}

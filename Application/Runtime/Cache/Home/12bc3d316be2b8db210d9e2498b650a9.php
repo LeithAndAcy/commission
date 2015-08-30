@@ -93,6 +93,8 @@
 									<th>销售数量（米数）</th>
 									<th>发货数量（米数）</th>
 									<th>销售金额(元)</th>
+									<th>销售费用(元)</th>
+									<th>销售费用比例</th>
 									<th>基本业绩提成比例</th>
 									<th>基本利润提成比例</th>
 									<th>业务提成调整比例</th>
@@ -122,6 +124,8 @@
 										<td><?php echo ($vo["sale_quantity"]); ?></td>
 										<td><?php echo ($vo["delivery_quantity"]); ?></td>
 										<td><?php echo ($vo["delivery_money"]); ?></td>
+										<td><?php echo ($vo["sale_expense"]); ?></td>
+										<td><?php echo ($vo["sale_expense_ratio"]); ?>%</td>
 										<td><?php echo ($vo["normal_business_ratio"]); ?>%</td>
 										<td><?php echo ($vo["normal_profit_ratio"]); ?>%</td>
 										<td id="<?php echo ($vo["contact_id"]); ?>_<?php echo ($vo["inventory_id"]); ?>_business_adjust"><?php echo ($vo["business_adjust"]); ?>%</td>

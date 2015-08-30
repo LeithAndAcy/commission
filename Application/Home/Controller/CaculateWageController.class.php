@@ -63,7 +63,7 @@ class CaculateWageController extends Controller {
 	public function LoadIncidentalFeePage(){
 		$last_month = _getLastMonth();
 		$payroll = $this -> db_salary -> getSalary($last_month);
-		$payroll = $this -> db_salesman -> addSalesmanName($payroll);
+		// $payroll = $this -> db_salesman -> addSalesmanName($payroll);
 		$this -> assign("payroll",$payroll);
 		$this -> display('IncidentalFeePage');
 	}
