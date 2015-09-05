@@ -213,8 +213,9 @@ class BusinessPercentController extends Controller {
 			
 			$temp_bPurchase = $value['purchase'];
 			//销售费用= 发货米数*销售费用单价*销售费用比例；
-			$temp_sale_expense =$value['delivery_quantity'] * $arr_ratio[$key]['sale_expense'] * $arr_ratio[$key]['sale_expense_ratio'];
-			$arr_ratio[$key]['end_sale_expense'] = $temp_sale_expense;
+			$arr_ratio[$key]['end_sale_expense'] =$value['delivery_quantity'] * $arr_ratio[$key]['sale_expense'] * $arr_ratio[$key]['sale_expense_ratio'];
+			$temp_sale_expense = $arr_ratio[$key]['sale_expense'];
+			// $arr_ratio[$key]['end_sale_expense'] = $temp_sale_expense;
 			if($temp_bPurchase){
 			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{

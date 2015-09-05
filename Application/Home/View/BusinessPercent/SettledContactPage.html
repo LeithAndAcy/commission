@@ -35,7 +35,11 @@
 						<th>销售数量（米数）</th>
 						<th>发货数量（米数）</th>
 						<th>销售金额(元)</th>
-
+						
+						<th>销售费用单价(元)</th>
+						<th>销售费用比例</th>
+						<th>销售费用(元)</th>
+						
 						<th>基本业绩提成比例</th>
 						<th>达标业绩提成比例</th>
 						<th>基本利润提成比例</th>
@@ -76,6 +80,11 @@
 							<td>{$vo.sale_quantity}</td>
 							<td>{$vo.delivery_quantity}</td>
 							<td>{$vo.delivery_money}</td>
+							
+							<td>{$vo.sale_expense}</td>
+							<td>{$vo.sale_expense_ratio}%</td>
+ 							<td>{$vo.end_sale_expense}</td>
+							
 							<td>{$vo.normal_business_ratio}%</td>
 							<td>{$vo.special_business_ratio}%</td>
 							<td>{$vo.normal_profit_ratio}%</td>
