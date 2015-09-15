@@ -15,7 +15,8 @@ class U8Model extends Model {
 	protected $trueTableName;
 	public function getEditedContactMain($begin_date,$end_date){
 		// so_somain 取订单号，合同号，客户编码，业务员编码
-		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where (cCloser in not null) and ((dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date'))");
+		// $res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where (cCloser in not null) and ((dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date'))");
+		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain where ((dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate not between '$begin_date' and '$end_date'))");
 		return $res;
 	}
 	public function getContactDetail($contact_main){
@@ -43,6 +44,20 @@ class U8Model extends Model {
 	
 	public function getContactDetailByDate($begin_date,$end_date){
 		
+		// $res = $this -> query("select SO_SOMain.cPersonCode as salesman_id,SO_SOMain.cCusCode as customer_id,
+		// Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
+		// SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
+		// SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity,SO_SODetails.iFHMoney as delivery_money,
+		// Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
+		// Inventory.cInvDefine1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name
+		// from SO_SOMain join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
+		// and (SO_SOMain.cCloser is null and ((SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date') 
+		// OR (SO_SOMain.dChangeVerifyDate is not null and SO_SOMain.dChangeVerifyDate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date')))
+		// join Inventory on SO_SODetails.cInvCode = Inventory.cInvCode
+		// join InventoryClass on Inventory.cInvCCode = InventoryClass.cInvCCode
+		// left join Person on Person.cPersonCode = SO_SOMain.cPersonCode
+		// left join Customer on Customer.cCusCode = SO_SOMain.cCusCode
+		// ");
 		$res = $this -> query("select SO_SOMain.cPersonCode as salesman_id,SO_SOMain.cCusCode as customer_id,
 		Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
 		SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
@@ -50,7 +65,7 @@ class U8Model extends Model {
 		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		Inventory.cInvDefine1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name
 		from SO_SOMain join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
-		and (SO_SOMain.cCloser is null and ((SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date') 
+		and (((SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date') 
 		OR (SO_SOMain.dChangeVerifyDate is not null and SO_SOMain.dChangeVerifyDate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date')))
 		join Inventory on SO_SODetails.cInvCode = Inventory.cInvCode
 		join InventoryClass on Inventory.cInvCCode = InventoryClass.cInvCCode
@@ -103,8 +118,10 @@ class U8Model extends Model {
 	
 	public function getAllContactMain($begin_date,$end_date){
 		// so_somain 取订单号，合同号，客户编码，业务员编码
+		// $res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain 
+		// where cCloser is null and ( (dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date'))");
 		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain 
-		where cCloser is null and ( (dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date'))");
+		where ( (dChangeVerifyDate is null and dverifydate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date') OR (dChangeVerifyDate is not null and dChangeVerifyDate between '$begin_date' and '$end_date' and dDate between '$begin_date' and '$end_date'))");
 		return $res;
 	}
 	
