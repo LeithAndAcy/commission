@@ -83,6 +83,9 @@
 							<a href="/commission/index.php/Home/SourceData/loadAreaPriceFloatPage" target="workflow">地区上浮底价表</a>
 						</li>
 						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadSpecialApprovePriceFloatPage" target="workflow">特批底价上浮比例表</a>
+						</li>
+						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadLengthLimitPage" target="workflow">合同结算长度限定表</a>
 						</li>
 						<li role="presentation">

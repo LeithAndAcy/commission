@@ -11,6 +11,7 @@ class SourceDataController extends Controller {
 	private $db_insurance_fund;
 	private $db_price_float_ratio;
 	private $db_area_price_float_ratio;
+	private $db_special_approve_price_float_ratio;
 	private $db_load_history;
 	private $db_customer;
 	private $db_U8;
@@ -37,6 +38,7 @@ class SourceDataController extends Controller {
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
 		$this -> db_area_price_float_ratio = D("AreaPriceFloatRatio");
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
+		$this -> db_special_approve_price_float_ratio = D("SpeicalApprovePriceFloatRatio");
 		$this -> db_load_history = D("LoadHistory");
 		$this -> db_customer = D("Customer");
 		$this -> db_contact_main = D("ContactMain");
@@ -51,6 +53,7 @@ class SourceDataController extends Controller {
 		$this -> db_salary = D("Salary");
 	}
     public function loadSourceDataPage(){
+    	\Think\Log::record('测试日志信息');
     	$this -> display('SourceDataPage');
 	}
 	
@@ -479,6 +482,13 @@ class SourceDataController extends Controller {
 	public function deleteAreaPriceFloatRatio(){
 		$delete_id = $_POST['delete_id'];
 		$this -> db_area_price_float_ratio -> deleteItemById($delete_id);
+	}
+	public function loadSpecialApprovePriceFloatPage(){
+		// print_r($this -> db_special_approve_price_float_ratio);exit;
+		$special_approve_price_float_ratio = $this -> db_special_approve_price_float_ratio ->getAllItems();
+		print_r($special_approve_price_float_ratio);exit;
+		$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
+		$this -> display('PriceFloatPage');
 	}
 	public function loadLengthLimitPage(){
 		$all_length_limit = $this -> db_length_limit -> getAllItems();
