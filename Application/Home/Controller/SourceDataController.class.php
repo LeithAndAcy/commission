@@ -37,8 +37,8 @@ class SourceDataController extends Controller {
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
 		$this -> db_area_price_float_ratio = D("AreaPriceFloatRatio");
+		$this -> db_special_approve_price_float_ratio = D("SpecialApprovePriceFloatRatio");
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
-		$this -> db_special_approve_price_float_ratio = D("SpeicalApprovePriceFloatRatio");
 		$this -> db_load_history = D("LoadHistory");
 		$this -> db_customer = D("Customer");
 		$this -> db_contact_main = D("ContactMain");
@@ -484,11 +484,27 @@ class SourceDataController extends Controller {
 		$this -> db_area_price_float_ratio -> deleteItemById($delete_id);
 	}
 	public function loadSpecialApprovePriceFloatPage(){
-		// print_r($this -> db_special_approve_price_float_ratio);exit;
-		$special_approve_price_float_ratio = $this -> db_special_approve_price_float_ratio ->getAllItems();
-		print_r($special_approve_price_float_ratio);exit;
-		$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
-		$this -> display('PriceFloatPage');
+		
+		$special_approve_price_float_ratio = $this -> db_special_approve_price_float_ratio -> getAllItems();
+		$this -> assign("special_approve_price_float_ratio",$special_approve_price_float_ratio);
+		$this -> display('SpecialApprovePriceFloatPage');
+	}
+	public function addSpecialApprovePriceFloatRatio(){
+		$data['classification_id'] = $_POST['add_new_classification_id'];
+		$data['customer_id'] = $_POST['add_new_customer_id'];
+		$data['ratio'] = $_POST['add_new_ratio'];
+		$this -> db_special_approve_price_float_ratio ->  addItem($data);
+		$this -> loadSpecialApprovePriceFloatPage();
+	}
+	public function deleteSpecialApprovePriceFloatRatio(){
+		$delete_id = $_POST['delete_id'];
+		$this -> db_special_approve_price_float_ratio -> deleteItemById($delete_id);
+	}
+	public function editSpecialApprovePriceFloatRatio(){
+		$id = $_POST['edit_id'];
+		$data['ratio'] = $_POST['edit_ratio'];
+		$this -> db_special_approve_price_float_ratio ->editItem($id,$data);
+		$this -> loadSpecialApprovePriceFloatPage();
 	}
 	public function loadLengthLimitPage(){
 		$all_length_limit = $this -> db_length_limit -> getAllItems();
