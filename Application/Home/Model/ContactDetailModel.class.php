@@ -88,6 +88,8 @@ class ContactDetailModel extends Model {
 			$data['end_cost_price'] = $value['end_cost_price'];
 			$data['sale_expense'] = $value['sale_expense'];
 			$data['sale_expense_ratio'] = $value['sale_expense_ratio'];
+			$data['special_approve_float_price_ratio'] = $value['special_approve_float_price_ratio'];
+			$data['special_approve_float_price'] = $value['special_approve_float_price'];
 			$this -> where($condition) -> save($data);
 			unset($condition);unset($data);
 		}

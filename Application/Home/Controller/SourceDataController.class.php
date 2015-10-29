@@ -171,9 +171,11 @@ class SourceDataController extends Controller {
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$all_sale_expense = $this -> db_sale_expense -> getAllHandledSaleExpense();
+		$all_special_approve_float_price_ratio = $this -> db_special_approve_price_float_ratio -> getAllHandledSpecialApprovePriceFloatRatio();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
+			$customer_id = $value['customer_id'];
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
 			$temp_inventory_id = substr($value['inventory_id'], 0,1) ;
@@ -190,6 +192,12 @@ class SourceDataController extends Controller {
 			}
 			//使用 join直接查出来地区浮动比例
 			$area_price_float_ratio = $value['ratio'];
+			//计算特批上浮底价
+			$arr_ratio[$key]['special_approve_float_price_ratio'] = $all_special_approve_float_price_ratio[$customer_id][$temp_inventory_id];
+			$arr_ratio[$key]['special_approve_float_price'] = $arr_ratio[$key]['special_approve_float_price_ratio'] * $contact_detail[$key]['cost_price'];
+			
+			//最终底价还要加上定制费  还没加
+			
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
@@ -215,7 +223,9 @@ class SourceDataController extends Controller {
 			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
+			
 		}
+		print_r($arr_ratio);
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
 	}
 	public function deleteContact(){
@@ -484,13 +494,12 @@ class SourceDataController extends Controller {
 		$this -> db_area_price_float_ratio -> deleteItemById($delete_id);
 	}
 	public function loadSpecialApprovePriceFloatPage(){
-		
 		$special_approve_price_float_ratio = $this -> db_special_approve_price_float_ratio -> getAllItems();
 		$this -> assign("special_approve_price_float_ratio",$special_approve_price_float_ratio);
 		$this -> display('SpecialApprovePriceFloatPage');
 	}
 	public function addSpecialApprovePriceFloatRatio(){
-		$data['classification_id'] = $_POST['add_new_classification_id'];
+		$data['inventory_id'] = $_POST['add_new_inventory_id'];
 		$data['customer_id'] = $_POST['add_new_customer_id'];
 		$data['ratio'] = $_POST['add_new_ratio'];
 		$this -> db_special_approve_price_float_ratio ->  addItem($data);

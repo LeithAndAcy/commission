@@ -11,7 +11,7 @@
 				<thead>
 					<tr>
 						<th>客户编码</th>
-						<th>存货类别编码(首字母)</th>
+						<th>产品编码的第一个字母</th>
 						<th>上浮比例</th>
 						<th>操作</th>
 					</tr>
@@ -20,7 +20,7 @@
 					<volist name="special_approve_price_float_ratio" id="vo">
 						<tr>
 							<td id="{$vo.id}_customer_id">{$vo.customer_id}</td>
-							<td id="{$vo.id}_classification_id">{$vo.classification_id}</td>
+							<td id="{$vo.id}_inventory_id">{$vo.inventory_id}</td>
 							<td id="{$vo.id}_ratio">{$vo.ratio}%</td>
 							<td special_approve_price_float_ratio_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="Edit" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#edit"> </span>
 								<span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="__PUBLIC__/img/delete.png"> </span>
@@ -50,7 +50,7 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">存货类别编码</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" id="edit_classification_id"  disabled="disabled">
+									<input type="text" class="form-control" id="edit_inventory_id"  disabled="disabled">
 								</div>
 							</div>
 							
@@ -91,7 +91,7 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">存货类别编码(首字母)</label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control validate[required]" name="add_new_classification_id">
+									<input type="text" class="form-control validate[required]" name="add_new_inventory_id">
 								</div>
 							</div>
 							<div class="form-group">
@@ -123,10 +123,10 @@
 			var edit_ratio = $("#" + edit_id + "_ratio").text();
 			edit_ratio = edit_ratio.slice(0, -1);
 			var edit_customer_id = $("#" + edit_id + "_customer_id").text();
-			var edit_classification_id = $("#" + edit_id + "_classification_id").text();
+			var edit_inventory_id = $("#" + edit_id + "_inventory_id").text();
 			$("#edit_id").val(edit_id);
 			$("#edit_customer_id").val(edit_customer_id);
-			$("#edit_classification_id").val(edit_classification_id);
+			$("#edit_inventory_id").val(edit_inventory_id);
 			$("#edit_ratio").val(edit_ratio);
 		});
 		$("#Table tbody").on("click", "tr td span img:odd", function() {

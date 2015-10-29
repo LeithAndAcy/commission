@@ -27,23 +27,14 @@ class SpecialApprovePriceFloatRatioModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition) -> delete();
 	}
-	public function getRatio($classification_id,$area){
-		$condition = array();
-		$condition['classification_id'] = $classification_id;
-		$condition['area'] = $area;
-		$res = $this -> where($condition) -> getField('ratio');
-		return $res;
-	}
-	private function checkDuplicate($data){
-		$condition = array();
-		$condition['classification_id'] = $data['classification_id'];
-		$condition['area'] = $data['area'];
-		$res = $this -> where($condition)-> find();
-		if($res){
-			return true;
-		}else{
-			return false;
+	public function getAllHandledSpecialApprovePriceFloatRatio(){
+		$arr = array();
+		$res = $this -> select();
+		foreach ($res as $key => $value) {
+			$arr[$value['customer_id']][$value['inventory_id']]= $value['ratio'];
 		}
+		return $arr;
 	}
+	
 }
 ?>
