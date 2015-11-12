@@ -10,6 +10,7 @@ class ExcelController extends Controller {
 	private $db_special_profit_ratio;
 	private $db_insurance_fund;
 	private $db_price_float_ratio;
+	private $db_area_price_float_ratio;
 	private $db_load_history;
 	private $db_customer;
 	private $db_contact_main;
@@ -21,6 +22,7 @@ class ExcelController extends Controller {
 	private $db_U8;
 	private $db_wage_deduction;
 	private $db_sale_expense;
+	private $db_special_approve_price_float_ratio;
 	function _initialize() {
 		$this -> db_salesman = D("Salesman");
 		$this -> db_normal_business_ratio = D("NormalBusinessRatio");
@@ -28,7 +30,9 @@ class ExcelController extends Controller {
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
+		$this -> db_area_price_float_ratio = D("AreaPriceFloatRatio");
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
+		$this -> db_special_approve_price_float_ratio = D("SpecialApprovePriceFloatRatio");
 		$this -> db_load_history = D("LoadHistory");
 		$this -> db_customer = D("Customer");
 		$this -> db_contact_main = D("ContactMain");
@@ -276,6 +280,75 @@ class ExcelController extends Controller {
 		}
 		$this -> success("添加成功！");
 	}
+	
+	public function importSpecialApprovePriceFloatRatioExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_special_approve_price_float_ratio = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_special_approve_price_float_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_special_approve_price_float_ratio as $key => $value) {
+			unset($arr_special_approve_price_float_ratio[$key]);
+			$arr_special_approve_price_float_ratio[$key]['customer_id'] = $value['B'];
+			$arr_special_approve_price_float_ratio[$key]['inventory_id'] = $value['C'];
+			$arr_special_approve_price_float_ratio[$key]['ratio'] = $value['D'];
+			$this -> db_special_approve_price_float_ratio -> addItem($arr_special_approve_price_float_ratio[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	
+	public function importAreaPriceFloatRatioExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_area_price_float_ratio = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_area_price_float_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_area_price_float_ratio as $key => $value) {
+			unset($arr_area_price_float_ratio[$key]);
+			$arr_area_price_float_ratio[$key]['classification_id'] = $value['B'];
+			$arr_area_price_float_ratio[$key]['area'] = $value['C'];
+			$arr_area_price_float_ratio[$key]['ratio'] = $value['D'];
+			$this -> db_area_price_float_ratio -> addItem($arr_area_price_float_ratio[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	
 	public function importSpecialProfitRatioExcel() {
 		$excel_name = $_FILES['excel_file']['name'];
 		$index = stripos($excel_name, ".");

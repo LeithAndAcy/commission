@@ -19,11 +19,23 @@ class ContactDetailModel extends Model {
 		$month = date('Y-m',strtotime($begin_date));
 		foreach ($all_contact_detail as $key => $value) {
 			$value['date'] = $month;
+			if($value['custom_fee'] == null){
+				$value['custom_fee'] = 0;
+			}
+			$value['delivery_money'] = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
+			unset($value['iNatSum']);
 			$this -> add($value);
 		}
 
 	}
-
+	
+	public function updateDeliveryQuantityAndMoney($cSOCode,$inventory_id,$data){
+		$condition = array();
+		$condition['cSOCode'] = $cSOCode;
+		$condition['inventory_id'] = $inventory_id;
+		$this -> where($condition) -> save($data);
+	}
+	
 	public function getContactDetail($contact_main) {
 		$condition = array();
 		$contact_detail = array();
@@ -46,6 +58,7 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['business_adjust'] *= 100;
 				$contact_detail[$i]['profit_adjust'] *= 100;
 				$contact_detail[$i]['sale_expense_ratio'] *= 100;
+				$contact_detail[$i]['special_approve_float_price_ratio'] *= 100;
 				$i++;
 			}
 		}
@@ -60,13 +73,17 @@ class ContactDetailModel extends Model {
 			$condition['inventory_id'] = $value['inventory_id'];
 			$data['normal_business_ratio'] = $value['normal_business_ratio'];
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio'] * 0.01;
+			$data['special_business_ratio'] = $value['special_business_ratio'];
 			$data['float_price'] = $value['float_price'];
 			$data['end_cost_price'] = $value['end_cost_price'];
 			$data['sale_expense'] = $value['sale_expense'];
 			$data['sale_expense_ratio'] = $value['sale_expense_ratio'];
 			$data['end_sale_expense'] = $value['end_sale_expense'];
-			$data['special_business_ratio'] = $value['special_business_ratio'];
-			// $data['special_profit_ratio'] = $value['special_profit_ratio'];
+			
+			$data['special_approve_float_price_ratio'] = $value['special_approve_float_price_ratio'];
+			$data['special_approve_float_price'] = $value['special_approve_float_price'];
+			$data['custom_fee_float_price'] = $value['custom_fee_float_price'];
+			
 			$data['normal_business'] = $value['normal_business'];
 			$data['special_business'] = $value['special_business'];
 			$data['normal_profit'] = $value['normal_profit'];
@@ -90,6 +107,7 @@ class ContactDetailModel extends Model {
 			$data['sale_expense_ratio'] = $value['sale_expense_ratio'];
 			$data['special_approve_float_price_ratio'] = $value['special_approve_float_price_ratio'];
 			$data['special_approve_float_price'] = $value['special_approve_float_price'];
+			$data['custom_fee_float_price'] = $value['custom_fee_float_price'];
 			$this -> where($condition) -> save($data);
 			unset($condition);unset($data);
 		}

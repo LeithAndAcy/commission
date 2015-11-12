@@ -22,6 +22,9 @@
 					<button class="btn btn-primary" id="get_ratio">
 						取数
 					</button>
+					<!-- <button class="btn btn-warning" id="update_quantity">
+						更新发货数量
+					</button> -->
 					<span>
 						合同总数：{$count_settlement_contact}
 					</span>
@@ -52,6 +55,9 @@
 									
 									<th>特批底价上浮比例</th>
 									<th>特批上浮底价</th>
+									
+									<th>定制费</th>
+									<th>定制费上浮底价</th>
 									
 									<th>上浮的底价（元）</th>
 									<th>销售数量（米数）</th>
@@ -88,6 +94,9 @@
 										
 										<td>{$vo.special_approve_float_price_ratio}%</td>
 										<td>{$vo.special_approve_float_price}</td>
+										
+										<td>{$vo.custom_fee}</td>
+										<td>{$vo.custom_fee_float_price}</td>
 										
 										<td>{$vo.float_price}</td>
 										<td>{$vo.sale_quantity}</td>
@@ -327,6 +336,12 @@
 		$("#get_ratio").click(function() {
 			$('#get_ratio').attr('disabled',"true");
 			$.post("__CONTROLLER__/getSettlementRatio", {}, function(data) {
+				window.location.href = "/commission/index.php/Home/SourceData/loadSettleSummaryPage";
+			});
+		});
+		$("#update_quantity").click(function(){
+			$('#update_quantity').attr('disabled',"true");
+			$.post("__CONTROLLER__/updateDeliveryQuantity", {}, function(data) {
 				window.location.href = "/commission/index.php/Home/SourceData/loadSettleSummaryPage";
 			});
 		});

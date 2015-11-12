@@ -40,6 +40,9 @@
 						<th>特批底价上浮比例</th>
 						<th>特批上浮底价</th>
 						
+						<th>定制费</th>
+						<th>定制费上浮底价</th>
+						
 						<th>上浮的底价（元）</th>
 						<th>销售数量（米数）</th>
 						<th>发货数量（米数）</th>
@@ -88,6 +91,9 @@
 							
 							<td>{$vo.special_approve_float_price_ratio}%</td>
 							<td>{$vo.special_approve_float_price}</td>
+							
+							<td>{$vo.custom_fee}</td>
+							<td>{$vo.custom_fee_float_price}</td>
 							
 							<td>{$vo.float_price}</td>
 							<td>{$vo.sale_quantity}</td>
@@ -310,6 +316,7 @@
 			}
 		});
 		$("#btn_caculate").click(function() {
+			alert("只会结算工资未结算的月份的合同");
 			var temp = confirm("确认结算？");
 			if(temp){
 				$('#btn_caculate').attr('disabled', "true");

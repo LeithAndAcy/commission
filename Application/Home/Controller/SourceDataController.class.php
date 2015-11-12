@@ -54,7 +54,7 @@ class SourceDataController extends Controller {
 	}
     public function loadSourceDataPage(){
     	\Think\Log::record('测试日志信息');
-    	$this -> display('SourceDataPage');
+		$this -> display('SourceDataPage');
 	}
 	
 	public function loadData(){
@@ -196,19 +196,23 @@ class SourceDataController extends Controller {
 			$arr_ratio[$key]['special_approve_float_price_ratio'] = $all_special_approve_float_price_ratio[$customer_id][$temp_inventory_id];
 			$arr_ratio[$key]['special_approve_float_price'] = $arr_ratio[$key]['special_approve_float_price_ratio'] * $contact_detail[$key]['cost_price'];
 			
-			//最终底价还要加上定制费  还没加
+			//最终底价还要加上定制费 
+			// print_r(round(30/605,6)) ; 
+			$arr_ratio[$key]['custom_fee_float_price'] = round($contact_detail[$key]['custom_fee']/$contact_detail[$key]['sale_quantity'],6);
 			
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
 				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
 					$arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
-					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust'];
+					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust']
+					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price'];
 					$arr_ratio[$key]['float_price_ratio'] = $vvvv['ratio']* 0.01; 
 					break;
 				}else{
 					$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
-					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
+					$arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']
+					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price'];
 					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
 			}
@@ -225,9 +229,28 @@ class SourceDataController extends Controller {
 			}
 			
 		}
-		print_r($arr_ratio);
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
 	}
+
+	public function updateDeliveryQuantity(){
+		$this -> db_U8 = D("U8");
+		$settlement_contact_cSOCode = $this -> db_contact_main -> getSettlementContactcSOCode();
+		print_r($settlement_contact_cSOCode);
+		foreach ($settlement_contact_cSOCode as $key => $value) {
+			$res = $this -> db_U8 ->getDeliveryQuantityAndINatSum($value['cSOCode'],$value['inventory_id']);
+			print_r($res);
+			if($res['delivery_quantity'] == $value['delivery_quantity']){
+				//发货数量相同，不做任何操作
+			}else{
+				//更改发货数量和发货金额
+				$data = array();
+				$data['delivery_quantity'] = $res['delivery_quantity'];
+				$data['delivery_money'] = round($res['iNatSum'] / $res['sale_quantity'],6) * $res['delivery_quantity'];
+				$this -> db_contact_detail -> updateDeliveryQuantityAndMoney($value['cSOCode'],$value['inventory_id'],$data);
+			}
+		}
+	}
+	
 	public function deleteContact(){
 		$contact_id = $_POST['contact_id'];
 		$inventory_id = $_POST['inventory_id'];

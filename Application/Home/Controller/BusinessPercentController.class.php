@@ -11,6 +11,7 @@ class BusinessPercentController extends Controller {
 	private $db_coustomer_funds;
 	private $db_normal_business_ratio;
 	private $db_special_business_ratio;
+	private $db_special_approve_price_float_ratio;
 	private $db_normial_profit_ratio;
 	private $db_special_profit_ratio;
 	private $db_price_float_ratio;
@@ -36,6 +37,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_salesman = D("Salesman");
 		$this -> db_normal_business_ratio = D("NormalBusinessRatio");
 		$this -> db_special_business_ratio = D("SpecialBusinessRatio");
+		$this -> db_special_approve_price_float_ratio = D("SpecialApprovePriceFloatRatio");
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
 		$this -> db_special_profit_ratio = D("SpecialProfitRatio");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
@@ -143,12 +145,13 @@ class BusinessPercentController extends Controller {
 		$temp_fee_ratio = $this -> db_fee_ratio -> getFeeRatio($salesman_id);
 		$special_business_ratio = $this -> db_special_business_ratio -> getAllHandledSpecialBusinessRatio();
 		$all_sale_expense = $this -> db_sale_expense -> getAllHandledSaleExpense();
-		
+		$all_special_approve_float_price_ratio = $this -> db_special_approve_price_float_ratio -> getAllHandledSpecialApprovePriceFloatRatio();
 		//取所有员工的发货金额综合
 		$all_salesman_delivery_money = $this -> db_contact_main -> getSettlingContactTotalDeliveryMoney();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
+			$customer_id = $value['customer_id'];
 			//取存货类别
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
@@ -167,17 +170,28 @@ class BusinessPercentController extends Controller {
 			//计算上浮底价   以及最终实际底价
 			//使用left join直接查出来地区浮动比例
 			$area_price_float_ratio = $value['ratio'];
+			
+			//计算特批上浮底价
+			$arr_ratio[$key]['special_approve_float_price_ratio'] = $all_special_approve_float_price_ratio[$customer_id][$temp_inventory_id];
+			$arr_ratio[$key]['special_approve_float_price'] = $arr_ratio[$key]['special_approve_float_price_ratio'] * $contact_detail[$key]['cost_price'];
+			
+			//定制费 
+			// print_r(round(30/605,6)) ; 
+			$arr_ratio[$key]['custom_fee_float_price'] = round($contact_detail[$key]['custom_fee']/$contact_detail[$key]['sale_quantity'],6);
+			
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
 				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
 					$arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
-					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
+					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust']
+					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price'];
 					$arr_ratio[$key]['float_price_ratio'] = $vvvv['ratio']* 0.01; 
 					break;
 				}else{
 					$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
-					$arr_ratio[$key]['end_cost_price'] = ($contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']);
+					$arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']
+					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price'];
 					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
 			}
@@ -194,15 +208,24 @@ class BusinessPercentController extends Controller {
 			//取回款，计算各种比例和金额    
 			$temp_total_funds = $all_salesman_delivery_money[$salesman_id];
 			
-			$temp_special_business_ratio = 0; //没有匹配的就默认为0
+			$temp_special_business_ratio = null; //没有匹配的就默认为null
 			foreach ($special_business_ratio as $kkkkk => $vvvvv) {
 				if($vvvvv['salesman_id'] == $salesman_id && substr($value['inventory_id'], 0,1) == $vvvvv['inventory_id'] &&$temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
 					$temp_special_business_ratio = $vvvvv['ratio'];
 					break;
 				}
 			}
-			
+			//匹配不到  取其他
+			if($temp_special_business_ratio == null){
+				foreach ($special_business_ratio as $kkkkk => $vvvvv) {
+					if($vvvvv['salesman_id'] == $salesman_id && ('其他' == $vvvvv['inventory_id']) &&$temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
+						$temp_special_business_ratio = $vvvvv['ratio'];
+						break;
+					}
+				}
+			}
 			$arr_ratio[$key]['special_business_ratio'] = $temp_special_business_ratio;
+			unset($temp_special_business_ratio);
 			if($arr_ratio[$key]['end_cost_price'] > $contact_detail[$key]['sale_price']){
 				$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_quantity']* $contact_detail[$key]['sale_price'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust']) *$temp_fee_ratio;
 				$arr_ratio[$key]['special_business'] = $contact_detail[$key]['delivery_quantity']* $contact_detail[$key]['sale_price'] * $arr_ratio[$key]['special_business_ratio'] *$temp_fee_ratio;
@@ -216,11 +239,11 @@ class BusinessPercentController extends Controller {
 			$arr_ratio[$key]['end_sale_expense'] =$value['delivery_quantity'] * $arr_ratio[$key]['sale_expense'] * $arr_ratio[$key]['sale_expense_ratio'];
 			$temp_sale_expense = $arr_ratio[$key]['sale_expense'];
 			// $arr_ratio[$key]['end_sale_expense'] = $temp_sale_expense;
-			if($temp_bPurchase){
+			if(FALSE){
 			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
 				if($arr_ratio[$key]['sale_expense'] >0){
-			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
+					$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
 			if($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']*1.1)>0){

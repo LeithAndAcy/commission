@@ -228,6 +228,7 @@ class ContactMainModel extends Model {
 		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
 		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
+		commission_contact_detail.custom_fee,
 		commission_contact_detail.sale_price,commission_contact_detail.cost_price,commission_contact_detail.float_price,
 		commission_contact_detail.sale_quantity,commission_contact_detail.delivery_quantity,commission_contact_detail.normal_business_ratio,
 		commission_contact_detail.special_business_ratio,commission_contact_detail.normal_profit_ratio,commission_contact_detail.business_adjust,
@@ -285,6 +286,7 @@ class ContactMainModel extends Model {
 		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
 		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
+		commission_contact_detail.custom_fee,
 		commission_contact_detail.sale_price,commission_contact_detail.cost_price,commission_contact_detail.float_price,
 		commission_contact_detail.sale_quantity,commission_contact_detail.delivery_quantity,commission_contact_detail.normal_business_ratio,
 		commission_contact_detail.special_business_ratio,commission_contact_detail.normal_profit_ratio,commission_contact_detail.business_adjust,
@@ -341,6 +343,12 @@ class ContactMainModel extends Model {
 		$res = $this -> where("date between '$search_begin_date' and '$search_end_date'") -> count();
 		
 		return $res;
+	}
+	public function getSettlementContactcSOCode(){
+		$res = $this -> query("select commission_contact_detail.cSOCode,commission_contact_detail.inventory_id,commission_contact_detail.delivery_quantity from commission_contact_detail join commission_contact_main on 
+		commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1 
+		and commission_contact_main.contact_id = commission_contact_detail.contact_id");
+		return $res;		
 	}
 }
 ?>
