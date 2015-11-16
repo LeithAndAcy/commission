@@ -188,6 +188,8 @@ class ContactDetailModel extends Model {
 			$res[$key]['normal_profit_ratio'] *= 100;
 			$res[$key]['business_adjust'] *= 100;
 			$res[$key]['profit_adjust'] *= 100;
+			$res[$key]['special_approve_float_price_ratio']*= 100;
+			$res[$key]['sale_expense_ratio']*= 100;
 		}
 		return $res;
 	}

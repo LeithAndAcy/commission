@@ -62,6 +62,9 @@
 					<button class="btn btn-primary" id="get_ratio">
 						取数
 					</button>
+					<!-- <button class="btn btn-warning" id="update_quantity">
+						更新发货数量
+					</button> -->
 					<span>
 						合同总数：<?php echo ($count_settlement_contact); ?>
 					</span>
@@ -89,11 +92,18 @@
 									<th>颜色</th>
 									<th>销售单价</th>
 									<th>底价（元）</th>
+									
+									<th>特批底价上浮比例</th>
+									<th>特批上浮底价</th>
+									
+									<th>定制费</th>
+									<th>定制费上浮底价</th>
+									
 									<th>上浮的底价（元）</th>
 									<th>销售数量（米数）</th>
 									<th>发货数量（米数）</th>
 									<th>销售金额(元)</th>
-									<th>销售费用(元)</th>
+									<th>销售费用单价(元)</th>
 									<th>销售费用比例</th>
 									<th>基本业绩提成比例</th>
 									<th>基本利润提成比例</th>
@@ -120,6 +130,13 @@
 										<td><?php echo ($vo["colour"]); ?></td>
 										<td><?php echo ($vo["sale_price"]); ?></td>
 										<td><?php echo ($vo["cost_price"]); ?></td>
+										
+										<td><?php echo ($vo["special_approve_float_price_ratio"]); ?>%</td>
+										<td><?php echo ($vo["special_approve_float_price"]); ?></td>
+										
+										<td><?php echo ($vo["custom_fee"]); ?></td>
+										<td><?php echo ($vo["custom_fee_float_price"]); ?></td>
+										
 										<td><?php echo ($vo["float_price"]); ?></td>
 										<td><?php echo ($vo["sale_quantity"]); ?></td>
 										<td><?php echo ($vo["delivery_quantity"]); ?></td>
@@ -355,6 +372,12 @@
 		$("#get_ratio").click(function() {
 			$('#get_ratio').attr('disabled',"true");
 			$.post("/commission/index.php/Home/SourceData/getSettlementRatio", {}, function(data) {
+				window.location.href = "/commission/index.php/Home/SourceData/loadSettleSummaryPage";
+			});
+		});
+		$("#update_quantity").click(function(){
+			$('#update_quantity').attr('disabled',"true");
+			$.post("/commission/index.php/Home/SourceData/updateDeliveryQuantity", {}, function(data) {
 				window.location.href = "/commission/index.php/Home/SourceData/loadSettleSummaryPage";
 			});
 		});

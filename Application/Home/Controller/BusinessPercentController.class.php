@@ -215,8 +215,9 @@ class BusinessPercentController extends Controller {
 					break;
 				}
 			}
+			
 			//匹配不到  取其他
-			if($temp_special_business_ratio == null){
+			if($temp_special_business_ratio === null){
 				foreach ($special_business_ratio as $kkkkk => $vvvvv) {
 					if($vvvvv['salesman_id'] == $salesman_id && ('其他' == $vvvvv['inventory_id']) &&$temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
 						$temp_special_business_ratio = $vvvvv['ratio'];
@@ -339,6 +340,8 @@ class BusinessPercentController extends Controller {
 	}
 	
 	public function complicateSearch(){
+		
+		session('search_settled_contact_data',$_POST);
 		$condition = array();
 		$temp_array = array();
 		$condition['contact_id'] = $_POST['search_contact_id'];
@@ -363,7 +366,7 @@ class BusinessPercentController extends Controller {
 		if($res == null){
 			$count_settled_contact_detail = $this -> db_contact_detail -> searchCountByDate($search_begin_date,$search_end_date);
 			$count_settled_contact = $this -> db_contact_main -> searchCountByDate($search_begin_date,$search_end_date);
-			$Page = new \Think\Page($count_settled_contact_detail,1500);
+			$Page = new \Think\Page($count_settled_contact_detail,1500000);
 			$show = $Page->show();// 分页显示输出
 			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page);
 		}
@@ -408,7 +411,6 @@ class BusinessPercentController extends Controller {
 			$this -> assign("contact_detail",$res);
 			$this -> display('BusinessPercent:CommissionBusinessPage');
 		}
-		
 	}
 	
 }

@@ -1182,5 +1182,181 @@ class ExcelController extends Controller {
 		header('Expires: 0');
 		$objWriter -> save('php://output');
 	}
+
+	public function generateComplicateSearchSettleContactExcelFile(){
+		vendor('PHPExcel.PHPExcel');
+		$this -> db_U8 = D("U8");
+		
+		$search_settled_contact_data = session('search_settled_contact_data');
+		//查数据
+		$condition = array();
+		$temp_array = array();
+		$condition['contact_id'] = $search_settled_contact_data['search_contact_id'];
+		$condition['cSOCode'] = $search_settled_contact_data['search_cSOCode'];
+		$condition['salesman_id'] = $search_settled_contact_data['search_salesman_id'];
+		$condition['salesman_name'] = $search_settled_contact_data['search_salesman_name'];
+		$condition['customer_id'] = $search_settled_contact_data['search_customer_id'];
+		$condition['customer_name'] = $search_settled_contact_data['search_customer_name'];
+		$condition['classification_id'] = $search_settled_contact_data['search_classification_id'];
+		$condition['inventory_id'] = $search_settled_contact_data['search_inventory_id'];
+		$condition['specification'] = $search_settled_contact_data['search_specification'];
+		$condition['colour'] = $search_settled_contact_data['search_colour'];
+		$type = $_POST['search_type'];
+		foreach ($condition as $key => $value) {
+			if($value == ""){
+				unset($condition[$key]);
+			}
+		}
+		
+		$res = $this -> db_contact_detail -> searchByCondition($condition);
+		$search_begin_date = $_POST['search_begin_date'];
+		$search_end_date = $_POST['search_end_date'];		
+		if($res == null){
+			$count_settled_contact_detail = $this -> db_contact_detail -> searchCountByDate($search_begin_date,$search_end_date);
+			$count_settled_contact = $this -> db_contact_main -> searchCountByDate($search_begin_date,$search_end_date);
+			$Page = new \Think\Page($count_settled_contact_detail,1500000);
+			$show = $Page->show();// 分页显示输出
+			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page);
+		}
+		foreach ($res as $key => $value) {
+			if($search_begin_date != null && $search_end_date != null){
+				if($value['date'] < $search_begin_date || $value['date']> $search_end_date){
+					unset($res[$key]);
+					continue;
+				}
+			}
+		}
+
+		if($type == "settling"){
+			//do nothing
+		}elseif($type == "settled"){
+		//	$count_settled_contact_detail = count($res);
+			//do nothing
+		}elseif($type == "commission_business"){
+			//do nothing
+		}
+		
+		$temp_trans = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', );
+		$objPHPExcel = new \PHPExcel();
+
+		$objPHPExcel -> getProperties() -> setCreator("提成管理系统")
+		 -> setLastModifiedBy("提成管理系统") -> setTitle("已结算合同") 
+		 -> setSubject("已结算合同") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+		 -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
+
+		$objPHPExcel -> setActiveSheetIndex(0);
+
+		$objPHPExcel -> getActiveSheet() -> setTitle('已结算合同');
+		
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('A') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('B') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('C') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('D') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('E') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('F') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('G') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('H') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('I') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('J') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('K') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('L') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('M') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('N') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('O') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('P') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('Q') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('R') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('S') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('T') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('U') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('V') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('W') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('X') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('Y') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('Z') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AA') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AB') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AC') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AD') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AE') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AF') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AG') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AH') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AI') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AJ') -> setWidth(30);
+		
+		
+		$objPHPExcel -> getActiveSheet() -> getDefaultStyle() -> getFont() -> setSize(12);
+		
+		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '合同号') 
+		-> setCellValue('C1', '销售订单号') -> setCellValue('D1', '客户编码') -> setCellValue('E1', '客户名称') 
+		-> setCellValue('F1', '业务员编码') -> setCellValue('G1', '业务员姓名') -> setCellValue('H1', '存货编码')
+		-> setCellValue('I1', '存货类别编码') -> setCellValue('J1', '存货名称') -> setCellValue('K1', '规格型号')
+		-> setCellValue('L1', '颜色') -> setCellValue('M1', '销售单价') -> setCellValue('N1', '底价（元）')
+		-> setCellValue('O1', '特批底价上浮比例') -> setCellValue('P1', '特批上浮底价') -> setCellValue('Q1', '定制费')
+		-> setCellValue('R1', '定制费上浮底价') -> setCellValue('S1', '上浮的底价（元）') -> setCellValue('T1', '销售数量（米数）')
+		-> setCellValue('U1', '发货数量（米数）') -> setCellValue('V1', '销售金额(元)') -> setCellValue('W1', '销售费用单价(元)')
+		-> setCellValue('X1', '销售费用比例') -> setCellValue('Y1', '销售费用(元)') -> setCellValue('Z1', '基本业绩提成比例')
+		-> setCellValue('AA1', '达标业绩提成比例') -> setCellValue('AB1', '基本利润提成比例') -> setCellValue('AC1', '业务提成调整比例')
+		-> setCellValue('AD1', '利润提成调整比例') -> setCellValue('AE1', '底价调整金额(元)') -> setCellValue('AF1', '最终实际底价(元)')
+		-> setCellValue('AG1', '基本业绩提成(元)') -> setCellValue('AH1', '回款达标业绩提成(元)') -> setCellValue('AI1', '基本利润提成(元)')
+		-> setCellValue('AJ1', '业绩利润提成汇总');
+		
+		foreach ($res as $key => $value) {
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['contact_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('C' . ($key + 2), $value['cSOCode']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['customer_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['customer_name']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('F' . ($key + 2), $value['salesman_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('G' . ($key + 2), $value['salesman_name']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('H' . ($key + 2), $value['inventory_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('I' . ($key + 2), $value['classification_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('J' . ($key + 2), $value['inventory_name']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('K' . ($key + 2), $value['salesman_name']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('L' . ($key + 2), $value['specification']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('M' . ($key + 2), $value['colour']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('N' . ($key + 2), $value['sale_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('O' . ($key + 2), $value['cost_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('P' . ($key + 2), $value['special_approve_float_price_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Q' . ($key + 2), $value['special_approve_float_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('R' . ($key + 2), $value['custom_fee']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('S' . ($key + 2), $value['custom_fee_float_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('T' . ($key + 2), $value['float_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('U' . ($key + 2), $value['sale_quantity']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('V' . ($key + 2), $value['delivery_quantity']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('W' . ($key + 2), $value['delivery_money']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('X' . ($key + 2), $value['sale_expense']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Y' . ($key + 2), $value['sale_expense_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Z' . ($key + 2), $value['end_sale_expense']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AA' . ($key + 2), $value['normal_business_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AB' . ($key + 2), $value['special_business_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AC' . ($key + 2), $value['normal_profit_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AD' . ($key + 2), $value['business_adjust']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AE' . ($key + 2), $value['profit_adjust']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AF' . ($key + 2), $value['end_cost_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AG' . ($key + 2), $value['normal_business']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AH' . ($key + 2), $value['special_business']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AI' . ($key + 2), $value['special_profit']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AJ' . ($key + 2), $value['total_business_profit']);
+		}
+		
+		
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$filename = "已结算合同".date('Ymdhis').".xls";
+		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
+		header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Disposition:inline;filename="'.$filename.'"');
+        header("Content-Transfer-Encoding: binary");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Pragma: no-cache");
+		header('Content-Encoding: none');
+		header('Expires: 0');
+		$objWriter -> save('php://output');
+	}
+
 }
 ?>
