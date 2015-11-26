@@ -194,6 +194,7 @@ class ContactDetailModel extends Model {
 		return $res;
 	}
 	
+	
 	public function searchCountByDate($search_begin_date,$search_end_date){
 		// $res = $this -> query("
 			// select * from commission_contact_detail where date >='$search_begin_date' AND date <= '$search_end_date'

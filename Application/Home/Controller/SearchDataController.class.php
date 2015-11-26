@@ -126,6 +126,7 @@ class SearchDataController extends Controller {
 	public function complicateSearch(){
 		$condition = array();
 		$temp_array = array();
+		session('search_settled_contact_data',$_POST);
 		$condition['contact_id'] = $_POST['search_contact_id'];
 		$condition['cSOCode'] = $_POST['search_cSOCode'];
 		$condition['salesman_id'] = $_POST['search_salesman_id'];
