@@ -194,6 +194,9 @@ class SourceDataController extends Controller {
 			$area_price_float_ratio = $value['ratio'];
 			//计算特批上浮底价
 			$arr_ratio[$key]['special_approve_float_price_ratio'] = $all_special_approve_float_price_ratio[$customer_id][$temp_inventory_id];
+			if($arr_ratio[$key]['special_approve_float_price_ratio'] === null){
+				$arr_ratio[$key]['special_approve_float_price_ratio'] = $all_special_approve_float_price_ratio[$customer_id]['其他'];
+			}
 			$arr_ratio[$key]['special_approve_float_price'] = $arr_ratio[$key]['special_approve_float_price_ratio'] * $contact_detail[$key]['cost_price'];
 			
 			//最终底价还要加上定制费 
@@ -235,10 +238,10 @@ class SourceDataController extends Controller {
 	public function updateDeliveryQuantity(){
 		$this -> db_U8 = D("U8");
 		$settlement_contact_cSOCode = $this -> db_contact_main -> getSettlementContactcSOCode();
-		print_r($settlement_contact_cSOCode);
+		// print_r($settlement_contact_cSOCode);
 		foreach ($settlement_contact_cSOCode as $key => $value) {
 			$res = $this -> db_U8 ->getDeliveryQuantityAndINatSum($value['cSOCode'],$value['inventory_id']);
-			print_r($res);
+			// print_r($res);
 			if($res['delivery_quantity'] == $value['delivery_quantity']){
 				//发货数量相同，不做任何操作
 			}else{

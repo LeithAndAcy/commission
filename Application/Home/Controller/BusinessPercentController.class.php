@@ -80,6 +80,7 @@ class BusinessPercentController extends Controller {
 		}
 		//判断哪些合同可结算    先判断回款，再判断发货数量
 		//  add condition:  normal_business_ratio > 0 
+		//  add condition:  normal_business_ratio > 0   &&  cost_price=0    不可取到可计算合同中
 		$total_customer_funds = $this -> db_constomer_funds ->getTotalCustomerFunds();
 		foreach ($total_customer_funds as $key => $value) {
 			$condition = array();
@@ -173,6 +174,9 @@ class BusinessPercentController extends Controller {
 			
 			//计算特批上浮底价
 			$arr_ratio[$key]['special_approve_float_price_ratio'] = $all_special_approve_float_price_ratio[$customer_id][$temp_inventory_id];
+			if($arr_ratio[$key]['special_approve_float_price_ratio'] === null){
+				$arr_ratio[$key]['special_approve_float_price_ratio'] = $all_special_approve_float_price_ratio[$customer_id]['其他'];
+			}
 			$arr_ratio[$key]['special_approve_float_price'] = $arr_ratio[$key]['special_approve_float_price_ratio'] * $contact_detail[$key]['cost_price'];
 			
 			//定制费 
