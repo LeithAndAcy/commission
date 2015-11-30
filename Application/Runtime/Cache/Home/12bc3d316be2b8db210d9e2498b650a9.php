@@ -92,6 +92,7 @@
 									<th>颜色</th>
 									<th>销售单价</th>
 									<th>底价（元）</th>
+									<th>最终底价（元）</th>
 									
 									<th>特批底价上浮比例</th>
 									<th>特批上浮底价</th>
@@ -130,6 +131,7 @@
 										<td><?php echo ($vo["colour"]); ?></td>
 										<td><?php echo ($vo["sale_price"]); ?></td>
 										<td><?php echo ($vo["cost_price"]); ?></td>
+										<td><?php echo ($vo["end_cost_price"]); ?></td>
 										
 										<td><?php echo ($vo["special_approve_float_price_ratio"]); ?>%</td>
 										<td><?php echo ($vo["special_approve_float_price"]); ?></td>
