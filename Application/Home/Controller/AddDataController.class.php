@@ -23,6 +23,7 @@ class AddDataController extends Controller {
 		$data['salesman_id'] = $_POST['salesman_id'];
 		$data['customer_id'] = $_POST['customer_id'];
 		$data['cSOCode'] = $_POST['cSOCode'];
+		$data['date'] = $_POST['date'];
 		$this -> db_contact_main -> addItem($data);
 		$this -> loadAddDataPage();
 	}
