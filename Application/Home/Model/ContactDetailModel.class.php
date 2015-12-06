@@ -205,7 +205,7 @@ class ContactDetailModel extends Model {
 	}
 	
 	public function searchByDate($search_begin_date,$search_end_date,$Page){
-		$res = $this -> where("date between '$search_begin_date' and '$search_end_date'")->limit($Page->firstRow.','.$Page->listRows) -> select();
+		$res = $this -> where("settled_date between '$search_begin_date' and '$search_end_date'")->limit($Page->firstRow.','.$Page->listRows) -> select();
 		// $res = $this ->limit($Page->firstRow.','.$Page->listRows) -> select();
 		return $res;
 	}
@@ -239,5 +239,16 @@ class ContactDetailModel extends Model {
 		}
 		return $arr_end_sale_expense;
 	}
+	
+	public function setContactSettled($arr_contact_id,$load_month){
+		$this_month = date('Y-m',strtotime("now"));
+		$str_contact_id;
+		foreach ($arr_contact_id as $key => $value) {
+			$str_contact_id .= "'".$value."'".',';
+		}
+		$str_contact_id = substr($str_contact_id, 0,-1);
+		$this -> query("update commission_contact_detail set settled_date = '$load_month' where date<>'$this_month' and contact_id in($str_contact_id)");
+	}
+	
 }
 ?>

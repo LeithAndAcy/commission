@@ -24,6 +24,7 @@ class BusinessPercentController extends Controller {
 	private $db_funds_back;
 	private $db_fee_ratio;
 	private $db_sale_expense;
+	private $db_load_history;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -49,6 +50,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_funds_back = D("FundsBack");
 		$this -> db_fee_ratio = D("FeeRatio");
 		$this -> db_sale_expense = D("SaleExpense");
+		$this -> db_load_history = D("LoadHistory");
 	}
     public function loadBusinessPercentPage(){
     	$this -> display('BusinessPercentPage');
@@ -306,7 +308,10 @@ class BusinessPercentController extends Controller {
 			if($this -> db_salary ->checkSalarySettled($date)){
 				//return true 已结算 do nothing
 			}else{
+				$end_date = $this -> db_load_history -> getLastEndDate();
+				$load_month = substr($end_date,0,7);
 				$this -> db_contact_main -> setContactSettled($value);
+				$this -> db_contact_detail -> setContactSettled($value,$load_month);
 			}
 		}
 	}
@@ -376,7 +381,7 @@ class BusinessPercentController extends Controller {
 		}
 		foreach ($res as $key => $value) {
 			if($search_begin_date != null && $search_end_date != null){
-				if($value['date'] < $search_begin_date || $value['date']> $search_end_date){
+				if($value['settled_date'] < $search_begin_date || $value['settled_date']> $search_end_date){
 					unset($res[$key]);
 					continue;
 				}

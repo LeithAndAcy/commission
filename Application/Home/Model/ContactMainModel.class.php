@@ -267,7 +267,7 @@ class ContactMainModel extends Model {
 		commission_contact_detail.customer_name,commission_contact_detail.salesman_name,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
 		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
-		commission_contact_detail.custom_fee,
+		commission_contact_detail.custom_fee,commission_contact_detail.settled_date,
 		commission_contact_detail.sale_price,commission_contact_detail.cost_price,commission_contact_detail.float_price,
 		commission_contact_detail.sale_quantity,commission_contact_detail.delivery_quantity,commission_contact_detail.normal_business_ratio,
 		commission_contact_detail.special_business_ratio,commission_contact_detail.normal_profit_ratio,commission_contact_detail.business_adjust,
@@ -367,7 +367,7 @@ class ContactMainModel extends Model {
 	public function countSettledContactDetail(){
 		$res = $this -> query("select count (*) as count_contact_detail from commission_contact_main join commission_contact_detail on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=1 and commission_contact_main.settlement=1
-		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		and commission_contact_main.cSOCode = commission_contact_detail.cSOCode;");
 		return $res[0]['count_contact_detail'];
 	}
 	public function getSettlingContactGroupByDate(){

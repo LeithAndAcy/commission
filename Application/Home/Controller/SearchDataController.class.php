@@ -149,13 +149,13 @@ class SearchDataController extends Controller {
 		if($res == null){
 			$count_settled_contact_detail = $this -> db_contact_detail -> searchCountByDate($search_begin_date,$search_end_date);
 			$count_settled_contact = $this -> db_contact_main -> searchCountByDate($search_begin_date,$search_end_date);
-			$Page = new \Think\Page($count_settled_contact_detail,1500);
+			$Page = new \Think\Page($count_settled_contact_detail,150000);
 			$show = $Page->show();// 分页显示输出
 			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page);
 		}	
 		foreach ($res as $key => $value) {
 			if($search_begin_date != null && $search_end_date != null){
-				if($value['date'] < $search_begin_date || $value['date']> $search_end_date){
+				if($value['settled_date'] < $search_begin_date || $value['settled_date']> $search_end_date){
 					unset($res[$key]);
 					continue;
 				}

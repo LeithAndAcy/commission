@@ -1220,21 +1220,20 @@ class ExcelController extends Controller {
 			}
 		}
 		
-		$search_begin_date = $_POST['search_begin_date'];
-		$search_end_date = $_POST['search_end_date'];		
+		$search_begin_date = $search_settled_contact_data['search_begin_date'];
+		$search_end_date = $search_settled_contact_data['search_end_date'];		
 		
 		if($condition == null){
 			$res = $this -> db_contact_main -> getSettledContactDetail();
 		}
 		foreach ($res as $key => $value) {
 			if($search_begin_date != null && $search_end_date != null){
-				if($value['date'] < $search_begin_date || $value['date']> $search_end_date){
+				if($value['settled_date'] < $search_begin_date || $value['settled_date'] > $search_end_date){
 					unset($res[$key]);
 					continue;
 				}
 			}
 		}
-
 		if($type == "settling"){
 			//do nothing
 		}elseif($type == "settled"){
@@ -1338,7 +1337,7 @@ class ExcelController extends Controller {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('W' . ($row_id + 2), $value['sale_expense']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('X' . ($row_id + 2), $value['sale_expense_ratio']."%");
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Y' . ($row_id + 2), $value['end_sale_expense']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Z' . ($row_id + 2), $value['normal_business_ratio'])."%";
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Z' . ($row_id + 2), $value['normal_business_ratio']."%");
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AA' . ($row_id + 2), $value['special_business_ratio']."%");
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AB' . ($row_id + 2), $value['normal_profit_ratio']."%");
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AC' . ($row_id + 2), $value['business_adjust']."%");
@@ -1347,7 +1346,7 @@ class ExcelController extends Controller {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AF' . ($row_id + 2), $value['end_cost_price']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AG' . ($row_id + 2), $value['normal_business']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AH' . ($row_id + 2), $value['special_business']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AI' . ($row_id + 2), $value['special_profit']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AI' . ($row_id + 2), $value['normal_profit']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AJ' . ($row_id + 2), $value['total_business_profit']);
 			$row_id = $row_id+1;
 		}
