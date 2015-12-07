@@ -381,10 +381,18 @@ class BusinessPercentController extends Controller {
 		}
 		foreach ($res as $key => $value) {
 			if($search_begin_date != null && $search_end_date != null){
-				if($value['settled_date'] < $search_begin_date || $value['settled_date']> $search_end_date){
-					unset($res[$key]);
-					continue;
+				if($type == "settled"){
+					if($value['settled_date'] < $search_begin_date || $value['settled_date']> $search_end_date){
+						unset($res[$key]);
+						continue;
+					}
+				}else{
+					if($value['date'] < $search_begin_date || $value['date']> $search_end_date){
+						unset($res[$key]);
+						continue;
+					}
 				}
+				
 			}
 			if($type == "settling"){
 				$temp =  $this -> db_contact_main -> getSettlingContactByContactId($value['contact_id']);

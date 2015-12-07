@@ -1188,6 +1188,7 @@ class ExcelController extends Controller {
 		$this -> db_U8 = D("U8");
 		
 		$search_settled_contact_data = session('search_settled_contact_data');
+		// print_r($search_settled_contact_data);
 		session('search_settled_contact_data',null);
 		
 		//查数据
@@ -1224,16 +1225,23 @@ class ExcelController extends Controller {
 		$search_end_date = $search_settled_contact_data['search_end_date'];		
 		
 		if($condition == null){
-			$res = $this -> db_contact_main -> getSettledContactDetail();
+			$res = $this -> db_contact_main -> getSettledContactDetail($search_begin_date,$search_end_date);
 		}
-		foreach ($res as $key => $value) {
-			if($search_begin_date != null && $search_end_date != null){
-				if($value['settled_date'] < $search_begin_date || $value['settled_date'] > $search_end_date){
-					unset($res[$key]);
-					continue;
+		
+		if($condition == null){
+			
+		}else{
+			foreach ($res as $key => $value) {
+				if($search_begin_date != null && $search_end_date != null){
+					if($value['settled_date'] < $search_begin_date || $value['settled_date'] > $search_end_date){
+						unset($res[$key]);
+						continue;
+					}
 				}
 			}
 		}
+		
+		
 		if($type == "settling"){
 			//do nothing
 		}elseif($type == "settled"){
@@ -1351,7 +1359,6 @@ class ExcelController extends Controller {
 			$row_id = $row_id+1;
 		}
 		
-		session('search_settled_contact_data',null);
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$filename = "已结算合同".date('Ymdhis').".xls";
 		$filename = iconv("utf-8", "gb2312", $filename);

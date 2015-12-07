@@ -206,7 +206,15 @@ class ContactDetailModel extends Model {
 	
 	public function searchByDate($search_begin_date,$search_end_date,$Page){
 		$res = $this -> where("settled_date between '$search_begin_date' and '$search_end_date'")->limit($Page->firstRow.','.$Page->listRows) -> select();
-		// $res = $this ->limit($Page->firstRow.','.$Page->listRows) -> select();
+		foreach ($res as $key => $value) {
+			$res[$key]['normal_business_ratio'] *= 100;
+			$res[$key]['special_business_ratio'] *= 100;
+			$res[$key]['normal_profit_ratio'] *= 100;
+			$res[$key]['business_adjust'] *= 100;
+			$res[$key]['profit_adjust'] *= 100;
+			$res[$key]['special_approve_float_price_ratio']*= 100;
+			$res[$key]['sale_expense_ratio']*= 100;
+		}
 		return $res;
 	}
 	

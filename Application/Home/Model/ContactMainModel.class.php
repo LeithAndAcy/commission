@@ -254,33 +254,38 @@ class ContactMainModel extends Model {
 		");
 		return $res;
 	}
-	public function getSettledContactDetail(){
-		// $res = $this -> query("select * from commission_contact_main join commission_contact_detail on 
-		// commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
-		// and commission_contact_main.contact_id = commission_contact_detail.contact_id
-		// join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
-		// join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
-		// and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
+	public function getSettledContactDetail($begin_date,$end_date){
 		$res = $this -> query("
-		select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.salesman_id,
-		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
-		commission_contact_detail.customer_name,commission_contact_detail.salesman_name,
+		select commission_contact_detail.contact_id,commission_contact_detail.cSOCode,
+		commission_contact_detail.inventory_id,commission_contact_detail.inventory_name,
+		commission_contact_detail.customer_name,commission_contact_detail.customer_id,
+		commission_contact_detail.salesman_name,commission_contact_detail.salesman_id,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
-		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
+		commission_contact_detail.specification,commission_contact_detail.colour,
 		commission_contact_detail.custom_fee,commission_contact_detail.settled_date,
 		commission_contact_detail.sale_price,commission_contact_detail.cost_price,commission_contact_detail.float_price,
-		commission_contact_detail.sale_quantity,commission_contact_detail.delivery_quantity,commission_contact_detail.normal_business_ratio,
-		commission_contact_detail.special_business_ratio,commission_contact_detail.normal_profit_ratio,commission_contact_detail.business_adjust,
-		commission_contact_detail.profit_adjust,commission_contact_detail.cost_price_adjust,commission_contact_detail.normal_business,
+		commission_contact_detail.sale_quantity,commission_contact_detail.delivery_quantity,
+		commission_contact_detail.normal_business_ratio * 100 as normal_business_ratio,
+		commission_contact_detail.special_business_ratio * 100 as special_business_ratio,
+		commission_contact_detail.normal_profit_ratio * 100 as normal_profit_ratio,
+		commission_contact_detail.business_adjust * 100 as business_adjust,
+		commission_contact_detail.profit_adjust * 100 as profit_adjust,
+		commission_contact_detail.cost_price_adjust,commission_contact_detail.normal_business,
 		commission_contact_detail.special_business,commission_contact_detail.normal_profit,commission_contact_detail.end_cost_price,
-		commission_contact_detail.total_business_profit,commission_customer.area_code,
-		commission_customer.area,commission_area_price_float_ratio.ratio
-		from commission_contact_main join commission_contact_detail on 
+		commission_contact_detail.total_business_profit,
+		commission_contact_detail.special_approve_float_price_ratio  * 100 as special_approve_float_price_ratio,
+		commission_contact_detail.special_approve_float_price,
+		commission_contact_detail.custom_fee,
+		commission_contact_detail.custom_fee_float_price,
+		commission_contact_detail.delivery_money,
+		commission_contact_detail.sale_expense,
+		commission_contact_detail.sale_expense_ratio * 100 as sale_expense_ratio,
+		commission_contact_detail.end_sale_expense
+		from commission_contact_detail join commission_contact_main on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=1 and commission_contact_main.settlement=1
-		and commission_contact_main.contact_id = commission_contact_detail.contact_id
-		left join commission_customer on commission_contact_main.customer_id = commission_customer.customer_id
-		left join commission_area_price_float_ratio on commission_area_price_float_ratio.area = commission_customer.area
-		and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id
+		and commission_contact_main.cSOCode = commission_contact_detail.cSOCode
+		and commission_contact_detail.settled_date >= '$begin_date'
+		and  commission_contact_detail.settled_date <= '$end_date'
 		");
 		return $res;
 	}
