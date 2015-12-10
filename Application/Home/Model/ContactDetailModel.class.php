@@ -150,7 +150,7 @@ class ContactDetailModel extends Model {
 		//normal_business_ratio
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
-		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity,normal_business_ratio,cost_price,end_cost_price');
+		$arr_contacat = $this -> where($condition) -> getField('id,sale_quantity,delivery_quantity,normal_business_ratio,cost_price,end_cost_price,inventory_id');
 		$flag = 1;
 		foreach ($arr_contacat as $key => $value) {
 			$delivery_rate = $value['delivery_quantity'] / $value['sale_quantity'];
@@ -159,7 +159,7 @@ class ContactDetailModel extends Model {
 			if($temp == null){
 				return 0;
 			}
-			if ($delivery_rate < $temp[0]['limit'] || ($value['normal_business_ratio'] == 0 && $value['cost_price'] !=0)|| ($value['normal_business_ratio'] != 0 && $value['end_cost_price'] == 0)) {
+			if ($delivery_rate < $temp[0]['limit'] || ($value['normal_business_ratio'] == 0 && $value['cost_price'] !=0)|| ($value['normal_business_ratio'] != 0 && $value['end_cost_price'] == 0 && is_numeric(substr($value['inventory_id'], 0,1)) )) {
 				$flag = 0;
 				break;
 			}
