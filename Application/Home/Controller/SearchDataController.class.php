@@ -151,7 +151,7 @@ class SearchDataController extends Controller {
 			$count_settled_contact = $this -> db_contact_main -> searchCountByDate($search_begin_date,$search_end_date);
 			$Page = new \Think\Page($count_settled_contact_detail,150000);
 			$show = $Page->show();// 分页显示输出
-			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page);
+			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page,$type);
 		}	
 		foreach ($res as $key => $value) {
 			if($search_begin_date != null && $search_end_date != null){
@@ -176,6 +176,7 @@ class SearchDataController extends Controller {
 			}
 		}
 		if($type == "settled"){
+			$count_settled_contact_detail = count($res);
 			if($count_settled_contact == null){
 				$count_settled_contact = count($temp_array);
 			}

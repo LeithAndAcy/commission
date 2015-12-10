@@ -372,12 +372,12 @@ class BusinessPercentController extends Controller {
 		$res = $this -> db_contact_detail -> searchByCondition($condition);
 		$search_begin_date = $_POST['search_begin_date'];
 		$search_end_date = $_POST['search_end_date'];		
-		if($res == null){
+		if($condition == null){
 			$count_settled_contact_detail = $this -> db_contact_detail -> searchCountByDate($search_begin_date,$search_end_date);
 			$count_settled_contact = $this -> db_contact_main -> searchCountByDate($search_begin_date,$search_end_date);
 			$Page = new \Think\Page($count_settled_contact_detail,1500000);
 			$show = $Page->show();// 分页显示输出
-			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page);
+			$res = $this -> db_contact_detail -> searchByDate($search_begin_date,$search_end_date,$Page,$type);
 		}
 		foreach ($res as $key => $value) {
 			if($search_begin_date != null && $search_end_date != null){
@@ -415,7 +415,7 @@ class BusinessPercentController extends Controller {
 			$this -> assign('settling_contact_detail',$res);
 			$this -> display('SettlingContactPage');
 		}elseif($type == "settled"){
-		//	$count_settled_contact_detail = count($res);
+			$count_settled_contact_detail = count($res);
 			if($count_settled_contact == null){
 				$count_settled_contact = count($temp_array);
 			}
