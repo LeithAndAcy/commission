@@ -159,7 +159,7 @@ class ContactDetailModel extends Model {
 			if($temp == null){
 				return 0;
 			}
-			if ($delivery_rate < $temp[0]['limit'] || ($value['normal_business_ratio'] == 0 && $value['cost_price'] !=0)|| ($value['normal_business_ratio'] != 0 && $value['end_cost_price'] == 0 && is_numeric(substr($value['inventory_id'], 0,1)) )) {
+			if ($delivery_rate < $temp[0]['limit'] || ($value['normal_business_ratio'] == 0 && $value['cost_price'] !=0)|| ($value['normal_business_ratio'] != 0 && $value['end_cost_price'] == 0 && (!is_numeric(substr($value['inventory_id'], 0,1))) )) {
 				$flag = 0;
 				break;
 			}
