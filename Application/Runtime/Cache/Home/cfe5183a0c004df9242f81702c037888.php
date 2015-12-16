@@ -94,6 +94,9 @@
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadTotalCustomerFundsPage" target="workflow">客户回款金额汇总表</a>
 						</li>
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadSettledHistoryPage" target="workflow">结算金额历史记录表</a>
+						</li>
 					</ul>
 				</div>
 			</div>

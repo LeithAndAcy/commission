@@ -25,6 +25,7 @@ class BusinessPercentController extends Controller {
 	private $db_fee_ratio;
 	private $db_sale_expense;
 	private $db_load_history;
+	private $db_settled_history;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -51,6 +52,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_fee_ratio = D("FeeRatio");
 		$this -> db_sale_expense = D("SaleExpense");
 		$this -> db_load_history = D("LoadHistory");
+		$this -> db_settled_history = D("SettledHistory");
 	}
     public function loadBusinessPercentPage(){
     	$this -> display('BusinessPercentPage');
@@ -114,6 +116,9 @@ class BusinessPercentController extends Controller {
 					//检测发货数量  and normal business ratio >0
 					if($this -> db_contact_detail -> checkContactSettable($vv['contact_id'])){
 						$this -> db_contact_main -> setSettlingContact($vv['contact_id']);
+						//更新本月结算金额
+						$this -> db_coustomer_funds -> updateThisMonthSettledMoney($vv['customer_id'],$contact_total_money);
+						
 						$contact_main[$key]['total_funds'] = $contact_main[$key]['total_funds'] - $contact_total_money;
 						$temp_customer_id = $vv['customer_id'];
 						$temp_salesman_id = $vv['salesman_id'];
@@ -158,11 +163,16 @@ class BusinessPercentController extends Controller {
 			//取存货类别
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
-			$temp_inventory_id = substr($value['inventory_id'], 0,1) ;
-			$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
-			if($arr_ratio[$key]['normal_business_ratio'] == null){
-				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
+			$temp_inventory_id = substr($value['inventory_id'], 0,1);
+			if($temp_inventory_id == 'F'){
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$value['classification_id']];
+			}else{
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
+				if($arr_ratio[$key]['normal_business_ratio'] == null){
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
+				}
 			}
+			
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
 				if($value['salesman_id'] == $vvv['salesman_id']){
@@ -312,6 +322,11 @@ class BusinessPercentController extends Controller {
 				$load_month = substr($end_date,0,7);
 				$this -> db_contact_main -> setContactSettled($value);
 				$this -> db_contact_detail -> setContactSettled($value,$load_month);
+				$res = $this -> db_coustomer_funds -> select();
+				foreach ($res as $key => $value) {
+					$this -> db_settled_history ->addItem($value['customer_id'],$value['this_month_settled_money']);
+				}
+				$this -> db_constomer_funds -> clearThisMonthSettledMoney();
 			}
 		}
 	}

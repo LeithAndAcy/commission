@@ -22,6 +22,16 @@ class CustomerFundsModel extends Model {
 		$res = $this -> select();
 		foreach ($res as $key => $value) {
 			$res[$key]['total_funds'] = $value['funds'] + $value['benefit'];
+			if($value['funds'] == 0){
+				//do nothing
+			}else{
+				$condition = array();
+				$condition['customer_id'] = $value['customer_id'];
+				$data['this_month_funds'] = $value['funds'];
+				$data['last_month_benefit'] = $value['benefit'];
+				//当取了一次又更改了回笼资金表？
+				$this -> where($condition) -> save($data);
+			}
 		}
 		return $res;
 	}
@@ -58,6 +68,14 @@ class CustomerFundsModel extends Model {
 			$data['customer_id'] = $customer_id;
 			$this -> add($data);
 		}
+	}
+	public function updateThisMonthSettledMoney($customer_id,$money){
+		$condition = array();
+		$condition['customer_id'] = $customer_id;
+		$this -> where($condition)->setInc('this_month_settled_money',$money);
+	}
+	public function clearThisMonthSettledMoney(){
+		$this -> query('update commission_customer_funds set this_month_settled_money =0');
 	}
 }
 ?>

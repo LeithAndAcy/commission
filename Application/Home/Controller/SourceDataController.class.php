@@ -25,6 +25,7 @@ class SourceDataController extends Controller {
 	private $db_fee_ratio;
 	private $db_sale_expense;
 	private $db_salary;
+	private $db_settled_history;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -51,6 +52,7 @@ class SourceDataController extends Controller {
 		$this -> db_fee_ratio = D("FeeRatio");
 		$this -> db_sale_expense = D("SaleExpense");
 		$this -> db_salary = D("Salary");
+		$this -> db_settled_history = D("SettledHistory");
 	}
     public function loadSourceDataPage(){
     	\Think\Log::record('测试日志信息');
@@ -178,10 +180,14 @@ class SourceDataController extends Controller {
 			$customer_id = $value['customer_id'];
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
-			$temp_inventory_id = substr($value['inventory_id'], 0,1) ;
-			$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
-			if($arr_ratio[$key]['normal_business_ratio'] == null){
-				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
+			$temp_inventory_id = substr($value['inventory_id'], 0,1);
+			if($temp_inventory_id == 'F'){
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$value['classification_id']];
+			}else{
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
+				if($arr_ratio[$key]['normal_business_ratio'] == null){
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
+				}
 			}
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
@@ -725,6 +731,12 @@ class SourceDataController extends Controller {
 		$total_customer_funds = $this -> db_customer -> addCustomerName($total_customer_funds);
 		$this -> assign("total_customer_funds",$total_customer_funds);
 		$this -> display('TotalCustomerFundsPage');
+	}
+	public function loadSettledHistoryPage(){
+		$total_settled_history = $this -> db_settled_history -> select();
+		$total_settled_history = $this -> db_customer -> addCustomerName($total_settled_history);
+		$this -> assign("total_settled_history",$total_settled_history);
+		$this -> display('SettledHistoryPage');
 	}
 	public function checkSalesmanId(){
 		$salesman_id = $_GET['fieldValue'];
