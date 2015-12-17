@@ -91,6 +91,7 @@ class BusinessPercentController extends Controller {
 			$condition['customer_id'] = $value['customer_id'];
 			$temp = $this -> db_funds_back -> getFunds($condition);
 			$total_customer_funds[$key]['total_funds'] += $temp;
+			$this -> db_constomer_funds -> setThisMonthFundsBack($condition,$temp);
 			$this -> db_funds_back -> where($condition) -> delete();
 		}
 		$condition = array();
@@ -325,7 +326,7 @@ class BusinessPercentController extends Controller {
 				$this -> db_contact_detail -> setContactSettled($value,$load_month);
 				$res = $this -> db_coustomer_funds -> select();
 				foreach ($res as $key => $value) {
-					$this -> db_settled_history ->addItem($value['customer_id'],$value['this_month_settled_money']);
+					$this -> db_settled_history ->addItem($value['customer_id'],$value['this_month_settled_money'],$value['this_month_funds_back'],$value['this_month_funds'],$value['last_month_benefit'],$value['benefit']);
 				}
 				$this -> db_constomer_funds -> clearThisMonthSettledMoney();
 			}

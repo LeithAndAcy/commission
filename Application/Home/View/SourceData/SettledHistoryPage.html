@@ -9,7 +9,10 @@
 					<tr>
 						<th>客户编码</th>
 						<th>客户姓名</th>
-						<th>结算金额</th>
+						<th>上月回款余额</th>
+						<th>本月回款余额</th>
+						<th>本月回笼资金调整</th>
+						<th>本月结算金额</th>
 						<th>日期</th>
 					</tr>
 				</thead>
@@ -18,7 +21,10 @@
 						<tr>
 							<td>{$vo.customer_id}</td>
 							<td>{$vo.customer_name}</td>
-							<td>{$vo.settled_money}</td>
+							<td>{$vo.last_month_benefit}</td>
+							<td>{$vo.benefit}</td>
+							<td>{$vo.this_month_funds_back}</td>
+							<td>{$vo.this_month_settled_money}</td>
 							<td>{$vo.date}</td>
 						</tr>
 					</volist>

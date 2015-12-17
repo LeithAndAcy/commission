@@ -4,12 +4,26 @@ use Think\Model;
 class SettledHistoryModel extends Model {
 	
 	
-	public function addItem($customer_id,$money){
+	public function addItem($customer_id,$this_month_settled_money,$this_month_funds_back,$this_month_funds,$last_month_benefit,$benefit){
 		$data = array();
-		$data['customer_id'] = $customer_id;
-		$data['settled_money'] =  $money;
-		$data['date'] = date('Y-m',time());
-		$this -> add($data);
+		$conidtion = array();
+		$conidtion['customer_id'] = $customer_id;
+		$conidtion['date'] = date('Y-m',time());
+		if($this -> where($conidtion)->find()){
+			$this -> where($conidtion) -> setField('benefit',$benefit);
+			$this -> where($conidtion) -> setInc('this_month_settled_money',$this_month_settled_money);
+			$this -> where($conidtion) -> setInc('this_month_funds_back',$this_month_funds_back);
+		}else{
+			$data['customer_id'] = $customer_id;
+			$data['this_month_settled_money'] =  $this_month_settled_money;
+			$data['this_month_funds_back'] =  $this_month_funds_back;
+			$data['this_month_funds'] =  $this_month_funds;
+			$data['last_month_benefit'] =  $last_month_benefit;
+			$data['benefit'] = $benefit;
+			$data['date'] = date('Y-m',time());
+			$this -> add($data);
+		}
+		
 	}
 
 }

@@ -76,6 +76,10 @@ class CustomerFundsModel extends Model {
 	}
 	public function clearThisMonthSettledMoney(){
 		$this -> query('update commission_customer_funds set this_month_settled_money =0');
+		$this -> query('update commission_customer_funds set this_month_funds_back =0');
+	}
+	public function setThisMonthFundsBack($condition,$this_month_funds_back){
+		$this -> where($condition) -> setInc('this_month_funds_back',$this_month_funds_back);
 	}
 }
 ?>
