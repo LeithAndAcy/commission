@@ -110,12 +110,13 @@ class BusinessPercentController extends Controller {
 				}
 				$contact_total_money = $this -> db_contact_detail -> getContactTotalMoney($vv['contact_id']);
 				if($contact_total_money > $contact_main[$key]['total_funds']){
-					$this -> db_constomer_funds ->setCustomerFunds($vv['customer_id'],$contact_main[$key]['total_funds']);
-					break;
+					// $this -> db_constomer_funds ->setCustomerFunds($vv['customer_id'],$contact_main[$key]['total_funds']);
+					// break;
+					continue;
 				}else{
 					//检测发货数量  and normal business ratio >0
 					if($this -> db_contact_detail -> checkContactSettable($vv['contact_id'])){
-						$this -> db_contact_main -> setSettlingContact($vv['contact_id']);
+					    $this -> db_contact_main -> setSettlingContact($vv['contact_id']);
 						//更新本月结算金额
 						$this -> db_coustomer_funds -> updateThisMonthSettledMoney($vv['customer_id'],$contact_total_money);
 						
