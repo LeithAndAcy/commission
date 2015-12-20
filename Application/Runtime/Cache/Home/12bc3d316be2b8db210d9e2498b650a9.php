@@ -62,9 +62,9 @@
 					<button class="btn btn-primary" id="get_ratio">
 						取数
 					</button>
-					<!-- <button class="btn btn-warning" id="update_quantity">
+					<button class="btn btn-warning" id="update_quantity">
 						更新发货数量
-					</button> -->
+					</button>
 					<span>
 						合同总数：<?php echo ($count_settlement_contact); ?>
 					</span>
@@ -103,7 +103,7 @@
 									<th>上浮的底价（元）</th>
 									<th>销售数量（米数）</th>
 									<th>发货数量（米数）</th>
-									<th>销售金额(元)</th>
+									<th>发货金额(元)</th>
 									<th>销售费用单价(元)</th>
 									<th>销售费用比例</th>
 									<th>基本业绩提成比例</th>

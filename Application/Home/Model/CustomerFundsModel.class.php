@@ -25,12 +25,14 @@ class CustomerFundsModel extends Model {
 			if($value['funds'] == 0){
 				if($value['this_month_funds'] == 0){
 					$condition = array();
+					$data = array();
 					$condition['customer_id'] = $value['customer_id'];
 					$data['last_month_benefit'] = $value['benefit'];
 					$this -> where($condition) -> save($data);
 				}
 			}else{
 				$condition = array();
+				$data = array();
 				$condition['customer_id'] = $value['customer_id'];
 				$data['this_month_funds'] = $value['funds'];
 				$data['last_month_benefit'] = $value['benefit'];

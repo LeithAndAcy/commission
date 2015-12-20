@@ -51,7 +51,7 @@
 			</div>
 			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 				<div class="panel-body">
-					<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
+					<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist" style="height: 400px;overflow-y: auto">
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadSettleSummaryPage" target="workflow">待结算合同</a>
 						</li>
@@ -106,7 +106,7 @@
 				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo"> 人事表
 				&nbsp;<i class="glyphicon glyphicon-plus"></i> </a></h4>
 			</div>
-			<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+			<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo" style="height: 400px;overflow-y: auto">
 				<div class="panel-body">
 					<ul id="myTab" class="nav nav-pills nav-stacked" role="tablist">
 						<li role="presentation">

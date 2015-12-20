@@ -340,7 +340,6 @@ class BusinessPercentController extends Controller {
 				$load_month = substr($end_date,0,7);
 				$this -> db_contact_main -> setContactSettled($value);
 				$this -> db_contact_detail -> setContactSettled($value,$load_month);
-				$this -> db_constomer_funds -> clearThisMonthSettledMoney();
 			}
 		}
 		$res = $this -> db_coustomer_funds -> select();
