@@ -738,6 +738,32 @@ class SourceDataController extends Controller {
 		$this -> assign("total_settled_history",$total_settled_history);
 		$this -> display('SettledHistoryPage');
 	}
+	public function settledHistorySearch(){
+		$condition = array();
+		$condition['customer_id'] = $_POST['search_customer_id'];
+		$condition['customer_name'] = $_POST['search_customer_name'];
+		$search_begin_date = $_POST['search_begin_date'];
+		$search_end_date = $_POST['search_end_date'];		
+		foreach ($condition as $key => $value) {
+			if($value == ""){
+				unset($condition[$key]);
+			}
+		}
+		$res = $this -> db_settled_history -> searchByCondition($condition);
+		if($condition == null){
+			$res = $this -> db_settled_history -> select();
+		}
+		foreach ($res as $key => $value) {
+			if($search_begin_date != null && $search_end_date != null){
+				if($value['date'] < $search_begin_date || $value['date']> $search_end_date){
+					unset($res[$key]);
+				}
+			}
+		}
+		$res = $this -> db_customer -> addCustomerName($res);
+		$this -> assign("total_settled_history",$res);
+		$this -> display('SettledHistoryPage');
+	}
 	public function checkSalesmanId(){
 		$salesman_id = $_GET['fieldValue'];
 		if($this -> db_salesman ->checkDuplicateSalesmanId($salesman_id)){

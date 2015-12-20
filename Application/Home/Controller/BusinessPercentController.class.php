@@ -132,6 +132,7 @@ class BusinessPercentController extends Controller {
 				}else{
 					//检测发货数量  and normal business ratio >0
 					if($this -> db_contact_detail -> checkContactSettable($vv['contact_id'])){
+					// if(1){
 						$this -> db_contact_main -> setSettlingContact($vv['contact_id']);
 						//更新本月结算金额
 						$this -> db_coustomer_funds -> updateThisMonthSettledMoney($vv['customer_id'],$contact_total_money);
@@ -339,12 +340,15 @@ class BusinessPercentController extends Controller {
 				$load_month = substr($end_date,0,7);
 				$this -> db_contact_main -> setContactSettled($value);
 				$this -> db_contact_detail -> setContactSettled($value,$load_month);
-				$res = $this -> db_coustomer_funds -> select();
-				foreach ($res as $key => $value) {
-					$this -> db_settled_history ->addItem($value['customer_id'],$value['this_month_settled_money'],$value['this_month_funds_back'],$value['this_month_funds'],$value['last_month_benefit'],$value['benefit']);
-				}
-				// $this -> db_constomer_funds -> clearThisMonthSettledMoney();
+				$this -> db_constomer_funds -> clearThisMonthSettledMoney();
 			}
+		}
+		$res = $this -> db_coustomer_funds -> select();
+		$res = $this -> db_customer -> addCustomerName($res);
+		$end_date = $this -> db_load_history -> getLastEndDate();
+		$month = substr($end_date,0,7);
+		foreach ($res as $key => $value) {
+			$this -> db_settled_history ->addItem($value['customer_id'],$value['this_month_settled_money'],$value['this_month_funds_back'],$value['this_month_funds'],$value['last_month_benefit'],$value['benefit'],$value['customer_name'],$month);
 		}
 		$this -> db_constomer_funds -> clearThisMonthSettledMoney();
 	}

@@ -23,7 +23,7 @@ class CustomerFundsModel extends Model {
 		foreach ($res as $key => $value) {
 			$res[$key]['total_funds'] = $value['funds'] + $value['benefit'];
 			if($value['funds'] == 0){
-				if($value['this_month_funds']){
+				if($value['this_month_funds'] == 0){
 					$condition = array();
 					$condition['customer_id'] = $value['customer_id'];
 					$data['last_month_benefit'] = $value['benefit'];
