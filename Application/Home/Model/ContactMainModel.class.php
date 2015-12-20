@@ -360,13 +360,13 @@ class ContactMainModel extends Model {
 	public function countSettlementContactDetail(){
 		$res = $this -> query("select count (*) as count_contact_detail from commission_contact_main join commission_contact_detail on 
 		commission_contact_main.settling=0 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
-		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		and commission_contact_main.cSOCode = commission_contact_detail.cSOCode;");
 		return $res[0]['count_contact_detail'];
 	}
 	public function countSettlingContactDetail(){
 		$res = $this -> query("select count (*) as count_contact_detail from commission_contact_main join commission_contact_detail on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=0 and commission_contact_main.settlement=1
-		and commission_contact_main.contact_id = commission_contact_detail.contact_id;");
+		and commission_contact_main.cSOCode = commission_contact_detail.cSOCode;");
 		return $res[0]['count_contact_detail'];
 	}
 	public function countSettledContactDetail(){

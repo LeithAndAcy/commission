@@ -23,13 +23,17 @@ class CustomerFundsModel extends Model {
 		foreach ($res as $key => $value) {
 			$res[$key]['total_funds'] = $value['funds'] + $value['benefit'];
 			if($value['funds'] == 0){
-				//do nothing
+				if($value['this_month_funds']){
+					$condition = array();
+					$condition['customer_id'] = $value['customer_id'];
+					$data['last_month_benefit'] = $value['benefit'];
+					$this -> where($condition) -> save($data);
+				}
 			}else{
 				$condition = array();
 				$condition['customer_id'] = $value['customer_id'];
 				$data['this_month_funds'] = $value['funds'];
 				$data['last_month_benefit'] = $value['benefit'];
-				//当取了一次又更改了回笼资金表？
 				$this -> where($condition) -> save($data);
 			}
 		}
@@ -77,6 +81,7 @@ class CustomerFundsModel extends Model {
 	public function clearThisMonthSettledMoney(){
 		$this -> query('update commission_customer_funds set this_month_settled_money =0');
 		$this -> query('update commission_customer_funds set this_month_funds_back =0');
+		$this -> query('update commission_customer_funds set this_month_funds =0');
 	}
 	public function setThisMonthFundsBack($condition,$this_month_funds_back){
 		$this -> where($condition) -> setInc('this_month_funds_back',$this_month_funds_back);

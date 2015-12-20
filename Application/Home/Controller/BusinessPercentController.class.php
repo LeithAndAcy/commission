@@ -101,6 +101,22 @@ class BusinessPercentController extends Controller {
 			$condition['settling'] = 0;
 			$condition['settled'] = 0;
 			$contact_main[$key] = $this -> db_contact_main ->getContactByCondition($condition);
+			$delete = array();
+			foreach ($contact_main[$key] as $kk => $vv) {
+				$temp_contact_id = $vv['contact_id'];
+				foreach ($contact_main[$key] as $kkk => $vvv) {
+					if($kk == $kkk){
+						continue;
+					}elseif(in_array($kk, $delete)){
+						continue;
+					}else{
+						if($temp_contact_id == $vvv['contact_id']){
+							unset($contact_main[$key][$kkk]);
+							array_push($delete,$kkk);
+						}
+					}
+				}
+			}
 			$contact_main[$key]['total_funds'] = $value['total_funds'];
 		}
 		foreach ($contact_main as $key => $value) {
@@ -112,11 +128,11 @@ class BusinessPercentController extends Controller {
 				$contact_total_money = $this -> db_contact_detail -> getContactTotalMoney($vv['contact_id']);
 				// if($contact_total_money > $contact_main[$key]['total_funds']){
 				if(bccomp($contact_total_money,$contact_main[$key]['total_funds'],4)>0){
-					continue;
+					continue;							
 				}else{
 					//检测发货数量  and normal business ratio >0
 					if($this -> db_contact_detail -> checkContactSettable($vv['contact_id'])){
-					    $this -> db_contact_main -> setSettlingContact($vv['contact_id']);
+						$this -> db_contact_main -> setSettlingContact($vv['contact_id']);
 						//更新本月结算金额
 						$this -> db_coustomer_funds -> updateThisMonthSettledMoney($vv['customer_id'],$contact_total_money);
 						
@@ -166,7 +182,7 @@ class BusinessPercentController extends Controller {
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
 			$temp_inventory_id = substr($value['inventory_id'], 0,1);
 			if($temp_inventory_id == 'F'){
-				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$value['classification_id']];
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,4)];
 			}else{
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
 				if($arr_ratio[$key]['normal_business_ratio'] == null){
@@ -327,9 +343,10 @@ class BusinessPercentController extends Controller {
 				foreach ($res as $key => $value) {
 					$this -> db_settled_history ->addItem($value['customer_id'],$value['this_month_settled_money'],$value['this_month_funds_back'],$value['this_month_funds'],$value['last_month_benefit'],$value['benefit']);
 				}
-				$this -> db_constomer_funds -> clearThisMonthSettledMoney();
+				// $this -> db_constomer_funds -> clearThisMonthSettledMoney();
 			}
 		}
+		$this -> db_constomer_funds -> clearThisMonthSettledMoney();
 	}
 	
 	public function loadSettledContactPage(){
