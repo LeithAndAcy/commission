@@ -23,19 +23,19 @@ class CustomerFundsModel extends Model {
 		foreach ($res as $key => $value) {
 			$res[$key]['total_funds'] = $value['funds'] + $value['benefit'];
 			if($value['funds'] == 0){
-				if($value['this_month_funds'] == 0){
+				if($value['this_month_funds'] == 0 && $value['this_month_settled_money'] == 0){
 					$condition = array();
 					$data = array();
 					$condition['customer_id'] = $value['customer_id'];
-					$data['last_month_benefit'] = $value['benefit'];
-					$this -> where($condition) -> save($data);
+					// $data['last_month_benefit'] = $value['benefit'];
+					// $this -> where($condition) -> save($data);
 				}
 			}else{
 				$condition = array();
 				$data = array();
 				$condition['customer_id'] = $value['customer_id'];
 				$data['this_month_funds'] = $value['funds'];
-				$data['last_month_benefit'] = $value['benefit'];
+				// $data['last_month_benefit'] = $value['benefit'];
 				$this -> where($condition) -> save($data);
 			}
 		}
@@ -57,10 +57,12 @@ class CustomerFundsModel extends Model {
 		$data = $this -> where($condition) -> find();
 		if($data == null){
 			$data['customer_id'] = $customer_id;
+			$data['this_month_settled_money'] = $benefit;
 			$data['benefit'] = $benefit*-1;
 			$this -> add($data);
 		}else{
 			$last_benefit = $data['benefit'] - $benefit;
+			$this -> where($condition)->setInc('this_month_settled_money',$benefit);
 			$this -> where($condition)->setField('benefit',$last_benefit);
 		}
 		
@@ -84,6 +86,7 @@ class CustomerFundsModel extends Model {
 		$this -> query('update commission_customer_funds set this_month_settled_money =0');
 		$this -> query('update commission_customer_funds set this_month_funds_back =0');
 		$this -> query('update commission_customer_funds set this_month_funds =0');
+		$this -> query('update commission_customer_funds set last_month_benefit = benefit where commission_customer_funds.id=commission_customer_funds.id');
 	}
 	public function setThisMonthFundsBack($condition,$this_month_funds_back){
 		$this -> where($condition) -> setInc('this_month_funds_back',$this_month_funds_back);

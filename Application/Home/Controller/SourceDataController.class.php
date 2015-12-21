@@ -727,7 +727,7 @@ class SourceDataController extends Controller {
 		$this -> display('LoadHistoryPage');
 	}
 	public function loadTotalCustomerFundsPage(){
-		$total_customer_funds = $this -> db_constomer_funds -> getTotalCustomerFunds();
+		$total_customer_funds = $this -> db_constomer_funds -> select();
 		$total_customer_funds = $this -> db_customer -> addCustomerName($total_customer_funds);
 		$this -> assign("total_customer_funds",$total_customer_funds);
 		$this -> display('TotalCustomerFundsPage');
