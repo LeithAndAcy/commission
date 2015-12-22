@@ -19,6 +19,7 @@ class ContactDetailModel extends Model {
 		$month = date('Y-m',strtotime($begin_date));
 		foreach ($all_contact_detail as $key => $value) {
 			$value['date'] = $month;
+			$value['delivery_quantity'] = 0;  //发货数量为0 另外取
 			if($value['custom_fee'] == null){
 				$value['custom_fee'] = 0;
 			}

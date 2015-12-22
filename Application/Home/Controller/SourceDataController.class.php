@@ -26,6 +26,7 @@ class SourceDataController extends Controller {
 	private $db_sale_expense;
 	private $db_salary;
 	private $db_settled_history;
+	private $db_delivery_history;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -53,6 +54,7 @@ class SourceDataController extends Controller {
 		$this -> db_sale_expense = D("SaleExpense");
 		$this -> db_salary = D("Salary");
 		$this -> db_settled_history = D("SettledHistory");
+		$this -> db_delivery_history = D("DeliveryHistory");
 	}
     public function loadSourceDataPage(){
     	\Think\Log::record('测试日志信息');
@@ -110,7 +112,7 @@ class SourceDataController extends Controller {
 	}
 	
 	private function _processData($begin_date,$end_date){
-		//去所有符合条件的数据插入commission的表中  contact_main  contact_detail   customer_fund  load_history
+		//去所有符合条件的数据插入commission的表中  contact_main  contact_detail   customer_fund  load_history delivery_history
 		$this -> db_U8 = D("U8");
 		$all_contact_main = $this -> db_U8 -> getAllContactMain($begin_date,$end_date);
 		// 插入 contact_main
@@ -126,6 +128,25 @@ class SourceDataController extends Controller {
 		$this -> db_constomer_funds -> updateItems($customer_funds);
 		// 插入load_history
 		$this -> db_load_history -> addItem($begin_date,$end_date,count($all_contact_main),count($all_contact_detail));
+		
+		//取得当月的发货记录 插入delivery_history
+		
+		$aaa = $this -> db_settled_history -> find();
+		if($aaa == null){
+			//从1月份取
+			$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth('2014-01-01',$end_date);
+		}else{
+			$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
+		}
+		$this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
+		
+		foreach ($all_delivery_detail as $key => $value) {
+			$condition = array();
+			$condition['cSOCode'] = $value['cSOCode'];
+			$condition['inventory_id'] = $value['inventory_id'];
+			$condition['colour'] = $value['colour'];
+			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
+		}
 		$this -> loadSettleSummaryPage();
 	}
 	public function setManualContact(){

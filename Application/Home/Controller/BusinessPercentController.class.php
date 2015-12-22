@@ -183,7 +183,9 @@ class BusinessPercentController extends Controller {
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
 			$temp_inventory_id = substr($value['inventory_id'], 0,1);
 			if($temp_inventory_id == 'F'){
-				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,4)];
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
+			}else if($temp_inventory_id == 'X'){
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
 			}else{
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
 				if($arr_ratio[$key]['normal_business_ratio'] == null){
