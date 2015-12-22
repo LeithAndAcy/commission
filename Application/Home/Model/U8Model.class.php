@@ -177,11 +177,12 @@ class U8Model extends Model {
 		DispatchList.cDefine2 as contact_id,DispatchList.cSOCode,
 		DispatchLists.cInvCode as inventory_id,DispatchLists.iQuantity as delivery_quantity,
 		Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
-		DispatchLists.cFree1 as colour,DispatchLists.iQuantity as delivery_quantity
+		DispatchLists.cFree1 as colour,DispatchLists.iQuantity as delivery_quantity,
+		SO_SODetails.iNatSum,SO_SODetails.iQuantity as sale_quantity
 		from DispatchList 
 		join DispatchLists on DispatchList.cSOCode = DispatchLists.cSOCode and DispatchList.DLID  = DispatchLists.DLID
 		join Inventory on DispatchLists.cInvCode = Inventory.cInvCode
-		join SO_SODetails on SO_SODetails.cFree1 = DispatchLists.cFree1 and SO_SODetails.cInvCode = DispatchLists.cInvCode
+		join SO_SODetails on SO_SODetails.cFree1 = DispatchLists.cFree1 and SO_SODetails.cInvCode = DispatchLists.cInvCode and SO_SODetails.cSOCode = DispatchLists.cSOCode
 		left join Person on Person.cPersonCode = DispatchList.cPersonCode
 		left join Customer on Customer.cCusCode = DispatchList.cCusCode
 		where DispatchList.dverifydate between '$begin_date' and '$end_date'
