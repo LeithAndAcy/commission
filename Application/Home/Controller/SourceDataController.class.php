@@ -131,7 +131,7 @@ class SourceDataController extends Controller {
 		
 		//取得当月的发货记录 插入delivery_history
 		
-		$aaa = $this -> db_settled_history -> find();
+		$aaa = $this -> db_delivery_history -> find();
 		if($aaa == null){
 			//从1月份取
 			$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth('2015-01-01',$end_date);
@@ -139,7 +139,6 @@ class SourceDataController extends Controller {
 			$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
 		}
 		$this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
-		
 		foreach ($all_delivery_detail as $key => $value) {
 			$condition = array();
 			$condition['cSOCode'] = $value['cSOCode'];
@@ -206,8 +205,14 @@ class SourceDataController extends Controller {
 			$temp_inventory_id = substr($value['inventory_id'], 0,1);
 			if($temp_inventory_id == 'F'){
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
+				if($arr_ratio[$key]['normal_business_ratio'] == null){
+					$arr_ratio[$key]['normal_business_ratio'] = 0.02;
+				}
 			}else if($temp_inventory_id == 'X'){
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
+				if($arr_ratio[$key]['normal_business_ratio'] == null){
+					$arr_ratio[$key]['normal_business_ratio'] = 0.02;
+				}
 			}else{
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
 				if($arr_ratio[$key]['normal_business_ratio'] == null){
