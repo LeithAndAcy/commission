@@ -20,11 +20,10 @@ class ContactDetailModel extends Model {
 		foreach ($all_contact_detail as $key => $value) {
 			$value['date'] = $month;
 			$value['delivery_quantity'] = 0;  //发货数量为0 另外取
-			$value['delivery_money'] = 0;  //发货金额为0 另外取
 			if($value['custom_fee'] == null){
 				$value['custom_fee'] = 0;
 			}
-			$value['sale_price'] = round($value['iNatSum'] / $value['sale_quantity'],6);
+			$value['delivery_money'] = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
 			unset($value['iNatSum']);
 			$this -> add($value);
 		}
