@@ -131,13 +131,7 @@ class SourceDataController extends Controller {
 		
 		//取得当月的发货记录 插入delivery_history
 		
-		$aaa = $this -> db_delivery_history -> find();
-		if($aaa == null){
-			//从1月份取
-			$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth('2015-01-01',$end_date);
-		}else{
-			$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
-		}
+		$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
 		$this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
 		foreach ($all_delivery_detail as $key => $value) {
 			$condition = array();
@@ -209,9 +203,16 @@ class SourceDataController extends Controller {
 					$arr_ratio[$key]['normal_business_ratio'] = 0.02;
 				}
 			}else if($temp_inventory_id == 'X'){
-				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
-				if($arr_ratio[$key]['normal_business_ratio'] == null){
-					$arr_ratio[$key]['normal_business_ratio'] = 0.02;
+				if(substr($value['inventory_id'], 0,2) == 'XF'){
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
+					if($arr_ratio[$key]['normal_business_ratio'] == null){
+						$arr_ratio[$key]['normal_business_ratio'] = 0.02;
+					}
+				}else{
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,2)];
+					if($arr_ratio[$key]['normal_business_ratio'] == null){
+						$arr_ratio[$key]['normal_business_ratio'] =  $normal_business_ratio[$salesman_id]['其他'];
+					}
 				}
 			}else{
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
@@ -273,20 +274,57 @@ class SourceDataController extends Controller {
 
 	public function updateDeliveryQuantity(){
 		$this -> db_U8 = D("U8");
-		$settlement_contact_cSOCode = $this -> db_contact_main -> getSettlementContactcSOCode();
-		// print_r($settlement_contact_cSOCode);
-		foreach ($settlement_contact_cSOCode as $key => $value) {
-			$res = $this -> db_U8 ->getDeliveryQuantityAndINatSum($value['cSOCode'],$value['inventory_id']);
-			// print_r($res);
-			if($res['delivery_quantity'] == $value['delivery_quantity']){
-				//发货数量相同，不做任何操作
-			}else{
-				//更改发货数量和发货金额
-				$data = array();
-				$data['delivery_quantity'] = $res['delivery_quantity'];
-				$data['delivery_money'] = round($res['iNatSum'] / $res['sale_quantity'],6) * $res['delivery_quantity'];
-				$this -> db_contact_detail -> updateDeliveryQuantityAndMoney($value['cSOCode'],$value['inventory_id'],$data);
-			}
+		$month = $_POST['month'];
+		switch ($month){
+			case '1':
+			  $begin_date = '2015-01-01';
+			  $end_date = '2015-01-31';
+			  break;
+			case '2':
+			  $begin_date = '2015-02-01';
+			  $end_date = '2015-02-28';
+			  break;
+			case '3':
+			  $begin_date = '2015-03-01';
+			  $end_date = '2015-03-31';
+			  break;
+			case '4':
+			  $begin_date = '2015-04-01';
+			  $end_date = '2015-04-30';
+			  break;
+			case '5':
+			  $begin_date = '2015-05-01';
+			  $end_date = '2015-05-31';
+			  break;
+			case '6':
+			  $begin_date = '2015-06-01';
+			  $end_date = '2015-06-30';
+			  break;
+			case '7':
+			  $begin_date = '2015-07-01';
+			  $end_date = '2015-07-31';
+			  break;
+			case '8':
+			  $begin_date = '2015-08-01';
+			  $end_date = '2015-08-31';
+			  break;
+			case '9':
+			  $begin_date = '2015-09-01';
+			  $end_date = '2015-09-30';
+			  break;
+			default:
+			  print_r("月份出错");exit;
+		}
+		$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
+		$this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
+		foreach ($all_delivery_detail as $key => $value) {
+			$condition = array();
+			$condition['cSOCode'] = $value['cSOCode'];
+			$condition['inventory_id'] = $value['inventory_id'];
+			$condition['colour'] = $value['colour'];
+			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
+			$temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
+			$this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
 		}
 	}
 	
