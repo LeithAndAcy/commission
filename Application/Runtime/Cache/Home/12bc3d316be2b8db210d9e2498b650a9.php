@@ -62,9 +62,9 @@
 					<button class="btn btn-primary" id="get_ratio">
 						取数
 					</button>
-					<!-- <button class="btn btn-warning" id="update_quantity">
-						更新发货数量
-					</button> -->
+					<button class="btn btn-warning" id="update_quantity">
+						更新1月到9月的发货数量
+					</button>
 					<span>
 						合同总数：<?php echo ($count_settlement_contact); ?>
 					</span>
@@ -379,7 +379,10 @@
 		});
 		$("#update_quantity").click(function(){
 			$('#update_quantity').attr('disabled',"true");
-			$.post("/commission/index.php/Home/SourceData/updateDeliveryQuantity", {}, function(data) {
+			var month = prompt("请输入月份","");
+			$.post("/commission/index.php/Home/SourceData/updateDeliveryQuantity", {
+				"month":month
+			}, function(data) {
 				window.location.href = "/commission/index.php/Home/SourceData/loadSettleSummaryPage";
 			});
 		});
