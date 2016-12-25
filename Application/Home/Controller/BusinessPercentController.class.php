@@ -184,15 +184,11 @@ class BusinessPercentController extends Controller {
 			$temp_inventory_id = substr($value['inventory_id'], 0,1);
 			if($temp_inventory_id == 'F'){
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
-				if($arr_ratio[$key]['normal_business_ratio'] == null){
-					$arr_ratio[$key]['normal_business_ratio'] = 0.02;
-				}
+			}else if($temp_inventory_id == 'K'){
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 			}else if($temp_inventory_id == 'X'){
 				if(substr($value['inventory_id'], 0,2) == 'XF'){
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
-					if($arr_ratio[$key]['normal_business_ratio'] == null){
-						$arr_ratio[$key]['normal_business_ratio'] = 0.02;
-					}
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 				}else{
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,2)];
 					if($arr_ratio[$key]['normal_business_ratio'] == null){
@@ -257,13 +253,35 @@ class BusinessPercentController extends Controller {
 			$temp_total_funds = $all_salesman_delivery_money[$salesman_id];
 			
 			$temp_special_business_ratio = null; //没有匹配的就默认为null
+			//2016-12-25新需求 特殊业绩提成比例和基本业绩提成比例算法一样
 			foreach ($special_business_ratio as $kkkkk => $vvvvv) {
+				/*
 				if($vvvvv['salesman_id'] == $salesman_id && substr($value['inventory_id'], 0,1) == $vvvvv['inventory_id'] &&$temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
-					$temp_special_business_ratio = $vvvvv['ratio'];
-					break;
+									$temp_special_business_ratio = $vvvvv['ratio'];
+									break;
+								}*/
+				if($vvvvv['salesman_id'] == $salesman_id && $temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
+					if(substr($value['inventory_id'], 0,1) == "F" || substr($value['inventory_id'], 0,1) == "K"){
+						if(substr($value['inventory_id'], 0,6) == $vvvvv['inventory_id']){
+							$temp_special_business_ratio = $vvvvv['ratio'];
+							break;
+						}
+					}elseif(substr($value['inventory_id'], 0,1) == "X"){
+						if(substr($value['inventory_id'], 0,2) == "XF"){
+							if(substr($value['inventory_id'], 0,6) == $vvvvv['inventory_id']){
+								$temp_special_business_ratio = $vvvvv['ratio'];
+								break;
+							}
+						}else{
+							if(substr($value['inventory_id'], 0,2) == $vvvvv['inventory_id']){
+								$temp_special_business_ratio = $vvvvv['ratio'];
+								break;
+							}
+						}
+					}
+					
 				}
 			}
-			
 			//匹配不到  取其他
 			if($temp_special_business_ratio === null){
 				foreach ($special_business_ratio as $kkkkk => $vvvvv) {

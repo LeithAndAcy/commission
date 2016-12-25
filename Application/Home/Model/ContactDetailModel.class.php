@@ -24,6 +24,7 @@ class ContactDetailModel extends Model {
 				$value['custom_fee'] = 0;
 			}
 			$value['delivery_money'] = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
+			$value['sale_price'] = round($value['iNatSum'] / $value['sale_quantity'],6);
 			unset($value['iNatSum']);
 			$this -> add($value);
 		}

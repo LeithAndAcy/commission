@@ -62,7 +62,7 @@ class U8Model extends Model {
 		// ");
 		$res = $this -> query("select SO_SOMain.cPersonCode as salesman_id,SO_SOMain.cCusCode as customer_id,
 		Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
-		SO_SOMain.cDefine2 as contact_id,cDefine33 as custom_fee,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
+		SO_SOMain.cDefine2 as contact_id,fSalePrice as custom_fee,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
 		SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity, SO_SODetails.iNatSum,
 		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		SO_SODetails.cFree1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name
