@@ -197,9 +197,9 @@ class BusinessPercentController extends Controller {
 				}
 			}else{
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
-				if($arr_ratio[$key]['normal_business_ratio'] == null){
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
-				}
+			}
+			if($arr_ratio[$key]['normal_business_ratio'] == null){
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
 			}
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
@@ -278,8 +278,12 @@ class BusinessPercentController extends Controller {
 								break;
 							}
 						}
+					}else{
+						if(substr($value['inventory_id'], 0,1) == $vvvvv['inventory_id']){
+							$temp_special_business_ratio = $vvvvv['ratio'];
+							break;
+						}
 					}
-					
 				}
 			}
 			//匹配不到  取其他

@@ -212,9 +212,9 @@ class SourceDataController extends Controller {
 				}
 			}else{
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][$temp_inventory_id];
-				if($arr_ratio[$key]['normal_business_ratio'] == null){
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
-				}
+			}
+			if($arr_ratio[$key]['normal_business_ratio'] == null){
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
 			}
 			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
 			foreach ($normal_profit_ratio as $kkk => $vvv) {
