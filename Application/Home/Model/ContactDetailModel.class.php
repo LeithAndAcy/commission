@@ -264,6 +264,9 @@ class ContactDetailModel extends Model {
 		$str_contact_id = substr($str_contact_id, 0,-1);
 		$this -> query("update commission_contact_detail set settled_date = '$load_month' where date<>'$this_month' and contact_id in($str_contact_id)");
 	}
-	
+	public function updateProfitAdjust($condition,$profit_adjust){
+		$data['profit_adjust'] = $profit_adjust *0.01;
+		$this -> where($condition) -> save($data);
+	}
 }
 ?>

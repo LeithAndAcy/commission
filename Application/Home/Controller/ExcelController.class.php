@@ -571,6 +571,41 @@ class ExcelController extends Controller {
 		}
 		$this -> success("添加成功！");
 	}
+	public function imporProfitAdjustExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_special_business_ratio = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_sale_expense[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_sale_expense as $key => $value) {
+			unset($arr_sale_expense[$key]);
+			$arr_profit_adjust[$key]['contact_id'] = $value['B'];
+			$arr_profit_adjust[$key]['cSOCode'] = $value['C'];
+			$arr_profit_adjust[$key]['inventory_id'] = $value['D'];
+			$arr_profit_adjust[$key]['classification_id'] = $value['E'];
+			$profit_adjust = $value['F'];
+			$this -> db_contact_detail -> updateProfitAdjust($arr_profit_adjust[$key],$profit_adjust);
+		}
+		$this -> success("调整成功！");
+	}
 	//export
 	public function generatePriceFloatRatioExcelFile(){
 		$this -> db_U8 = D("U8");

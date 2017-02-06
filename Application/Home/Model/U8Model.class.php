@@ -182,7 +182,7 @@ class U8Model extends Model {
 		from DispatchList 
 		join DispatchLists on DispatchList.cSOCode = DispatchLists.cSOCode and DispatchList.DLID  = DispatchLists.DLID
 		join Inventory on DispatchLists.cInvCode = Inventory.cInvCode
-		join SO_SODetails on SO_SODetails.cFree1 = DispatchLists.cFree1 and SO_SODetails.cInvCode = DispatchLists.cInvCode and SO_SODetails.cSOCode = DispatchLists.cSOCode
+		join SO_SODetails on (SO_SODetails.cFree1 = DispatchLists.cFree1 OR (SO_SODetails.cFree1 is null AND DispatchLists.cFree1 is null))  and SO_SODetails.cInvCode = DispatchLists.cInvCode and SO_SODetails.cSOCode = DispatchLists.cSOCode
 		left join Person on Person.cPersonCode = DispatchList.cPersonCode
 		left join Customer on Customer.cCusCode = DispatchList.cCusCode
 		where DispatchList.dverifydate between '$begin_date' and '$end_date'
