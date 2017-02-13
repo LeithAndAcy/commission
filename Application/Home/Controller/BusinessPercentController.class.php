@@ -26,6 +26,7 @@ class BusinessPercentController extends Controller {
 	private $db_sale_expense;
 	private $db_load_history;
 	private $db_settled_history;
+	private $db_salesman_funds;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -53,6 +54,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_sale_expense = D("SaleExpense");
 		$this -> db_load_history = D("LoadHistory");
 		$this -> db_settled_history = D("SettledHistory");
+		$this -> db_salesman_funds = D("SalesmanFunds");
 	}
     public function loadBusinessPercentPage(){
     	$this -> display('BusinessPercentPage');
@@ -157,6 +159,70 @@ class BusinessPercentController extends Controller {
 		$this -> db_contact_detail -> updateAdjust($contact_id,$inventory_id,$business_adjust,$profit_adjust,$cost_price_adjust);
 		$this -> db_contact_main -> setContactEdited($contact_id);
 		$this -> loadSettlingContactPage();
+	}
+	public function caculateSpecialBusiness(){
+		$contact_detail = $this -> db_contact_main -> getSettlingContactDetail();
+		$special_business_ratio = $this -> db_special_business_ratio -> getAllHandledSpecialBusinessRatio();
+		$all_salesman_funds = $this -> db_salesman_funds -> getAllHandledSalesmanFunds();
+		$arr_ratio = array();
+		foreach ($contact_detail as $key => $value) {
+			$salesman_id = $value['salesman_id'];
+			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
+			$arr_ratio[$key]['inventory_id'] = $value['inventory_id'];
+			$temp_inventory_id = substr($value['inventory_id'], 0,1);
+			$salesman_funds = $all_salesman_funds[$salesman_id];
+			$temp_fee_ratio = $this -> db_fee_ratio -> getFeeRatio($salesman_id);
+			$temp_special_business_ratio = null; //没有匹配的就默认为null
+			foreach ($special_business_ratio as $kkkkk => $vvvvv) {
+				/*
+				if($vvvvv['salesman_id'] == $salesman_id && substr($value['inventory_id'], 0,1) == $vvvvv['inventory_id'] &&$temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
+									$temp_special_business_ratio = $vvvvv['ratio'];
+									break;
+								}*/
+				if($vvvvv['salesman_id'] == $salesman_id && $salesman_funds>=$vvvvv['low_limit'] && $salesman_funds < $vvvvv['high_limit']){
+					if(substr($value['inventory_id'], 0,1) == "F" || substr($value['inventory_id'], 0,1) == "K"){
+						if(substr($value['inventory_id'], 0,6) == $vvvvv['inventory_id']){
+							$temp_special_business_ratio = $vvvvv['ratio'];
+							break;
+						}
+					}elseif(substr($value['inventory_id'], 0,1) == "X"){
+						if(substr($value['inventory_id'], 0,2) == "XF"){
+							if(substr($value['inventory_id'], 0,6) == $vvvvv['inventory_id']){
+								$temp_special_business_ratio = $vvvvv['ratio'];
+								break;
+							}
+						}else{
+							if(substr($value['inventory_id'], 0,2) == $vvvvv['inventory_id']){
+								$temp_special_business_ratio = $vvvvv['ratio'];
+								break;
+							}
+						}
+					}else{
+						if(substr($value['inventory_id'], 0,1) == $vvvvv['inventory_id']){
+							$temp_special_business_ratio = $vvvvv['ratio'];
+							break;
+						}
+					}
+				}
+			}
+			//匹配不到  取其他
+			if($temp_special_business_ratio === null){
+				foreach ($special_business_ratio as $kkkkk => $vvvvv) {
+					if($vvvvv['salesman_id'] == $salesman_id && ('其他' == $vvvvv['inventory_id']) && $salesman_funds>=$vvvvv['low_limit'] && $salesman_funds < $vvvvv['high_limit']){
+						$temp_special_business_ratio = $vvvvv['ratio'];
+						break;
+					}
+				}
+			}
+			$arr_ratio[$key]['special_business_ratio'] = $temp_special_business_ratio;
+			if($contact_detail[$key]['end_cost_price'] > $contact_detail[$key]['sale_price']){
+				$arr_ratio[$key]['special_business'] = $contact_detail[$key]['delivery_quantity']* $contact_detail[$key]['sale_price'] * $arr_ratio[$key]['special_business_ratio'] *$temp_fee_ratio;
+			}else{
+				$arr_ratio[$key]['special_business'] = $contact_detail[$key]['delivery_quantity']* $contact_detail[$key]['end_cost_price'] * $arr_ratio[$key]['special_business_ratio'] *$temp_fee_ratio;
+			}
+			$arr_ratio[$key]['total_business_profit'] = $arr_ratio[$key]['special_business'] + $contact_detail[$key]['normal_business'] + + $contact_detail[$key]['normal_profit'];
+		}
+		$this -> db_contact_detail -> updateSpeicalBusiness($arr_ratio);
 	}
 	public function getSettlingRatioAndPrice(){
 		//取基本业绩提成比例以及基本利润提成比例

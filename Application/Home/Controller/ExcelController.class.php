@@ -23,6 +23,7 @@ class ExcelController extends Controller {
 	private $db_wage_deduction;
 	private $db_sale_expense;
 	private $db_special_approve_price_float_ratio;
+	private $db_salesman_funds;
 	function _initialize() {
 		$this -> db_salesman = D("Salesman");
 		$this -> db_normal_business_ratio = D("NormalBusinessRatio");
@@ -43,6 +44,7 @@ class ExcelController extends Controller {
 		$this -> db_tax_ratio = D("TaxRatio");
 		$this -> db_wage_deduction = D("WageDeduction");
 		$this -> db_sale_expense = D("SaleExpense");
+		$this -> db_salesman_funds = D("SalesmanFunds");
 	}
 	//import
 	public function loadPriceFloatExcel() {
@@ -605,6 +607,41 @@ class ExcelController extends Controller {
 			$this -> db_contact_detail -> updateProfitAdjust($arr_profit_adjust[$key],$profit_adjust);
 		}
 		$this -> success("调整成功！");
+	}
+	public function imporSalesmanFundsExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_special_business_ratio = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_sale_expense[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		
+		foreach ($arr_sale_expense as $key => $value) {
+			unset($arr_sale_expense[$key]);
+			$arr_salesman_funds[$key]['salesman_id'] = $value['B'];
+			$arr_salesman_funds[$key]['salesman_name'] = $value['C'];
+			$arr_salesman_funds[$key]['funds'] = $value['D'];
+			$arr_salesman_funds[$key]['month'] = $value['E'];
+		}
+		$this -> db_salesman_funds -> addItems($arr_salesman_funds);
+		$this -> success("添加成功！");
 	}
 	//export
 	public function generatePriceFloatRatioExcelFile(){

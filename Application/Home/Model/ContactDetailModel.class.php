@@ -95,6 +95,19 @@ class ContactDetailModel extends Model {
 		}
 	}
 
+	public function updateSpeicalBusiness($arr_ratio = array()) {
+		$condition = array();
+		$data = array();
+		foreach ($arr_ratio as $key => $value) {
+			$condition['contact_id'] = $value['contact_id'];
+			$condition['inventory_id'] = $value['inventory_id'];
+			$data['special_business_ratio'] = $value['special_business_ratio'];
+			$data['special_business'] = $value['special_business'];
+			$data['total_business_profit'] = $value['total_business_profit'];
+			$this -> where($condition) -> save($data);
+		}
+	}
+	
 	public function updateSettlementRatio($arr_ratio = array()) {
 		foreach ($arr_ratio as $key => $value) {
 			$condition = array();
