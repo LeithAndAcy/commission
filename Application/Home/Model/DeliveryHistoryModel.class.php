@@ -18,6 +18,11 @@ class DeliveryHistoryModel extends Model {
 			$data['delivery_quantity'] = $value['delivery_quantity'];
 			$data['inventory_name'] = $value['inventory_name'];
 			$data['specification'] = $value['specification'];
+			if($value['colour'] == null){
+				$data['colour'] = '无';
+			}else{
+				$data['colour'] = $value['colour'];
+			}
 			$data['colour'] = $value['colour'];
 			$data['date'] = $month;
 			$this -> add($data);

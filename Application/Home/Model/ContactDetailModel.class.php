@@ -23,6 +23,9 @@ class ContactDetailModel extends Model {
 			if($value['custom_fee'] == null){
 				$value['custom_fee'] = 0;
 			}
+			if($value['colour'] == null){
+				$value['colour'] = '无';
+			}
 			$value['delivery_money'] = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
 			$value['sale_price'] = round($value['iNatSum'] / $value['sale_quantity'],6);
 			unset($value['iNatSum']);

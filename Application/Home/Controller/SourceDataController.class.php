@@ -137,7 +137,11 @@ class SourceDataController extends Controller {
 			$condition = array();
 			$condition['cSOCode'] = $value['cSOCode'];
 			$condition['inventory_id'] = $value['inventory_id'];
-			$condition['colour'] = $value['colour'];
+			if($value['colour'] === null){
+				$condition['colour'] = '无';
+			}else{
+				$condition['colour'] = $value['colour'];
+			}
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
 			$temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
@@ -317,6 +321,12 @@ class SourceDataController extends Controller {
 			$condition = array();
 			$condition['cSOCode'] = $value['cSOCode'];
 			$condition['inventory_id'] = $value['inventory_id'];
+			if($value['colour'] === null){
+				//颜色默认为无
+				$condition['colour'] = '无';
+			}else{
+				$condition['colour'] = $value['colour'];
+			}
 			$condition['colour'] = $value['colour'];
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
 			$temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
