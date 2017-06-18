@@ -7,6 +7,7 @@ class ExcelController extends Controller {
 	private $db_normal_business_ratio;
 	private $db_special_business_ratio;
 	private $db_normial_profit_ratio;
+	private $db_normal_profit_discount_ratio;
 	private $db_special_profit_ratio;
 	private $db_insurance_fund;
 	private $db_price_float_ratio;
@@ -29,6 +30,7 @@ class ExcelController extends Controller {
 		$this -> db_normal_business_ratio = D("NormalBusinessRatio");
 		$this -> db_special_business_ratio = D("SpecialBusinessRatio");
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
+		$this -> db_normal_profit_discount_ratio = D("NormalProfitDiscountRatio");
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
 		$this -> db_area_price_float_ratio = D("AreaPriceFloatRatio");
@@ -414,6 +416,39 @@ class ExcelController extends Controller {
 			$arr_normal_profit_ratio[$key]['salesman_id'] = $value['B'];
 			$arr_normal_profit_ratio[$key]['ratio'] = $value['C'];
 			$this -> db_normial_profit_ratio -> addNormalProfitRatio($arr_normal_profit_ratio[$key]);
+		}
+		$this -> success("添加成功！");
+	}
+	public function importNormalProfitDiscountRatioExcel() {
+		$excel_name = $_FILES['excel_file']['name'];
+		$index = stripos($excel_name, ".");
+		if (strtolower(substr($excel_name, $index + 1)) != "xls" && strtolower(substr($excel_name, $index + 1)) != "xlsx") {
+			$this -> error("上传文件格式出错");
+		}
+		vendor('PHPExcel.PHPExcel');
+		Vendor('PHPExcel.PHPExcel.IOFactory');
+		Vendor('PHPExcel.PHPExcel.Reader.Excel5.php');
+		$PHPReader = new \PHPExcel_Reader_Excel5();
+		$PHPexcel = new \PHPExcel();
+		$excel_obj = $_FILES['excel_file']['tmp_name'];
+		$PHPExcel_obj = $PHPReader -> load($excel_obj);
+		$currentSheet = $PHPExcel_obj -> getSheet(0);
+		$highestColumn = $currentSheet -> getHighestColumn();
+		$highestRow = $currentSheet -> getHighestRow();
+		$arr_normal_profit_discount_ratio = array();
+		for ($j = 2; $j <= $highestRow; $j++)//从第2行开始读取数据
+		{
+			for ($k = 'B'; $k <= $highestColumn; $k++)//从B列读取数据
+			{
+				$arr_normal_profit_discount_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
+			}
+		}
+		foreach ($arr_normal_profit_discount_ratio as $key => $value) {
+			unset($arr_normal_profit_discount_ratio[$key]);
+			$arr_normal_profit_discount_ratio[$key]['salesman_id'] = $value['B'];
+			$arr_normal_profit_discount_ratio[$key]['date'] = $value['C'];
+			$arr_normal_profit_discount_ratio[$key]['ratio'] = $value['D'];
+			$this -> db_normal_profit_discount_ratio -> addNormalProfitDiscountRatio($arr_normal_profit_discount_ratio[$key]);
 		}
 		$this -> success("添加成功！");
 	}
@@ -920,7 +955,62 @@ class ExcelController extends Controller {
 		header('Expires: 0');
 		$objWriter -> save('php://output');
 	}
+	
+	public function exprotNormalProfitDiscountRatioExcelFile(){
+		vendor('PHPExcel.PHPExcel');
+		$normal_profit_discount_ratio = $this -> db_normal_profit_discount_ratio -> getAllNormalProfitDiscountRatio();
+		$normal_profit_discount_ratio = $this -> db_salesman -> addSalesmanName($normal_profit_discount_ratio);
+		$temp_trans = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ', );
+		$objPHPExcel = new \PHPExcel();
+
+		$objPHPExcel -> getProperties() -> setCreator("提成管理系统")
+		 -> setLastModifiedBy("提成管理系统") -> setTitle("基本利润提成比例表") 
+		 -> setSubject("基本利润提成比折扣例表") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+		 -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
+
+		$objPHPExcel -> setActiveSheetIndex(0);
+
+		$objPHPExcel -> getActiveSheet() -> setTitle('基本利润提成比例折扣表');
 		
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('A') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('B') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('C') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('D') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('E') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('F') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('G') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('H') -> setWidth(18);
+		
+		$objPHPExcel -> getActiveSheet() -> getDefaultStyle() -> getFont() -> setSize(12);
+		
+
+		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '业务员编码') 
+		-> setCellValue('C1', '业务员姓名') -> setCellValue('D1', '日期')-> setCellValue('E1', '基本利润提成比例折扣');
+		foreach ($normal_profit_discount_ratio as $key => $value) {
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($key + 2), $key+1);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($key + 2), $value['salesman_id']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('C' . ($key + 2), $value['salesman_name']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('D' . ($key + 2), $value['date']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('E' . ($key + 2), $value['ratio']."%");
+		}
+		
+		
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$filename = "基本利润提成比例折扣表".date('Ymdhis').".xls";
+		$filename = iconv("utf-8", "gb2312", $filename);
+		ob_end_clean();//清除缓冲区,避免乱码
+		header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Disposition:inline;filename="'.$filename.'"');
+        header("Content-Transfer-Encoding: binary");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Pragma: no-cache");
+		header('Content-Encoding: none');
+		header('Expires: 0');
+		$objWriter -> save('php://output');
+	}
+	
 	public function exportCustomerExcelFile(){
 		vendor('PHPExcel.PHPExcel');
 		$all_customer = $this -> db_customer -> getAllCustomer();

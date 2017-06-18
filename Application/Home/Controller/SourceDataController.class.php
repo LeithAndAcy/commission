@@ -7,6 +7,7 @@ class SourceDataController extends Controller {
 	private $db_normal_business_ratio;
 	private $db_special_business_ratio;
 	private $db_normial_profit_ratio;
+	private $db_normial_profit_discount_ratio;
 	private $db_special_profit_ratio;
 	private $db_insurance_fund;
 	private $db_price_float_ratio;
@@ -36,6 +37,7 @@ class SourceDataController extends Controller {
 		$this -> db_normal_business_ratio = D("NormalBusinessRatio");
 		$this -> db_special_business_ratio = D("SpecialBusinessRatio");
 		$this -> db_normial_profit_ratio = D("NormalProfitRatio");
+		$this -> db_normial_profit_discount_ratio = D("NormalProfitDiscountRatio");
 		$this -> db_insurance_fund = D("InsuranceFund");
 		$this -> db_price_float_ratio = D("PriceFloatRatio");
 		$this -> db_area_price_float_ratio = D("AreaPriceFloatRatio");
@@ -429,6 +431,34 @@ class SourceDataController extends Controller {
 	public function deleteNormalProfitRatioById(){
 		$id = $_POST['delete_id'];
 		$this -> db_normial_profit_ratio -> deleteNormalProfitRatioById($id);
+	}
+	public function loadNormalProfitDiscountPage(){
+		$all_normal_profit_discount_ratio = $this -> db_normial_profit_discount_ratio -> getAllNormalProfitDiscountRatio();
+		$res = $this -> _addSalesmanName($all_normal_profit_discount_ratio);
+		$all_normal_profit_discount_ratio = $res['data'];
+		$all_salesman = $res['salesman'];
+		$this -> assign("all_normal_profit_discount_ratio",$all_normal_profit_discount_ratio);
+		$this -> assign("all_salesman",$all_salesman);
+		$this -> display('NormalProfitDiscountPage');
+	}
+	public function editNormalProfitDiscountRatio(){
+		$id = $_POST['edit_id'];
+		$ratio = $_POST['edit_ratio'];
+		$date = $_POST['edit_date'];
+		$this -> db_normial_profit_discount_ratio -> edtiNormalProfitDiscountRatio($id,$date,$ratio);
+		$this -> loadNormalProfitDiscountPage();
+	}
+	public function addNewNormalProfitDiscountRatio(){
+		$data = array();
+		$data['salesman_id'] = $_POST['add_new_salesman_id'];
+		$data['date'] = $_POST['add_new_date'];
+		$data['ratio'] = $_POST['add_new_ratio'];
+		$this -> db_normial_profit_discount_ratio -> addNormalProfitDiscountRatio($data);
+		$this -> loadNormalProfitDiscountPage();
+	}
+	public function deleteNormalProfitDiscountRatioById(){
+		$id = $_POST['delete_id'];
+		$this -> db_normial_profit_discount_ratio -> deleteNormalProfitDiscountRatioById($id);
 	}
 	public function loadFeeRatioPage(){
 		$all_fee_ratio = $this -> db_fee_ratio -> getAllFeeRatio();
