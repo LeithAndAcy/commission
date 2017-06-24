@@ -33,10 +33,14 @@
 						<th>规格型号</th>
 						<th>颜色</th>
 						<th>销售单价</th>
+						<th>总经理底价上浮比例</th>
+						<th>总经理上浮底价</th>
+						<th>技术底价上浮比例</th>
+						<th>技术上浮底价</th>
 						<th>底价（元）</th>
 
-						<th>特批底价上浮比例</th>
-						<th>特批上浮底价</th>
+						<th>月结底价上浮比例</th>
+						<th>月结上浮底价</th>
 
 						<th>定制费</th>
 						<th>定制费上浮底价</th>
@@ -63,6 +67,7 @@
 						<th>基本业绩提成(元)</th>
 						<th>回款达标业绩提成(元)</th>
 						<th>基本利润提成(元)</th>
+						<th>基本利润提成比例折扣</th>
 						<!-- <th>回款未达标利润提成(元)</th> -->
 
 						<th>业绩利润提成汇总</th>
@@ -85,6 +90,10 @@
 							<td>{$vo.specification}</td>
 							<td>{$vo.colour}</td>
 							<td>{$vo.sale_price}</td>
+							<td>{$vo.gm_ratio}%</td>
+										<td>{$vo.gm_price}</td>
+										<td>{$vo.skill_ratio}%</td>
+										<td>{$vo.skill_price}</td>
 							<td>{$vo.cost_price}</td>
 
 							<td>{$vo.special_approve_float_price_ratio}%</td>
@@ -105,6 +114,7 @@
 							<td>{$vo.normal_business_ratio}%</td>
 							<td>{$vo.special_business_ratio}%</td>
 							<td>{$vo.normal_profit_ratio}%</td>
+							<td>{$vo.normal_profit_discount_ratio}%</td>
 							<!-- <td>{$vo.special_profit_ratio}%</td> -->
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_business_adjust">{$vo.business_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_profit_adjust">{$vo.profit_adjust}%</td>

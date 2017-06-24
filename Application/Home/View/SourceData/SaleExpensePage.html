@@ -34,7 +34,6 @@
 						<th>业务员编码</th>
 						<th>业务员姓名</th>
 						<th>合同号</th>
-						<th>存货编码</th>
 						<th>销售费用单价(元)</th>
 						<th>销售费用比例</th>
 						<th>操作</th>
@@ -46,7 +45,6 @@
 							<td id="{$vo.id}_salesman_id">{$vo.salesman_id}</td>
 							<td id="{$vo.id}_name">{$vo.salesman_name}</td>
 							<td id="{$vo.id}_contact_id">{$vo.contact_id}</td>
-							<td id="{$vo.id}_inventory_id">{$vo.inventory_id}</td>
 							<td id="{$vo.id}_sale_expense">{$vo.sale_expense}</td>
 							<td id="{$vo.id}_ratio">{$vo.ratio}%</td>
 							<td sale_expense_id="{$vo.id}"><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Edit" alt="Edit" src="__PUBLIC__/img/edit.png" data-toggle="modal" data-target="#edit"> </span><span style="margin-left: 10px;margin-right: 10px;cursor: pointer;"> <img title="Delete" alt="Delete" src="__PUBLIC__/img/delete.png"> </span></td>
@@ -84,12 +82,12 @@
 									<input type="text" class="form-control" id="edit_contact_id" placeholder="合同号" disabled="disabled">
 								</div>
 							</div>
-							<div class="form-group">
+							<!-- <div class="form-group">
 								<label class="col-sm-4 control-label">存货编码</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" id="edit_inventory_id" disabled="disabled">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group">
 								<label class="col-sm-4 control-label">销售费用单价</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">
@@ -150,12 +148,12 @@
 									<input type="text" class="form-control validate[required]" id="add_new_contact_id" name="add_new_contact_id">
 								</div>
 							</div>
-							<div class="form-group">
+							<!-- <div class="form-group">
 								<label class="col-sm-4 control-label">存货编码</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control validate[required]" id="add_new_inventory_id" name="add_new_inventory_id">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group">
 								<label class="col-sm-4 control-label">销售费用单价</label>
 								<div class="col-sm-6 input-group" style="padding-left: 15px;padding-right: 14px">

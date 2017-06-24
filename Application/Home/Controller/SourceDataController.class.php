@@ -196,6 +196,7 @@ class SourceDataController extends Controller {
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
 		$all_sale_expense = $this -> db_sale_expense -> getAllHandledSaleExpense();
 		$all_special_approve_float_price_ratio = $this -> db_special_approve_price_float_ratio -> getAllHandledSpecialApprovePriceFloatRatio();
+		$all_normal_profit_discount_ratio = $this -> db_normial_profit_discount_ratio -> getAllHandledNormalProfitDiscountRatio();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
@@ -203,12 +204,23 @@ class SourceDataController extends Controller {
 			$arr_ratio[$key]['salesman_id'] = $value['salesman_id'];
 			$arr_ratio[$key]['contact_id'] = $value['contact_id'];
 			$temp_inventory_id = substr($value['inventory_id'], 0,1);
+			$temp_normal_profit_discount_ratio = $all_normal_profit_discount_ratio[$salesman_id][substr($value['contact_id'], 0,4)];
+			if($temp_normal_profit_discount_ratio == null){
+				$temp_normal_profit_discount_ratio = 1;
+			}
+			$arr_ratio[$key]['normal_profit_discount_ratio'] = $temp_normal_profit_discount_ratio;
 			if($temp_inventory_id == 'F'){
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 			}else if($temp_inventory_id == 'K'){
-				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
+				if(substr($value['inventory_id'], 0,2) == 'KX'){
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
+				}else{
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
+				}
 			}else if($temp_inventory_id == 'X'){
-				if(substr($value['inventory_id'], 0,2) == 'XF'){
+				if(substr($value['inventory_id'], 0,2) == 'XF' || substr($value['inventory_id'], 0,2) == 'XG' || substr($value['inventory_id'], 0,2) == 'XH'
+				|| substr($value['inventory_id'], 0,2) == 'XI' || substr($value['inventory_id'], 0,2) == 'XJ'
+				|| substr($value['inventory_id'], 0,2) == 'XA' || substr($value['inventory_id'], 0,2) == 'XE'){
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 				}else{
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,2)];
@@ -229,6 +241,10 @@ class SourceDataController extends Controller {
 					break;
 				}
 			}
+			//计算总经理上浮底价和技术上浮底价
+			$arr_ratio[$key]['gm_price'] = $value['gm_ratio'] * $value['cost_price'];
+			$arr_ratio[$key]['skill_price'] = $value['skill_ratio'] * $value['cost_price'];
+			
 			//使用 join直接查出来地区浮动比例
 			$area_price_float_ratio = $value['ratio'];
 			//计算特批上浮底价
@@ -248,13 +264,13 @@ class SourceDataController extends Controller {
 				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
 					$arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
 					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust']
-					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price'];
+					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price']+$arr_ratio[$key]['gm_price']+$arr_ratio[$key]['skill_price'];
 					$arr_ratio[$key]['float_price_ratio'] = $vvvv['ratio']* 0.01; 
 					break;
 				}else{
 					$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
 					$arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['cost_price'] + $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price_adjust']
-					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price'];
+					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price']+$arr_ratio[$key]['gm_price']+$arr_ratio[$key]['skill_price'];
 					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
 			}
@@ -269,7 +285,6 @@ class SourceDataController extends Controller {
 			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
-			
 		}
 		$this -> db_contact_detail -> updateSettlementRatio($arr_ratio);
 	}

@@ -75,5 +75,11 @@ class CustomerModel extends Model {
 		$res = $this -> where($condition) -> getField('area');
 		return $res;
 	}
+	public function getSHYCId(){
+		$condition = array();
+		$condition['customer_name'] = "上海易初电线电缆有限公司";
+		$res = $this -> where($condition) -> getField('customer_id');
+		return $res;
+	}
 }
 ?>

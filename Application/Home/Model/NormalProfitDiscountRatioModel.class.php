@@ -32,5 +32,13 @@ class NormalProfitDiscountRatioModel extends Model {
 		$condition['id'] = $id;
 		$this -> where($condition) -> delete();
 	}
+	public function getAllHandledNormalProfitDiscountRatio(){
+		$res = $this -> select();
+		$arr = array();	
+		foreach($res as $key => $value){
+			$arr[$value['salesman_id']][$value['date']]=$value['ratio'];
+		}
+		return $arr;
+	}
 }
 ?>

@@ -2,7 +2,7 @@
 namespace Home\Model;
 use Think\Model;
 class ContactMainModel extends Model {
-		
+	
 	public function checkItemSettled($contact_id){
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
@@ -22,9 +22,13 @@ class ContactMainModel extends Model {
 		}
 	}
 	public function addContactMain($all_contact_main,$begin_date){
+		$db_customer = D("Customer");
 		$month = date('Y-m',strtotime($begin_date));
 		foreach ($all_contact_main as $key => $value) {
-			// $last_month = date('Y-m',strtotime('-1 month'));
+			//客户名称为上海易初电线电缆有限公司   不取
+			if($value['customer_id'] == $db_customer->getSHYCId()){
+				continue;
+			}
 			$value['date'] = $month;
 			$this -> add($value);
 		}
@@ -235,6 +239,7 @@ class ContactMainModel extends Model {
 		$res = $this -> query("
 		select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.salesman_id,
 		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
+		commission_contact_detail.gm_ratio,commission_contact_detail.skill_ratio,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
 		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
 		commission_contact_detail.custom_fee,
@@ -258,6 +263,7 @@ class ContactMainModel extends Model {
 		$res = $this -> query("
 		select commission_contact_detail.contact_id,commission_contact_detail.cSOCode,
 		commission_contact_detail.inventory_id,commission_contact_detail.inventory_name,
+		commission_contact_detail.gm_ratio,commission_contact_detail.skill_ratio,
 		commission_contact_detail.customer_name,commission_contact_detail.customer_id,
 		commission_contact_detail.salesman_name,commission_contact_detail.salesman_id,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
@@ -328,6 +334,7 @@ class ContactMainModel extends Model {
 		$res = $this -> query("
 		select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.salesman_id,
 		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
+		commission_contact_detail.gm_ratio,commission_contact_detail.skill_ratio,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
 		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
 		commission_contact_detail.custom_fee,
