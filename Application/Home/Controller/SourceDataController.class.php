@@ -212,16 +212,14 @@ class SourceDataController extends Controller {
 			if($temp_inventory_id == 'F'){
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 			}else if($temp_inventory_id == 'K'){
-				if(substr($value['inventory_id'], 0,2) == 'KX'){
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
-				}else{
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
-				}
+				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 			}else if($temp_inventory_id == 'X'){
 				if(substr($value['inventory_id'], 0,2) == 'XF' || substr($value['inventory_id'], 0,2) == 'XG' || substr($value['inventory_id'], 0,2) == 'XH'
 				|| substr($value['inventory_id'], 0,2) == 'XI' || substr($value['inventory_id'], 0,2) == 'XJ'
 				|| substr($value['inventory_id'], 0,2) == 'XA' || substr($value['inventory_id'], 0,2) == 'XE'){
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
+				}elseif(substr($value['inventory_id'], 0,2) == 'XK'){
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
 				}else{
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,2)];
 					if($arr_ratio[$key]['normal_business_ratio'] == null){

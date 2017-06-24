@@ -41,8 +41,8 @@ class SaleExpenseModel extends Model {
 		$arr = array();	
 		$res = $this->select();
 		foreach ($res as $key => $value) {
-			$arr[$value['salesman_id']][$value['contact_id']][$value['inventory_id']]['sale_expense'] = $value['sale_expense'];
-			$arr[$value['salesman_id']][$value['contact_id']][$value['inventory_id']]['sale_expense_ratio'] = $value['ratio'];
+			$arr[$value['salesman_id']][$value['contact_id']]['sale_expense'] = $value['sale_expense'];
+			$arr[$value['salesman_id']][$value['contact_id']]['sale_expense_ratio'] = $value['ratio'];
 		}
 		return $arr;
 	}

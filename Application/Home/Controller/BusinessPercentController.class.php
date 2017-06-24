@@ -261,8 +261,12 @@ class BusinessPercentController extends Controller {
 			}else if($temp_inventory_id == 'K'){
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 			}else if($temp_inventory_id == 'X'){
-				if(substr($value['inventory_id'], 0,2) == 'XF'){
+				if(substr($value['inventory_id'], 0,2) == 'XF' || substr($value['inventory_id'], 0,2) == 'XG' || substr($value['inventory_id'], 0,2) == 'XH'
+				|| substr($value['inventory_id'], 0,2) == 'XI' || substr($value['inventory_id'], 0,2) == 'XJ'
+				|| substr($value['inventory_id'], 0,2) == 'XA' || substr($value['inventory_id'], 0,2) == 'XE'){
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
+				}elseif(substr($value['inventory_id'], 0,2) == 'XK'){
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
 				}else{
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,2)];
 					if($arr_ratio[$key]['normal_business_ratio'] == null){
@@ -318,9 +322,8 @@ class BusinessPercentController extends Controller {
 				}
 			}
 			//取销售费用以及销售费用比例
-			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense'];
-			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense_ratio'];
-			
+			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'];
+			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense_ratio'];
 			//没配置比例表的情况
 			if($price_float_ratio == null){
 				$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
@@ -334,11 +337,6 @@ class BusinessPercentController extends Controller {
 			$temp_special_business_ratio = null; //没有匹配的就默认为null
 			//2016-12-25新需求 特殊业绩提成比例和基本业绩提成比例算法一样
 			foreach ($special_business_ratio as $kkkkk => $vvvvv) {
-				/*
-				if($vvvvv['salesman_id'] == $salesman_id && substr($value['inventory_id'], 0,1) == $vvvvv['inventory_id'] &&$temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
-									$temp_special_business_ratio = $vvvvv['ratio'];
-									break;
-								}*/
 				if($vvvvv['salesman_id'] == $salesman_id && $temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
 					if(substr($value['inventory_id'], 0,1) == "F" || substr($value['inventory_id'], 0,1) == "K"){
 						if(substr($value['inventory_id'], 0,6) == $vvvvv['inventory_id']){
@@ -346,8 +344,16 @@ class BusinessPercentController extends Controller {
 							break;
 						}
 					}elseif(substr($value['inventory_id'], 0,1) == "X"){
-						if(substr($value['inventory_id'], 0,2) == "XF"){
+						if(substr($value['inventory_id'], 0,2) == "XF" || substr($value['inventory_id'], 0,2) == "XG" ||
+						substr($value['inventory_id'], 0,2) == "XH" || substr($value['inventory_id'], 0,2) == "XI" 
+						|| substr($value['inventory_id'], 0,2) == "XJ" || substr($value['inventory_id'], 0,2) == "XA"
+						|| substr($value['inventory_id'], 0,2) == "XE"){
 							if(substr($value['inventory_id'], 0,6) == $vvvvv['inventory_id']){
+								$temp_special_business_ratio = $vvvvv['ratio'];
+								break;
+							}
+						}elseif(substr($value['inventory_id'], 0,2) == "XK"){
+							if(substr($value['inventory_id'], 0,7) == $vvvvv['inventory_id']){
 								$temp_special_business_ratio = $vvvvv['ratio'];
 								break;
 							}
