@@ -65,13 +65,15 @@ class U8Model extends Model {
 		SO_SOMain.cDefine2 as contact_id,fSalePrice as custom_fee,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
 		SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity, SO_SODetails.iNatSum,
 		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
-		SO_SODetails.cFree1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name
+		SO_SODetails.cFree1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name,
+		SO_SODetails_extradefine.cbdefine3 as gm_ratio,SO_SODetails_extradefine.cbdefine4 as skill_ratio
 		from SO_SOMain join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
 		and (
 		(SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date') 
 		OR (SO_SOMain.dChangeVerifyDate is not null and SO_SOMain.cChangeVerifier is not null and SO_SOMain.dverifydate between '$begin_date' and '$end_date')
 		)
 		join Inventory on SO_SODetails.cInvCode = Inventory.cInvCode
+		join SO_SODetails_extradefine on SO_SODetails.iSOsID = SO_SODetails_extradefine.iSOsID
 		join InventoryClass on Inventory.cInvCCode = InventoryClass.cInvCCode
 		left join Person on Person.cPersonCode = SO_SOMain.cPersonCode
 		left join Customer on Customer.cCusCode = SO_SOMain.cCusCode

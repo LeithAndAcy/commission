@@ -322,7 +322,7 @@ class BusinessPercentController extends Controller {
 				}
 			}
 			//取销售费用以及销售费用比例
-			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'];
+			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'] * $value['cost_price'];
 			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense_ratio'];
 			//没配置比例表的情况
 			if($price_float_ratio == null){

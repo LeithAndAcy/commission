@@ -7,6 +7,7 @@ class SaleExpenseModel extends Model {
 		$res = $this->select();
 		foreach ($res as $key => $value) {
 			$res[$key]['ratio'] *= 100;
+			$res[$key]['sale_expense'] *= 100;
 		}
 		return $res;
 	}
@@ -24,12 +25,13 @@ class SaleExpenseModel extends Model {
 	public function editItem($id,$sale_expense,$ratio){
 		$condition = array();
 		$condition['id'] = $id;
-		$data['sale_expense'] = $sale_expense;
+		$data['sale_expense'] = $sale_expense* 0.01;
 		$data['ratio'] = $ratio * 0.01;
 		$this -> where($condition) -> save($data);
 	}
 	public function addItem($data){
 		$data['ratio'] *= 0.01;
+		$data['sale_expense'] *= 0.01;
 		$this -> add($data);
 	}
 	public function deleteItem($id){

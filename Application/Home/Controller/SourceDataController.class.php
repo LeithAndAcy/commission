@@ -274,8 +274,8 @@ class SourceDataController extends Controller {
 			}
 			$temp_bPurchase = $value['purchase'];
 			//取销售费用以及销售费用比例
-			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense'];
-			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']][$value['inventory_id']]['sale_expense_ratio'];
+			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'] * $value['cost_price'];
+			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense_ratio'];
 			if($temp_bPurchase){
 			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
