@@ -91,16 +91,20 @@
 									<th>规格型号</th>
 									<th>颜色</th>
 									<th>销售单价</th>
+									<th>总经理底价上浮比例</th>
+									<th>总经理上浮底价</th>
+									<th>技术底价上浮比例</th>
+									<th>技术上浮底价</th>
 									<th>底价（元）</th>
 									<th>最终底价（元）</th>
 									
-									<th>特批底价上浮比例</th>
-									<th>特批上浮底价</th>
+									<th>月结底价上浮比例</th>
+									<th>月结上浮底价</th>
 									
 									<th>定制费</th>
 									<th>定制费上浮底价</th>
 									
-									<th>上浮的底价（元）</th>
+									<th>短米上浮的底价（元）</th>
 									<th>销售数量（米数）</th>
 									<th>发货数量（米数）</th>
 									<th>发货金额(元)</th>
@@ -108,6 +112,7 @@
 									<th>销售费用比例</th>
 									<th>基本业绩提成比例</th>
 									<th>基本利润提成比例</th>
+									<th>基本利润提成比例折扣</th>
 									<th>业务提成调整比例</th>
 									<th>利润提成调整比例</th>
 									<th>底价调整金额（元）</th>
@@ -130,6 +135,10 @@
 										<td><?php echo ($vo["specification"]); ?></td>
 										<td><?php echo ($vo["colour"]); ?></td>
 										<td><?php echo ($vo["sale_price"]); ?></td>
+										<td><?php echo ($vo["gm_ratio"]); ?>%</td>
+										<td><?php echo ($vo["gm_price"]); ?></td>
+										<td><?php echo ($vo["skill_ratio"]); ?>%</td>
+										<td><?php echo ($vo["skill_price"]); ?></td>
 										<td><?php echo ($vo["cost_price"]); ?></td>
 										<td><?php echo ($vo["end_cost_price"]); ?></td>
 										
@@ -147,6 +156,7 @@
 										<td><?php echo ($vo["sale_expense_ratio"]); ?>%</td>
 										<td><?php echo ($vo["normal_business_ratio"]); ?>%</td>
 										<td><?php echo ($vo["normal_profit_ratio"]); ?>%</td>
+										<td><?php echo ($vo["normal_profit_discount_ratio"]); ?>%</td>
 										<td id="<?php echo ($vo["contact_id"]); ?>_<?php echo ($vo["inventory_id"]); ?>_business_adjust"><?php echo ($vo["business_adjust"]); ?>%</td>
 										<td id="<?php echo ($vo["contact_id"]); ?>_<?php echo ($vo["inventory_id"]); ?>_profit_adjust"><?php echo ($vo["profit_adjust"]); ?>%</td>
 										<td id="<?php echo ($vo["contact_id"]); ?>_<?php echo ($vo["inventory_id"]); ?>_cost_price_adjust"><?php echo ($vo["cost_price_adjust"]); ?></td>

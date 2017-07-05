@@ -64,11 +64,14 @@
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadNormalProfitPage" target="workflow">基本利润提成比例表</a>
 						</li>
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadNormalProfitDiscountPage" target="workflow">基本利润提成比例折扣表</a>
+						</li>
 						<li>
 							<a href="/commission/index.php/Home/SourceData/loadFeeRatioPage" target="workflow">扣率表</a>
 						</li>
 						<li>
-							<a href="/commission/index.php/Home/SourceData/loadSaleExpensePage" target="workflow">销售费用表</a>
+							<a href="/commission/index.php/Home/SourceData/loadSaleExpensePage" target="workflow">销售费用单价比例</a>
 						</li>
 						<!-- <li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadSpecialProfitPage" target="workflow">未达标利润提成比例表</a>
@@ -76,14 +79,18 @@
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadFundsBackPage" target="workflow">资金回笼调整表</a>
 						</li>
+						<!--
 						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">上浮底价调整比例表</a>
+													<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">涓婃诞搴曚环璋冩暣姣斾緥琛�</a>
+												</li>-->
+						<li role="presentation">
+							<a href="/commission/index.php/Home/SourceData/loadPriceFloatPage" target="workflow">短米底价调整比例表</a>
 						</li>
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadAreaPriceFloatPage" target="workflow">地区上浮底价表</a>
 						</li>
 						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadSpecialApprovePriceFloatPage" target="workflow">特批底价上浮比例表</a>
+							<a href="/commission/index.php/Home/SourceData/loadSpecialApprovePriceFloatPage" target="workflow">月结底价上浮比例表</a>
 						</li>
 						<li role="presentation">
 							<a href="/commission/index.php/Home/SourceData/loadLengthLimitPage" target="workflow">合同结算长度限定表</a>
