@@ -353,7 +353,7 @@ class SourceDataController extends Controller {
 		$contact_id = $_POST['contact_id'];
 		$inventory_id = $_POST['inventory_id'];
 		$this -> db_contact_main -> deleteItem($contact_id);
-		$this -> db_contact_detail -> deleteItem($contact_id,$inventory_id);
+		$this -> db_contact_detail -> deleteItem($contact_id);
 	}
 	public function loadNormalBusinessPage(){
 		$this -> db_U8 = D("U8");

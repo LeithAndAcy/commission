@@ -257,10 +257,9 @@ class ContactDetailModel extends Model {
 		return $res;
 	}
 	
-	public function deleteItem($contact_id, $inventory_id) {
+	public function deleteItem($contact_id) {
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
-		$condition['inventory_id'] = $inventory_id;
 		$this -> where($condition) -> delete();
 	}
 
