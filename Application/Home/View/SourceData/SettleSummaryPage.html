@@ -22,8 +22,8 @@
 					<button class="btn btn-primary" id="get_ratio">
 						取数
 					</button>
-					<button style="display: none" class="btn btn-warning" id="update_quantity">
-						更新1月到9月的发货数量
+					<button class="btn btn-warning" id="update_quantity">
+						更新发货数量
 					</button>
 					<span>
 						合同总数：{$count_settlement_contact}
@@ -353,7 +353,7 @@
 		});
 		$("#update_quantity").click(function(){
 			$('#update_quantity').attr('disabled',"true");
-			var month = prompt("请输入月份","");
+			var month = prompt("请输入月份2017-01","");
 			$.post("__CONTROLLER__/updateDeliveryQuantity", {
 				"month":month
 			}, function(data) {

@@ -131,23 +131,22 @@ class SourceDataController extends Controller {
 		// 插入load_history
 		$this -> db_load_history -> addItem($begin_date,$end_date,count($all_contact_main),count($all_contact_detail));
 		
-		//取得当月的发货记录 插入delivery_history
-		
-		$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
-		$this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
-		foreach ($all_delivery_detail as $key => $value) {
-			$condition = array();
-			$condition['cSOCode'] = $value['cSOCode'];
-			$condition['inventory_id'] = $value['inventory_id'];
-			if($value['colour'] === null){
-				$condition['colour'] = '无';
-			}else{
-				$condition['colour'] = $value['colour'];
-			}
-			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
-			$temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
-			$this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
-		}
+		//取得当月的发货记录 插入delivery_history  单独的按钮取(2017-07-12)
+		// $all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
+		// $this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
+		// foreach ($all_delivery_detail as $key => $value) {
+			// $condition = array();
+			// $condition['cSOCode'] = $value['cSOCode'];
+			// $condition['inventory_id'] = $value['inventory_id'];
+			// if($value['colour'] === null){
+				// $condition['colour'] = '无';
+			// }else{
+				// $condition['colour'] = $value['colour'];
+			// }
+			// $this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
+			// $temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
+			// $this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
+		// }
 		$this -> loadSettleSummaryPage();
 	}
 	public function setManualContact(){
@@ -276,11 +275,11 @@ class SourceDataController extends Controller {
 			//取销售费用以及销售费用比例
 			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'] * $value['cost_price'];
 			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense_ratio'];
-			if($temp_bPurchase){
+			if(FALSE){
 			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
-				if($arr_ratio[$key]['sale_expense'] >0){
-			//		$arr_ratio[$key]['normal_profit_ratio'] = 50;
+				if($arr_ratio[$key]['sale_expense'] >0 && $arr_ratio[$key]['normal_profit_ratio'] > 50){
+					$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
 		}
@@ -290,46 +289,8 @@ class SourceDataController extends Controller {
 	public function updateDeliveryQuantity(){
 		$this -> db_U8 = D("U8");
 		$month = $_POST['month'];
-		switch ($month){
-			case '1':
-			  $begin_date = '2015-01-01';
-			  $end_date = '2015-01-31';
-			  break;
-			case '2':
-			  $begin_date = '2015-02-01';
-			  $end_date = '2015-02-28';
-			  break;
-			case '3':
-			  $begin_date = '2015-03-01';
-			  $end_date = '2015-03-31';
-			  break;
-			case '4':
-			  $begin_date = '2015-04-01';
-			  $end_date = '2015-04-30';
-			  break;
-			case '5':
-			  $begin_date = '2015-05-01';
-			  $end_date = '2015-05-31';
-			  break;
-			case '6':
-			  $begin_date = '2015-06-01';
-			  $end_date = '2015-06-30';
-			  break;
-			case '7':
-			  $begin_date = '2015-07-01';
-			  $end_date = '2015-07-31';
-			  break;
-			case '8':
-			  $begin_date = '2015-08-01';
-			  $end_date = '2015-08-31';
-			  break;
-			case '9':
-			  $begin_date = '2015-09-01';
-			  $end_date = '2015-09-30';
-			  break;
-			default:
-			  print_r("月份出错");exit;
-		}
+		$begin_date = date('Y-m-01', strtotime($month));
+		$end_date = date('Y-m-d', strtotime(date('Y-m-01', strtotime($month)) . ' +1 month -1 day'));
 		$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
 		$this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
 		foreach ($all_delivery_detail as $key => $value) {

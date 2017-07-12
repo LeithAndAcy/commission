@@ -398,7 +398,7 @@ class BusinessPercentController extends Controller {
 			if(FALSE){
 			//	$arr_ratio[$key]['normal_profit_ratio'] = 100;
 			}else{
-				if($arr_ratio[$key]['sale_expense'] >0){
+				if($arr_ratio[$key]['sale_expense'] >0 && $arr_ratio[$key]['normal_profit_ratio'] > 50){
 					$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
