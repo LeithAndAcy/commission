@@ -224,6 +224,9 @@ class ContactDetailModel extends Model {
 			$res[$key]['profit_adjust'] *= 100;
 			$res[$key]['special_approve_float_price_ratio']*= 100;
 			$res[$key]['sale_expense_ratio']*= 100;
+			$res[$key]['gm_ratio'] *= 100;
+			$res[$key]['skill_ratio'] *= 100;
+			$res[$key]['normal_profit_discount_ratio'] *= 100;
 		}
 		return $res;
 	}

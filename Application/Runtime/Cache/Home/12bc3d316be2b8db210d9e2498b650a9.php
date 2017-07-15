@@ -62,8 +62,8 @@
 					<button class="btn btn-primary" id="get_ratio">
 						取数
 					</button>
-					<button style="display: none" class="btn btn-warning" id="update_quantity">
-						更新1月到9月的发货数量
+					<button class="btn btn-warning" id="update_quantity">
+						更新发货数量
 					</button>
 					<span>
 						合同总数：<?php echo ($count_settlement_contact); ?>
@@ -112,7 +112,7 @@
 									<th>销售费用比例</th>
 									<th>基本业绩提成比例</th>
 									<th>基本利润提成比例</th>
-									<th>基本利润提成比例折扣</th>
+									<th>达标利润提成比例折扣</th>
 									<th>业务提成调整比例</th>
 									<th>利润提成调整比例</th>
 									<th>底价调整金额（元）</th>
@@ -389,7 +389,7 @@
 		});
 		$("#update_quantity").click(function(){
 			$('#update_quantity').attr('disabled',"true");
-			var month = prompt("请输入月份","");
+			var month = prompt("请输入月份2017-01","");
 			$.post("/commission/index.php/Home/SourceData/updateDeliveryQuantity", {
 				"month":month
 			}, function(data) {

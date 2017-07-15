@@ -65,7 +65,7 @@
 							<a href="/commission/index.php/Home/SourceData/loadNormalProfitPage" target="workflow">基本利润提成比例表</a>
 						</li>
 						<li role="presentation">
-							<a href="/commission/index.php/Home/SourceData/loadNormalProfitDiscountPage" target="workflow">基本利润提成比例折扣表</a>
+							<a href="/commission/index.php/Home/SourceData/loadNormalProfitDiscountPage" target="workflow">达标利润提成比例折扣表</a>
 						</li>
 						<li>
 							<a href="/commission/index.php/Home/SourceData/loadFeeRatioPage" target="workflow">扣率表</a>
