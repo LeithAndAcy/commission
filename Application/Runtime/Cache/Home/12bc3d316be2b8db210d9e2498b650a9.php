@@ -90,6 +90,8 @@
 									<th>存货名称</th>
 									<th>规格型号</th>
 									<th>颜色</th>
+									<th>芯线颜色</th>
+									<th>现货</th>
 									<th>销售单价</th>
 									<th>总经理底价上浮比例</th>
 									<th>总经理上浮底价</th>
@@ -134,6 +136,8 @@
 										<td><?php echo ($vo["inventory_name"]); ?></td>
 										<td><?php echo ($vo["specification"]); ?></td>
 										<td><?php echo ($vo["colour"]); ?></td>
+										<td><?php echo ($vo["coreColour"]); ?></td>
+										<td><?php echo ($vo["inStore"]); ?></td>
 										<td><?php echo ($vo["sale_price"]); ?></td>
 										<td><?php echo ($vo["gm_ratio"]); ?>%</td>
 										<td><?php echo ($vo["gm_price"]); ?></td>

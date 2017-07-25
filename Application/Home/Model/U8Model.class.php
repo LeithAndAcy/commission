@@ -45,25 +45,11 @@ class U8Model extends Model {
 	
 	
 	public function getContactDetailByDate($begin_date,$end_date){
-		
-		// $res = $this -> query("select SO_SOMain.cPersonCode as salesman_id,SO_SOMain.cCusCode as customer_id,
-		// Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
-		// SO_SOMain.cDefine2 as contact_id,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
-		// SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity,SO_SODetails.iFHMoney as delivery_money,
-		// Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
-		// Inventory.cInvDefine1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name
-		// from SO_SOMain join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
-		// and (SO_SOMain.cCloser is null and ((SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date') 
-		// OR (SO_SOMain.dChangeVerifyDate is not null and SO_SOMain.dChangeVerifyDate between '$begin_date' and '$end_date' and SO_SOMain.dDate between '$begin_date' and '$end_date')))
-		// join Inventory on SO_SODetails.cInvCode = Inventory.cInvCode
-		// join InventoryClass on Inventory.cInvCCode = InventoryClass.cInvCCode
-		// left join Person on Person.cPersonCode = SO_SOMain.cPersonCode
-		// left join Customer on Customer.cCusCode = SO_SOMain.cCusCode
-		// ");
 		$res = $this -> query("select SO_SOMain.cPersonCode as salesman_id,SO_SOMain.cCusCode as customer_id,
 		Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
 		SO_SOMain.cDefine2 as contact_id,fSalePrice as custom_fee,SO_SODetails.cSOCode,SO_SODetails.iQuantity as sale_quantity,SO_SODetails.cInvCode as inventory_id,
 		SO_SODetails.iTaxUnitPrice as sale_price,SO_SODetails.iQuotedPrice as cost_price,SO_SODetails.iFHQuantity as delivery_quantity, SO_SODetails.iNatSum,
+		SO_SODetails.cDefine22 as coreColour,SO_SODetails.cDefine33 as inStore,
 		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		SO_SODetails.cFree1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name,
 		SO_SODetails_extradefine.cbdefine4 as gm_ratio,SO_SODetails_extradefine.cbdefine5 as skill_ratio
@@ -176,7 +162,7 @@ class U8Model extends Model {
 	public function getDeliveryHistoryByMonth($begin_date,$end_date){
 		$res = $this -> query("select DispatchList.cPersonCode as salesman_id,DispatchList.cCusCode as customer_id,
 		Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
-		DispatchList.cDefine2 as contact_id,DispatchList.cSOCode,
+		DispatchList.cDefine2 as contact_id,DispatchList.cSOCode,DispatchList.cDefine22 as coreColour,
 		DispatchLists.cInvCode as inventory_id,DispatchLists.iQuantity as delivery_quantity,
 		Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		DispatchLists.cFree1 as colour,DispatchLists.iQuantity as delivery_quantity,
@@ -189,21 +175,6 @@ class U8Model extends Model {
 		left join Customer on Customer.cCusCode = DispatchList.cCusCode
 		where DispatchList.dverifydate between '$begin_date' and '$end_date'
 		");
-		// $res = $this -> query("select DispatchList.cPersonCode as salesman_id,DispatchList.cCusCode as customer_id,
-		// Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
-		// DispatchList.cDefine2 as contact_id,DispatchList.cSOCode,
-		// DispatchLists.cInvCode as inventory_id,DispatchLists.iQuantity as delivery_quantity,
-		// Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
-		// DispatchLists.cFree1 as colour,DispatchLists.iQuantity as delivery_quantity,
-		// SO_SODetails.iNatSum,SO_SODetails.iQuantity as sale_quantity
-		// from DispatchList 
-		// join DispatchLists on  DispatchList.DLID  = DispatchLists.DLID
-		// join Inventory on DispatchLists.cInvCode = Inventory.cInvCode
-		// join SO_SODetails on SO_SODetails.cSOCode = DispatchLists.cSOCode
-		// left join Person on Person.cPersonCode = DispatchList.cPersonCode
-		// left join Customer on Customer.cCusCode = DispatchList.cCusCode
-		// where DispatchList.dverifydate between '$begin_date' and '$end_date'
-		// ");
 		return $res;
 	}
 	

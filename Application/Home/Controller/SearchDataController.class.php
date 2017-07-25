@@ -175,23 +175,44 @@ class SearchDataController extends Controller {
 				}
 			}
 		}
+		//增加几个字段的合计
+		$tempTotal = array();
+		$tempTotal['contact_id'] = '合计';
+		$tempTotal['normal_business'] = 0;
+		$tempTotal['special_business'] = 0;
+		$tempTotal['normal_profit'] = 0;
+		$tempTotal['normal_profit_1'] = 0;
+		$tempTotal['normal_profit_2'] = 0;
+		$tempTotal['total_business_profit'] = 0;
+		foreach ($res as $key => $value) {
+			$tempTotal['normal_business'] += $value['normal_business'];
+			$tempTotal['special_business'] += $value['special_business'];
+			$tempTotal['normal_profit'] += $value['normal_profit'];
+			$tempTotal['normal_profit_1'] += $value['normal_profit_1'];
+			$tempTotal['normal_profit_2'] += $value['normal_profit_2'];
+			$tempTotal['total_business_profit'] += $value['total_business_profit'];
+		}
 		if($type == "settled"){
 			$count_settled_contact_detail = count($res);
 			if($count_settled_contact == null){
 				$count_settled_contact = count($temp_array);
 			}
 			$count_settled_contact = count($temp_array);
+			array_unshift($res,$tempTotal);
 			$this -> assign('count_settled_contact',$count_settled_contact);
 			$this -> assign('count_settled_contact_detail',$count_settled_contact_detail);
 			$this -> assign("settled_contact_detail",$res);
 			$this -> display('BusinessPercent:SettledContactPage');
 		}elseif($type == "manualSettled"){
+			array_unshift($res,$tempTotal);
 			$this -> assign('manual_settled_contact_detail',$res);
 			$this -> display('ManualSettledContactPage');
 		}elseif($type == "editedSettled"){
+			array_unshift($res,$tempTotal);
 			$this -> assign("edited_settled_contact_detail",$res);
 			$this -> display('EditedSettledContactPage');
 		}elseif($type == "commission_business"){
+			array_unshift($res,$tempTotal);
 			$this -> assign("contact_detail",$res);
 			$this -> display('BusinessPercent:CommissionBusinessPage');
 		}
