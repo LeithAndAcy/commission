@@ -23,7 +23,7 @@ class DeliveryHistoryModel extends Model {
 			}else{
 				$data['colour'] = $value['colour'];
 			}
-			$data['colour'] = $value['colour'];
+			$data['coreColour'] = $value['coreColour'];
 			$data['date'] = $month;
 			$this -> add($data);
 		}	

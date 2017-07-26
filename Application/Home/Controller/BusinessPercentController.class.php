@@ -184,25 +184,25 @@ class BusinessPercentController extends Controller {
 			$temp_special_business_ratio = null;
 			//没有匹配的就默认为null
 			foreach ($special_business_ratio as $kkkkk => $vvvvv) {
-				/*
-				 if($vvvvv['salesman_id'] == $salesman_id && substr($value['inventory_id'], 0,1) == $vvvvv['inventory_id'] &&$temp_total_funds>=$vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']){
-				 $temp_special_business_ratio = $vvvvv['ratio'];
-				 break;
-				 }*/
-				if ($vvvvv['salesman_id'] == $salesman_id && $salesman_funds >= $vvvvv['low_limit'] && $salesman_funds < $vvvvv['high_limit']) {
+				if ($vvvvv['salesman_id'] == $salesman_id && $temp_total_funds >= $vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']) {
 					if (substr($value['inventory_id'], 0, 1) == "F" || substr($value['inventory_id'], 0, 1) == "K") {
 						if (substr($value['inventory_id'], 0, 6) == $vvvvv['inventory_id']) {
 							$temp_special_business_ratio = $vvvvv['ratio'];
 							break;
 						}
 					} elseif (substr($value['inventory_id'], 0, 1) == "X") {
-						if (substr($value['inventory_id'], 0, 2) == "XF") {
-							if (substr($value['inventory_id'], 0, 6) == $vvvvv['inventory_id']) {
+						if (substr($value['inventory_id'], 0, 2) == "XG" || substr($value['inventory_id'], 0, 2) == "XH" || substr($value['inventory_id'], 0, 2) == "XI" || substr($value['inventory_id'], 0, 2) == "XJ" || substr($value['inventory_id'], 0, 2) == "XA" || substr($value['inventory_id'], 0, 2) == "XE") {
+							if (substr($value['inventory_id'], 0, 2) == $vvvvv['inventory_id']) {
+								$temp_special_business_ratio = $vvvvv['ratio'];
+								break;
+							}
+						} elseif (substr($value['inventory_id'], 0, 2) == "XK"  || substr($value['inventory_id'], 0, 2) == "XF") {
+							if (substr($value['inventory_id'], 0, 7) == $vvvvv['inventory_id']) {
 								$temp_special_business_ratio = $vvvvv['ratio'];
 								break;
 							}
 						} else {
-							if (substr($value['inventory_id'], 0, 2) == $vvvvv['inventory_id']) {
+							if (substr($value['inventory_id'], 0, 1) == $vvvvv['inventory_id']) {
 								$temp_special_business_ratio = $vvvvv['ratio'];
 								break;
 							}
@@ -218,7 +218,7 @@ class BusinessPercentController extends Controller {
 			//匹配不到  取其他
 			if ($temp_special_business_ratio === null) {
 				foreach ($special_business_ratio as $kkkkk => $vvvvv) {
-					if ($vvvvv['salesman_id'] == $salesman_id && ('其他' == $vvvvv['inventory_id']) && $salesman_funds >= $vvvvv['low_limit'] && $salesman_funds < $vvvvv['high_limit']) {
+					if ($vvvvv['salesman_id'] == $salesman_id && ('其他' == $vvvvv['inventory_id']) && $temp_total_funds >= $vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']) {
 						$temp_special_business_ratio = $vvvvv['ratio'];
 						break;
 					}
@@ -270,12 +270,12 @@ class BusinessPercentController extends Controller {
 			} else if ($temp_inventory_id == 'K') {
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0, 6)];
 			} else if ($temp_inventory_id == 'X') {
-				if (substr($value['inventory_id'], 0, 2) == 'XF' || substr($value['inventory_id'], 0, 2) == 'XG' || substr($value['inventory_id'], 0, 2) == 'XH' || substr($value['inventory_id'], 0, 2) == 'XI' || substr($value['inventory_id'], 0, 2) == 'XJ' || substr($value['inventory_id'], 0, 2) == 'XA' || substr($value['inventory_id'], 0, 2) == 'XE') {
+				if (substr($value['inventory_id'], 0, 2) == 'XG' || substr($value['inventory_id'], 0, 2) == 'XH' || substr($value['inventory_id'], 0, 2) == 'XI' || substr($value['inventory_id'], 0, 2) == 'XJ' || substr($value['inventory_id'], 0, 2) == 'XA' || substr($value['inventory_id'], 0, 2) == 'XE') {
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0, 6)];
-				} elseif (substr($value['inventory_id'], 0, 2) == 'XK') {
+				} elseif (substr($value['inventory_id'], 0, 2) == 'XK' || substr($value['inventory_id'], 0, 2) == 'XF') {
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0, 7)];
 				} else {
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0, 2)];
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0, 1)];
 					if ($arr_ratio[$key]['normal_business_ratio'] == null) {
 						$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id]['其他'];
 					}
@@ -313,7 +313,7 @@ class BusinessPercentController extends Controller {
 			$arr_ratio[$key]['custom_fee_float_price'] = round($contact_detail[$key]['custom_fee'] / $contact_detail[$key]['sale_quantity'], 6);
 
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
-				if ($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] && $vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] && $vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']) {
+				if ($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] && $vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] && $vvvv['low_length'] <= $contact_detail[$key]['sale_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['sale_quantity']) {
 					if($value['inStore'] == '现货'){
 						$vvvv['ratio'] = 0;
 					}	
@@ -350,18 +350,18 @@ class BusinessPercentController extends Controller {
 							break;
 						}
 					} elseif (substr($value['inventory_id'], 0, 1) == "X") {
-						if (substr($value['inventory_id'], 0, 2) == "XF" || substr($value['inventory_id'], 0, 2) == "XG" || substr($value['inventory_id'], 0, 2) == "XH" || substr($value['inventory_id'], 0, 2) == "XI" || substr($value['inventory_id'], 0, 2) == "XJ" || substr($value['inventory_id'], 0, 2) == "XA" || substr($value['inventory_id'], 0, 2) == "XE") {
-							if (substr($value['inventory_id'], 0, 6) == $vvvvv['inventory_id']) {
+						if (substr($value['inventory_id'], 0, 2) == "XG" || substr($value['inventory_id'], 0, 2) == "XH" || substr($value['inventory_id'], 0, 2) == "XI" || substr($value['inventory_id'], 0, 2) == "XJ" || substr($value['inventory_id'], 0, 2) == "XA" || substr($value['inventory_id'], 0, 2) == "XE") {
+							if (substr($value['inventory_id'], 0, 2) == $vvvvv['inventory_id']) {
 								$temp_special_business_ratio = $vvvvv['ratio'];
 								break;
 							}
-						} elseif (substr($value['inventory_id'], 0, 2) == "XK") {
+						} elseif (substr($value['inventory_id'], 0, 2) == "XK"  || substr($value['inventory_id'], 0, 2) == "XF") {
 							if (substr($value['inventory_id'], 0, 7) == $vvvvv['inventory_id']) {
 								$temp_special_business_ratio = $vvvvv['ratio'];
 								break;
 							}
 						} else {
-							if (substr($value['inventory_id'], 0, 2) == $vvvvv['inventory_id']) {
+							if (substr($value['inventory_id'], 0, 1) == $vvvvv['inventory_id']) {
 								$temp_special_business_ratio = $vvvvv['ratio'];
 								break;
 							}

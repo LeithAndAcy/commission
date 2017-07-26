@@ -213,14 +213,14 @@ class SourceDataController extends Controller {
 			}else if($temp_inventory_id == 'K'){
 				$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
 			}else if($temp_inventory_id == 'X'){
-				if(substr($value['inventory_id'], 0,2) == 'XF' || substr($value['inventory_id'], 0,2) == 'XG' || substr($value['inventory_id'], 0,2) == 'XH'
+				if(substr($value['inventory_id'], 0,2) == 'XG' || substr($value['inventory_id'], 0,2) == 'XH'
 				|| substr($value['inventory_id'], 0,2) == 'XI' || substr($value['inventory_id'], 0,2) == 'XJ'
 				|| substr($value['inventory_id'], 0,2) == 'XA' || substr($value['inventory_id'], 0,2) == 'XE'){
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,6)];
-				}elseif(substr($value['inventory_id'], 0,2) == 'XK'){
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,2)];
+				}elseif(substr($value['inventory_id'], 0,2) == 'XK' || substr($value['inventory_id'], 0,2) == 'XF'){
 					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,7)];
 				}else{
-					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,2)];
+					$arr_ratio[$key]['normal_business_ratio'] = $normal_business_ratio[$salesman_id][substr($value['inventory_id'], 0,1)];
 					if($arr_ratio[$key]['normal_business_ratio'] == null){
 						$arr_ratio[$key]['normal_business_ratio'] =  $normal_business_ratio[$salesman_id]['其他'];
 					}
@@ -258,7 +258,7 @@ class SourceDataController extends Controller {
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
-				$vvvv['low_length'] <= $contact_detail[$key]['delivery_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['delivery_quantity']){
+				$vvvv['low_length'] <= $contact_detail[$key]['sale_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['sale_quantity']){
 					if($value['inStore'] == '现货'){
 						$vvvv['ratio'] = 0;
 					}
@@ -307,7 +307,6 @@ class SourceDataController extends Controller {
 			}else{
 				$condition['colour'] = $value['colour'];
 			}
-			$condition['colour'] = $value['colour'];
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
 			$temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
