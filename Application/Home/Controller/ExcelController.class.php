@@ -1458,29 +1458,36 @@ class ExcelController extends Controller {
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AE') -> setWidth(18);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AF') -> setWidth(30);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AG') -> setWidth(30);
-		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AH') -> setWidth(18);
-		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AI') -> setWidth(18);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AH') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AI') -> setWidth(30);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AJ') -> setWidth(30);
-		
-		
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AK') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AL') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AM') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AN') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AO') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AP') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AQ') -> setWidth(30);
+		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AR') -> setWidth(30);
 		$objPHPExcel -> getActiveSheet() -> getDefaultStyle() -> getFont() -> setSize(12);
 		
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '合同号') 
 		-> setCellValue('C1', '销售订单号') -> setCellValue('D1', '客户编码') -> setCellValue('E1', '客户名称') 
 		-> setCellValue('F1', '业务员编码') -> setCellValue('G1', '业务员姓名') -> setCellValue('H1', '存货编码')
 		-> setCellValue('I1', '存货类别编码') -> setCellValue('J1', '存货名称') -> setCellValue('K1', '规格型号')
-		-> setCellValue('L1', '颜色') -> setCellValue('M1', '销售单价') -> setCellValue('N1', '底价（元）')
-		-> setCellValue('O1', '特批底价上浮比例') -> setCellValue('P1', '特批上浮底价') -> setCellValue('Q1', '定制费')
-		-> setCellValue('R1', '定制费上浮底价') -> setCellValue('S1', '上浮的底价（元）') -> setCellValue('T1', '销售数量（米数）')
-		-> setCellValue('U1', '发货数量（米数）') -> setCellValue('V1', '销售金额(元)') -> setCellValue('W1', '销售费用单价(元)')
-		-> setCellValue('X1', '销售费用比例') -> setCellValue('Y1', '销售费用(元)') -> setCellValue('Z1', '基本业绩提成比例')
-		-> setCellValue('AA1', '达标业绩提成比例') -> setCellValue('AB1', '基本利润提成比例') -> setCellValue('AC1', '业务提成调整比例')
-		-> setCellValue('AD1', '利润提成调整比例') -> setCellValue('AE1', '底价调整金额(元)') -> setCellValue('AF1', '最终实际底价(元)')
-		-> setCellValue('AG1', '基本业绩提成(元)') -> setCellValue('AH1', '回款达标业绩提成(元)') -> setCellValue('AI1', '基本利润提成(元)')
-		-> setCellValue('AJ1', '业绩利润提成汇总');
+		-> setCellValue('L1', '颜色') -> setCellValue('M1', '芯线颜色')-> setCellValue('N1', '现货')
+		-> setCellValue('O1', '销售单价') -> setCellValue('P1', '总经理底价上浮比例') -> setCellValue('Q1', '总经理上浮底价') 
+		-> setCellValue('R1', '技术底价上浮比例') -> setCellValue('S1', '技术上浮底价') -> setCellValue('T1', '底价（元）') 
+		-> setCellValue('U1', '月结底价上浮比例') -> setCellValue('V1', '月结上浮底价') -> setCellValue('W1', '定制费')
+		-> setCellValue('X1', '定制费上浮底价') -> setCellValue('Y1', '短米上浮底价（元）') -> setCellValue('Z1', '销售数量（米数）')
+		-> setCellValue('AA1', '发货数量（米数）') -> setCellValue('AB1', '销售金额(元)') -> setCellValue('AC1', '销售费用单价(元)')
+		-> setCellValue('AD1', '销售费用比例') -> setCellValue('AE1', '销售费用(元)') -> setCellValue('AF1', '基本业绩提成比例')
+		-> setCellValue('AG1', '达标业绩提成比例') -> setCellValue('AH1', '基本利润提成比例') -> setCellValue('AI1', '业务提成调整比例')
+		-> setCellValue('AJ1', '利润提成调整比例') -> setCellValue('AK1', '底价调整金额(元)') -> setCellValue('AL1', '最终实际底价(元)')
+		-> setCellValue('AM1', '基本业绩提成(元)') -> setCellValue('AN1', '回款达标业绩提成(元)') -> setCellValue('AO1', '基本利润提成(元)')
+		-> setCellValue('AP1', '九折后基本利润提成(元)') -> setCellValue('AQ1', '达标折扣后基本利润提成(元)') -> setCellValue('AR1', '业绩利润提成汇总');
 		
 		$row_id = 0;
-		
 		foreach ($res as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($row_id + 2), $row_id+1);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('B' . ($row_id + 2), $value['contact_id']);
@@ -1494,30 +1501,38 @@ class ExcelController extends Controller {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('J' . ($row_id + 2), $value['inventory_name']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('K' . ($row_id + 2), $value['specification']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('L' . ($row_id + 2), $value['colour']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('M' . ($row_id + 2), $value['sale_price']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('N' . ($row_id + 2), $value['cost_price']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('O' . ($row_id + 2), $value['special_approve_float_price_ratio']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('P' . ($row_id + 2), $value['special_approve_float_price']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Q' . ($row_id + 2), $value['custom_fee']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('R' . ($row_id + 2), $value['custom_fee_float_price']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('S' . ($row_id + 2), $value['float_price']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('T' . ($row_id + 2), $value['sale_quantity']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('U' . ($row_id + 2), $value['delivery_quantity']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('V' . ($row_id + 2), $value['delivery_money']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('W' . ($row_id + 2), $value['sale_expense']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('X' . ($row_id + 2), $value['sale_expense_ratio']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Y' . ($row_id + 2), $value['end_sale_expense']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Z' . ($row_id + 2), $value['normal_business_ratio']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AA' . ($row_id + 2), $value['special_business_ratio']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AB' . ($row_id + 2), $value['normal_profit_ratio']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AC' . ($row_id + 2), $value['business_adjust']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AD' . ($row_id + 2), $value['profit_adjust']."%");
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AE' . ($row_id + 2), $value['cost_price_adjust']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AF' . ($row_id + 2), $value['end_cost_price']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AG' . ($row_id + 2), $value['normal_business']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AH' . ($row_id + 2), $value['special_business']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AI' . ($row_id + 2), $value['normal_profit']);
-			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AJ' . ($row_id + 2), $value['total_business_profit']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('M' . ($row_id + 2), $value['coreColour']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('N' . ($row_id + 2), $value['inStore']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('O' . ($row_id + 2), $value['sale_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('P' . ($row_id + 2), $value['gm_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Q' . ($row_id + 2), $value['gm_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('R' . ($row_id + 2), $value['skill_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('S' . ($row_id + 2), $value['skill_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('T' . ($row_id + 2), $value['cost_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('U' . ($row_id + 2), $value['special_approve_float_price_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('V' . ($row_id + 2), $value['special_approve_float_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('W' . ($row_id + 2), $value['custom_fee']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('X' . ($row_id + 2), $value['custom_fee_float_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Y' . ($row_id + 2), $value['float_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('Z' . ($row_id + 2), $value['sale_quantity']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AA' . ($row_id + 2), $value['delivery_quantity']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AB' . ($row_id + 2), $value['delivery_money']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AC' . ($row_id + 2), $value['sale_expense']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AD' . ($row_id + 2), $value['sale_expense_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AE' . ($row_id + 2), $value['end_sale_expense']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AF' . ($row_id + 2), $value['normal_business_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AG' . ($row_id + 2), $value['special_business_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AH' . ($row_id + 2), $value['normal_profit_ratio']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AI' . ($row_id + 2), $value['business_adjust']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AJ' . ($row_id + 2), $value['profit_adjust']."%");
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AK' . ($row_id + 2), $value['cost_price_adjust']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AL' . ($row_id + 2), $value['end_cost_price']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AM' . ($row_id + 2), $value['normal_business']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AN' . ($row_id + 2), $value['special_business']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AO' . ($row_id + 2), $value['normal_profit']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AP' . ($row_id + 2), $value['normal_profit_1']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AQ' . ($row_id + 2), $value['normal_profit_2']);
+			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AR' . ($row_id + 2), $value['total_business_profit']);
 			$row_id = $row_id+1;
 		}
 		

@@ -259,7 +259,7 @@ class SourceDataController extends Controller {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
 				$vvvv['low_length'] <= $contact_detail[$key]['sale_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['sale_quantity']){
-					if($value['inStore'] == '现货'){
+					if($value['inStore'] == '现货' || $value['inStore'] == '外购'){
 						$vvvv['ratio'] = 0;
 					}
 					$arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
@@ -306,6 +306,11 @@ class SourceDataController extends Controller {
 				$condition['colour'] = '无';
 			}else{
 				$condition['colour'] = $value['colour'];
+			}
+			if($value['coreColour'] === null){
+				$condition['coreColour'] = '无';
+			}else{
+				$condition['coreColour'] = $value['coreColour'];
 			}
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
 			$temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];

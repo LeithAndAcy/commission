@@ -31,6 +31,9 @@ class ContactDetailModel extends Model {
 			if($value['colour'] == null){
 				$value['colour'] = '无';
 			}
+			if($value['coreColour'] == null){
+				$value['coreColour'] = '无';
+			}
 			$value['delivery_money'] = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
 			$value['sale_price'] = round($value['iNatSum'] / $value['sale_quantity'],6);
 			unset($value['iNatSum']);

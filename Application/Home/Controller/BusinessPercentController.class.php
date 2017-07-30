@@ -314,7 +314,7 @@ class BusinessPercentController extends Controller {
 
 			foreach ($price_float_ratio as $kkkk => $vvvv) {
 				if ($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] && $vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] && $vvvv['low_length'] <= $contact_detail[$key]['sale_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['sale_quantity']) {
-					if($value['inStore'] == '现货'){
+					if($value['inStore'] == '现货' || $value['inStore'] == '外购'){
 						$vvvv['ratio'] = 0;
 					}	
 					$arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
