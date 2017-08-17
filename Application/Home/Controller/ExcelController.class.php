@@ -309,6 +309,7 @@ class ExcelController extends Controller {
 				$arr_special_approve_price_float_ratio[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
+		$this -> db_special_approve_price_float_ratio -> deleteAllItems();
 		foreach ($arr_special_approve_price_float_ratio as $key => $value) {
 			unset($arr_special_approve_price_float_ratio[$key]);
 			$arr_special_approve_price_float_ratio[$key]['customer_id'] = $value['B'];
@@ -548,9 +549,8 @@ class ExcelController extends Controller {
 			unset($arr_sale_expense[$key]);
 			$arr_sale_expense[$key]['salesman_id'] = $value['B'];
 			$arr_sale_expense[$key]['contact_id'] = $value['C'];
-			$arr_sale_expense[$key]['inventory_id'] = $value['D'];
-			$arr_sale_expense[$key]['sale_expense'] = $value['E'];
-			$arr_sale_expense[$key]['ratio'] = $value['F'];
+			$arr_sale_expense[$key]['sale_expense'] = $value['D'];
+			$arr_sale_expense[$key]['ratio'] = $value['E'];
 			$this -> db_sale_expense -> addItem($arr_sale_expense[$key]);
 		}
 		$this -> success("添加成功！");

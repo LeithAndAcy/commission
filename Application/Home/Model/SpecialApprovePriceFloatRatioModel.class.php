@@ -35,6 +35,9 @@ class SpecialApprovePriceFloatRatioModel extends Model {
 		}
 		return $arr;
 	}
+	public function deleteAllItems(){
+		$this -> where(1)->delete();
+	}
 	
 }
 ?>

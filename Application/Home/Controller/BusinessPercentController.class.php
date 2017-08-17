@@ -580,6 +580,8 @@ class BusinessPercentController extends Controller {
 		$tempTotal['normal_profit_1'] = 0;
 		$tempTotal['normal_profit_2'] = 0;
 		$tempTotal['total_business_profit'] = 0;
+		$tempTotal['delivery_money'] = 0;
+		$tempTotal['end_sale_expense'] = 0;
 		foreach ($res as $key => $value) {
 			$tempTotal['normal_business'] += $value['normal_business'];
 			$tempTotal['special_business'] += $value['special_business'];
@@ -587,6 +589,8 @@ class BusinessPercentController extends Controller {
 			$tempTotal['normal_profit_1'] += $value['normal_profit_1'];
 			$tempTotal['normal_profit_2'] += $value['normal_profit_2'];
 			$tempTotal['total_business_profit'] += $value['total_business_profit'];
+			$tempTotal['end_sale_expense'] += $value['end_sale_expense'];
+			$tempTotal['delivery_money'] += $value['delivery_money'];
 		}
 		if ($type == "settling") {
 			$count_settling_contact_detail = count($res);
