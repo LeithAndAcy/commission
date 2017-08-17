@@ -276,6 +276,7 @@ class ContactMainModel extends Model {
 		commission_contact_detail.normal_business_ratio * 100 as normal_business_ratio,
 		commission_contact_detail.special_business_ratio * 100 as special_business_ratio,
 		commission_contact_detail.normal_profit_ratio * 100 as normal_profit_ratio,
+		commission_contact_detail.normal_profit_discount_ratio * 100 as normal_profit_discount_ratio,
 		commission_contact_detail.business_adjust * 100 as business_adjust,
 		commission_contact_detail.profit_adjust * 100 as profit_adjust,
 		commission_contact_detail.cost_price_adjust,commission_contact_detail.normal_business,

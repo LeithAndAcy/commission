@@ -262,7 +262,7 @@ class BusinessPercentController extends Controller {
 			$temp_inventory_id = substr($value['inventory_id'], 0, 1);
 			$temp_normal_profit_discount_ratio = $all_normal_profit_discount_ratio[$salesman_id][substr($value['contact_id'], 0, 4)];
 			if ($temp_normal_profit_discount_ratio == null) {
-				$temp_normal_profit_discount_ratio = 1;
+				$temp_normal_profit_discount_ratio = 0;
 			}
 			$arr_ratio[$key]['normal_profit_discount_ratio'] = $temp_normal_profit_discount_ratio;
 			if ($temp_inventory_id == 'F') {
