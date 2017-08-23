@@ -116,7 +116,7 @@ class U8Model extends Model {
 		$res = $this -> query("select cSOCode,cDefine2 as contact_id,cPersonCode as salesman_id,cCusCode as customer_id from SO_SOMain 
 		where ( (SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date')
 		 OR(SO_SOMain.dChangeVerifyDate is not null and SO_SOMain.cChangeVerifier is not null and SO_SOMain.dverifydate between '$begin_date' and '$end_date')
-		 )");
+		 )order by cSOCode");
 		return $res;
 	}
 	

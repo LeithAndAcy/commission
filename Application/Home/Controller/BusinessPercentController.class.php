@@ -394,7 +394,7 @@ class BusinessPercentController extends Controller {
 			}
 
 			$temp_bPurchase = $value['purchase'];
-			//销售费用= 发货米数*销售费用单价*销售费用比例；
+			//销售费用= 发货米数*销售费用单价*销售费用比例； 2017-08-23：最终底价为0时，销售费用为0
 			$arr_ratio[$key]['end_sale_expense'] = $value['delivery_quantity'] * $arr_ratio[$key]['sale_expense'] * $arr_ratio[$key]['sale_expense_ratio'];
 			$temp_sale_expense = $arr_ratio[$key]['sale_expense'];
 			// $arr_ratio[$key]['end_sale_expense'] = $temp_sale_expense;
@@ -405,18 +405,24 @@ class BusinessPercentController extends Controller {
 					$arr_ratio[$key]['normal_profit_ratio'] = 50;
 				}
 			}
-			if ($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) > 0) {
-				$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) * (($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'] - 0.1)) + $arr_ratio[$key]['end_cost_price'] * 0.1 * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']));
-				$arr_ratio[$key]['normal_profit_1'] = $contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) * (($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'] - 0.1)) + $arr_ratio[$key]['end_cost_price'] * 0.1 * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'])) * $temp_fee_ratio;
-				$arr_ratio[$key]['normal_profit_2'] = $contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) * (($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'] - 0.1)) + $arr_ratio[$key]['end_cost_price'] * 0.1 * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'])) * $temp_fee_ratio * $temp_normal_profit_discount_ratio;
-			} elseif ($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) <= 0) {
-				$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']);
-				$arr_ratio[$key]['normal_profit_1'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio;
-				$arr_ratio[$key]['normal_profit_2'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio * $temp_normal_profit_discount_ratio;
-			} else {
-				$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']);
-				$arr_ratio[$key]['normal_profit_1'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio;
-				$arr_ratio[$key]['normal_profit_2'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio * $temp_normal_profit_discount_ratio;
+			if($arr_ratio[$key]['end_cost_price'] == 0){
+				$arr_ratio[$key]['normal_profit'] =0;
+				$arr_ratio[$key]['normal_profit_1'] =0;
+				$arr_ratio[$key]['normal_profit_2'] =0;
+			}else{
+				if ($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) > 0) {
+					$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) * (($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'] - 0.1)) + $arr_ratio[$key]['end_cost_price'] * 0.1 * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']));
+					$arr_ratio[$key]['normal_profit_1'] = $contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) * (($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'] - 0.1)) + $arr_ratio[$key]['end_cost_price'] * 0.1 * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'])) * $temp_fee_ratio;
+					$arr_ratio[$key]['normal_profit_2'] = $contact_detail[$key]['delivery_quantity'] * (($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) * (($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'] - 0.1)) + $arr_ratio[$key]['end_cost_price'] * 0.1 * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust'])) * $temp_fee_ratio * $temp_normal_profit_discount_ratio;
+				} elseif ($temp_sale_expense == 0 && ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] * 1.1) <= 0) {
+					$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']);
+					$arr_ratio[$key]['normal_profit_1'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio;
+					$arr_ratio[$key]['normal_profit_2'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price']) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio * $temp_normal_profit_discount_ratio;
+				} else {
+					$arr_ratio[$key]['normal_profit'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']);
+					$arr_ratio[$key]['normal_profit_1'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio;
+					$arr_ratio[$key]['normal_profit_2'] = $contact_detail[$key]['delivery_quantity'] * ($contact_detail[$key]['sale_price'] - $arr_ratio[$key]['end_cost_price'] - $temp_sale_expense) * ($arr_ratio[$key]['normal_profit_ratio'] * 0.01 + $contact_detail[$key]['profit_adjust']) * $temp_fee_ratio * $temp_normal_profit_discount_ratio;
+				}
 			}
 		}
 		$this -> db_contact_detail -> updateSettlingRatio($arr_ratio);
