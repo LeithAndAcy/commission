@@ -667,7 +667,7 @@ class ExcelController extends Controller {
 				$arr_sale_expense[$j][$k] = (string)$PHPExcel_obj -> getActiveSheet() -> getCell("$k$j") -> getValue();
 			}
 		}
-		
+
 		foreach ($arr_sale_expense as $key => $value) {
 			unset($arr_sale_expense[$key]);
 			$arr_salesman_funds[$key]['salesman_id'] = $value['B'];

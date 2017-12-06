@@ -173,6 +173,7 @@ class BusinessPercentController extends Controller {
 		$contact_detail = $this -> db_contact_main -> getSettlingContactDetail();
 		$special_business_ratio = $this -> db_special_business_ratio -> getAllHandledSpecialBusinessRatio();
 		$all_salesman_funds = $this -> db_salesman_funds -> getAllHandledSalesmanFunds();
+        $all_salesman_delivery_money = $this -> db_contact_main -> getSettlingContactTotalDeliveryMoney();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
@@ -182,6 +183,7 @@ class BusinessPercentController extends Controller {
 			$salesman_funds = $all_salesman_funds[$salesman_id];
 			$temp_fee_ratio = $this -> db_fee_ratio -> getFeeRatio($salesman_id);
 			$temp_special_business_ratio = null;
+            $temp_total_funds = $all_salesman_delivery_money[$salesman_id];
 			//没有匹配的就默认为null
 			foreach ($special_business_ratio as $kkkkk => $vvvvv) {
 				if ($vvvvv['salesman_id'] == $salesman_id && $temp_total_funds >= $vvvvv['low_limit'] && $temp_total_funds < $vvvvv['high_limit']) {
@@ -246,7 +248,7 @@ class BusinessPercentController extends Controller {
 		$normal_profit_ratio = $this -> db_normial_profit_ratio -> getAllNormalProfitRatio();
 		$all_normal_profit_discount_ratio = $this -> db_normial_profit_discount_ratio -> getAllHandledNormalProfitDiscountRatio();
 		$price_float_ratio = $this -> db_price_float_ratio -> getAllPriceFloatRatio();
-		$temp_fee_ratio = $this -> db_fee_ratio -> getFeeRatio($salesman_id);
+		$temp_fee_ratio = $this -> db_fee_ratio -> getFeeRatio("");
 		$special_business_ratio = $this -> db_special_business_ratio -> getAllHandledSpecialBusinessRatio();
 		$all_sale_expense = $this -> db_sale_expense -> getAllHandledSaleExpense();
 		$all_special_approve_float_price_ratio = $this -> db_special_approve_price_float_ratio -> getAllHandledSpecialApprovePriceFloatRatio();
@@ -328,7 +330,7 @@ class BusinessPercentController extends Controller {
 				}
 			}
 			//计算销售费用单价以及取销售费用比例  sale_expense销售费用单价比例   sale_expense_ratio销售费用比例
-			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'] * ($value['sale_price'] - $value['cost_price']);
+			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'] * ($value['sale_price'] - $value['end_cost_price']);
 			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense_ratio'];
 			//没配置比例表的情况
 			if ($price_float_ratio == null) {
