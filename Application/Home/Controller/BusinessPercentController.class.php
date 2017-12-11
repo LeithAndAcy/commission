@@ -137,7 +137,8 @@ class BusinessPercentController extends Controller {
 				// if($contact_total_money > $contact_main[$key]['total_funds']){
 				if (bccomp($contact_total_money, $contact_main[$key]['total_funds'], 4) > 0) {
 					//continue;
-					break;
+                    $this -> db_constomer_funds -> setCustomerFunds($total_customer_funds[$key]['customer_id'], $contact_main[$key]['total_funds']);
+                    break;
 				} else {
 					//检测发货数量  and normal business ratio >0
 					if ($this -> db_contact_detail -> checkContactSettable($vv['contact_id'])) {
