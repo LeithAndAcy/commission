@@ -4,7 +4,7 @@
 function _checkLogin()
 	{
 		// setcookie("REQUEST_URI", $_SERVER['REQUEST_URI'], time()+3600);
-		if($_SESSION['user_name'] )
+		if($_SESSION['user_name'])
 		{
 			return true;
 		}
@@ -21,6 +21,13 @@ function _getLastMonth(){
 	$t = strtotime($first_day_of_month);
 	$last_month = date("Y-m",strtotime('- 1 month',$t));
 	return $last_month;
+}
+function _authCheck(){
+	if($_SESSION['user_name'] == "admin"){
+		return true;
+	}else{
+		return false;
+	}
 }
 ?>
 

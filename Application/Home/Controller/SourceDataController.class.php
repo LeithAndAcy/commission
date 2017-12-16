@@ -333,7 +333,11 @@ class SourceDataController extends Controller {
 		// $all_normal_business_ratio = $this -> db_U8 -> getInventoryDetail($all_normal_business_ratio);
 		$this -> assign("all_normal_business_ratio",$all_normal_business_ratio);
 		$this -> assign("all_salesman",$all_salesman);
-		$this -> display('NormalBusinessPage');
+		if(_authCheck()){
+            $this -> display('NormalBusinessPage');
+        }else{
+		    $this -> error("权限不足");
+        }
 	}
 	public function addNewNormalBusinessRatio(){
 		$data = array();
@@ -360,7 +364,11 @@ class SourceDataController extends Controller {
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_special_business_ratio",$all_special_business_ratio);
 		$this -> assign("all_salesman",$all_salesman);
-		$this -> display('SpecialBusinessPage');
+        if(_authCheck()){
+            $this -> display('SpecialBusinessPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function editSpecialBusinessRatio(){
 		$id = $_POST['edit_id'];
@@ -395,7 +403,11 @@ class SourceDataController extends Controller {
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_normal_profit_ratio",$all_normal_profit_ratio);
 		$this -> assign("all_salesman",$all_salesman);
-		$this -> display('NormalProfitPage');
+        if(_authCheck()){
+            $this -> display('NormalProfitPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function editNormalProfitRatio(){
 		$id = $_POST['edit_id'];
@@ -421,7 +433,11 @@ class SourceDataController extends Controller {
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_normal_profit_discount_ratio",$all_normal_profit_discount_ratio);
 		$this -> assign("all_salesman",$all_salesman);
-		$this -> display('NormalProfitDiscountPage');
+        if(_authCheck()){
+            $this -> display('NormalProfitDiscountPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function editNormalProfitDiscountRatio(){
 		$id = $_POST['edit_id'];
@@ -448,7 +464,11 @@ class SourceDataController extends Controller {
 		// $all_salesman = $this -> db_salesman -> getAllSalesman();
 		// $this -> assign("all_salesman",$all_salesman);
 		$this -> assign("all_fee_ratio",$all_fee_ratio);
-		$this -> display("AllFeeRatioPage");
+        if(_authCheck()){
+            $this -> display("AllFeeRatioPage");
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function editFeeRatio(){
 		$id = $_POST['edit_id'];
@@ -474,8 +494,11 @@ class SourceDataController extends Controller {
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_salesman",$all_salesman);
 		$this -> assign("all_sale_expense",$all_sale_expense);
-		$this -> display('SaleExpensePage');
-		
+        if(_authCheck()){
+            $this -> display('SaleExpensePage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function editSaleExpense(){
 		$id = $_POST['edit_id'];
@@ -505,7 +528,11 @@ class SourceDataController extends Controller {
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_special_profit_ratio",$all_special_profit_ratio);
 		$this -> assign("all_salesman",$all_salesman);
-		$this -> display('SpecialProfitPage');
+        if(_authCheck()){
+            $this -> display('SpecialProfitPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function addNewSpecialProfitRatio(){
 		$data = array();
@@ -537,13 +564,16 @@ class SourceDataController extends Controller {
 		$all_salesman = $res['salesman'];
 		$this -> assign("all_insurance_fund",$all_insurance_fund);
 		$this -> assign("all_salesman",$all_salesman);
-		$this -> display('InsuranceAndFundPage');
+        if(_authCheck()){
+            $this -> display('InsuranceAndFundPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function editInsuranceFund(){
 		$id = $_POST['edit_id'];
 		$data['insurance'] = $_POST['edit_insurance'];
 		$data['fund'] = $_POST['edit_fund'];
-		
 		$this -> db_insurance_fund ->editInsuranceAndFund($id,$data);
 		$this -> loadInsuranceAndFundPage();
 	}
@@ -565,7 +595,11 @@ class SourceDataController extends Controller {
 		$all_price_float_ratio = $this -> db_price_float_ratio ->getAllPriceFloatRatio();
 		$all_price_float_ratio = $this -> db_U8 -> getClassificationName($all_price_float_ratio);
 		$this -> assign("all_price_ratio_ratio",$all_price_float_ratio);
-		$this -> display('PriceFloatPage');
+        if(_authCheck()){
+            $this -> display('PriceFloatPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function addPriceFloatRatio(){
 		$data['classification_id'] = $_POST['add_new_classification_id'];
@@ -592,7 +626,11 @@ class SourceDataController extends Controller {
 		$all_area_price_float_ratio = $this -> db_area_price_float_ratio ->getAllAreaPriceFloatRatio();
 		$all_area_price_float_ratio = $this -> db_U8 -> getClassificationName($all_area_price_float_ratio);
 		$this -> assign("all_area_price_ratio_ratio",$all_area_price_float_ratio);
-		$this -> display('AreaPriceFloatPage');
+        if(_authCheck()){
+            $this -> display('AreaPriceFloatPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function addAreaPriceFloatRatio(){
 		$data['classification_id'] = $_POST['add_new_classification_id'];
@@ -614,7 +652,11 @@ class SourceDataController extends Controller {
 	public function loadSpecialApprovePriceFloatPage(){
 		$special_approve_price_float_ratio = $this -> db_special_approve_price_float_ratio -> getAllItems();
 		$this -> assign("special_approve_price_float_ratio",$special_approve_price_float_ratio);
-		$this -> display('SpecialApprovePriceFloatPage');
+        if(_authCheck()){
+            $this -> display('SpecialApprovePriceFloatPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function addSpecialApprovePriceFloatRatio(){
 		$data['inventory_id'] = $_POST['add_new_inventory_id'];
@@ -636,7 +678,11 @@ class SourceDataController extends Controller {
 	public function loadLengthLimitPage(){
 		$all_length_limit = $this -> db_length_limit -> getAllItems();
 		$this -> assign("all_length_limit",$all_length_limit);
-		$this -> display('LengthLimitPage');
+        if(_authCheck()){
+            $this -> display('LengthLimitPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function editLengthLimit(){
 		$id = $_POST['edit_id'];
@@ -665,7 +711,11 @@ class SourceDataController extends Controller {
 		$all_funds_back = $this -> db_funds_back -> getAllItems();
 		$all_funds_back = $this -> db_customer -> addCustomerName($all_funds_back);
 		$this -> assign('all_funds_back',$all_funds_back);
-		$this -> display('FundsBackPage');
+        if(_authCheck()){
+            $this -> display('FundsBackPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function addFundsBack(){
 		$data = array();
@@ -914,6 +964,22 @@ class SourceDataController extends Controller {
 				}
 			}
 		}
+        //增加几个字段的合计
+        $tempTotal = array();
+        $tempTotal['contact_id'] = '合计';
+        $tempTotal['sale_quantity'] = 0;
+        $tempTotal['delivery_quantity'] = 0;
+        $tempTotal['delivery_money'] = 0;
+        $tempTotal['custom_fee'] = 0;
+        $tempTotal['sale_expense'] = 0;
+        foreach ($res as $key => $value) {
+            $tempTotal['sale_quantity'] += $value['sale_quantity'];
+            $tempTotal['delivery_quantity'] += $value['delivery_quantity'];
+            $tempTotal['delivery_money'] += $value['delivery_money'];
+            $tempTotal['custom_fee'] += $value['custom_fee'];
+            $tempTotal['sale_expense'] += $value['sale_expense'];
+        }
+        array_unshift($res,$tempTotal);
 		// $res = $this -> db_salesman -> addSalesmanName($res);
 		// $res = $this -> db_customer -> addCustomerName($res);
 		$count_settlement_contact = count($temp_array);

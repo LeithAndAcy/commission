@@ -15,7 +15,11 @@ class AddDataController extends Controller {
 	}
 	
 	public function loadAddDataPage(){
-		$this -> display("AddDataPage");
+        if(_authCheck()){
+            $this -> display("AddDataPage");
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	public function addContact(){
 		$data = array();

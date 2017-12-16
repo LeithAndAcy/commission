@@ -13,8 +13,11 @@ class SystemConfigController extends Controller {
 		$this -> db_login = D("Login");
 	}
     public function loadSystemConfigPage(){
-    	$this -> display('SystemConfigPage');
-		
+        if(_authCheck()){
+            $this -> display('SystemConfigPage');
+        }else{
+            $this -> error("权限不足");
+        }
 	}
 	
 	public function checkCurrentPWD(){
