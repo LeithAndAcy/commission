@@ -395,8 +395,9 @@ class BusinessPercentController extends Controller {
 				$arr_ratio[$key]['normal_business'] = $contact_detail[$key]['delivery_quantity'] * $arr_ratio[$key]['end_cost_price'] * ($arr_ratio[$key]['normal_business_ratio'] + $contact_detail[$key]['business_adjust']) * $temp_fee_ratio;
 				$arr_ratio[$key]['special_business'] = $contact_detail[$key]['delivery_quantity'] * $arr_ratio[$key]['end_cost_price'] * $arr_ratio[$key]['special_business_ratio'] * $temp_fee_ratio;
 			}
-
-			$temp_bPurchase = $value['purchase'];
+            //更新条件与发货数量相关
+            $arr_ratio[$key]['delivery_quantity'] = $contact_detail[$key]['delivery_quantity'];
+            $temp_bPurchase = $value['purchase'];
 			//销售费用= 发货米数*销售费用单价*销售费用比例；
 			$arr_ratio[$key]['end_sale_expense'] = $value['delivery_quantity'] * $arr_ratio[$key]['sale_expense'] * $arr_ratio[$key]['sale_expense_ratio'];
 			$temp_sale_expense = $arr_ratio[$key]['sale_expense'];

@@ -87,6 +87,7 @@ class ContactDetailModel extends Model {
 		foreach ($arr_ratio as $key => $value) {
 			$condition['contact_id'] = $value['contact_id'];
 			$condition['inventory_id'] = $value['inventory_id'];
+            $condition['delivery_quantity'] = $value['delivery_quantity'];
 			$data['normal_business_ratio'] = $value['normal_business_ratio'];
 			$data['normal_profit_ratio'] = $value['normal_profit_ratio'] * 0.01;
 			$data['special_business_ratio'] = $value['special_business_ratio'];
