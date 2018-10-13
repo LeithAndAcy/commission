@@ -291,7 +291,7 @@ class ContactMainModel extends Model {
 		commission_contact_detail.delivery_money,
 		commission_contact_detail.sale_expense,
 		commission_contact_detail.sale_expense_ratio * 100 as sale_expense_ratio,
-		commission_contact_detail.end_sale_expense
+		commission_contact_detail.end_sale_expense,commission_contact_detail.exch_rate
 		from commission_contact_detail join commission_contact_main on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=1 and commission_contact_main.settlement=1
 		and commission_contact_main.cSOCode = commission_contact_detail.cSOCode

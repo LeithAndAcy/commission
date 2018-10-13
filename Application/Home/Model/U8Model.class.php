@@ -52,7 +52,8 @@ class U8Model extends Model {
 		SO_SODetails.cDefine22 as coreColour,SO_SODetails.cDefine33 as inStore,
 		Inventory.cInvCCode as classification_id,Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		SO_SODetails.cFree1 as colour,Inventory.bPurchase as purchase,InventoryClass.cInvCName as classification_name,
-		SO_SODetails_extradefine.cbdefine4 as gm_ratio,SO_SODetails_extradefine.cbdefine5 as skill_ratio
+		SO_SODetails_extradefine.cbdefine4 as gm_ratio,SO_SODetails_extradefine.cbdefine5 as skill_ratio,
+		SO_SOMain.iExchRate as exch_rate
 		from SO_SOMain join SO_SODetails on SO_SOMain.cSOCode = SO_SODetails.cSOCode
 		and (
 		(SO_SOMain.dChangeVerifyDate is null and SO_SOMain.dverifydate between '$begin_date' and '$end_date') 
