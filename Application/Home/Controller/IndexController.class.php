@@ -14,10 +14,6 @@ class IndexController extends Controller {
 	}
 	public function checkLogin(){
 		$xxsj=date('YmdHis');
-		$u_stoptime=20190806123950;
-		if($xxsj > $u_stoptime) {
-			exit;
-		}
 		$user_name = $_POST['user_name'];
 		$user_pwd = $_POST['user_pwd'];
 		if($user_name == null || $user_pwd == null){

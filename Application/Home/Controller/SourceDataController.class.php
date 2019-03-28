@@ -259,10 +259,10 @@ class SourceDataController extends Controller {
 				if($vvvv['classification_id'] == $contact_detail[$key]['classification_id'] &&
 				$vvvv['low_price'] <= $contact_detail[$key]['cost_price'] && $vvvv['high_price'] > $contact_detail[$key]['cost_price'] &&
 				$vvvv['low_length'] <= $contact_detail[$key]['sale_quantity'] && $vvvv['high_length'] > $contact_detail[$key]['sale_quantity']){
-					if($value['inStore'] == '现货' || $value['inStore'] == '外购'){
-						$vvvv['ratio'] = 0;
-					}
-					$arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
+                    if($value['inStore'] == '现货' ||$value['inStore'] == '外购' || $value['inStore'] == '现货-备货' || $value['inStore'] == '现货-裁线' || $value['inStore'] == '线束' || $value['inStore'] == '代卖'){
+                        $vvvv['ratio'] = 0;
+                    }
+                    $arr_ratio[$key]['float_price'] = ($vvvv['ratio'] * 0.01 + $area_price_float_ratio) * $contact_detail[$key]['cost_price'];
 					$arr_ratio[$key]['end_cost_price'] = $arr_ratio[$key]['float_price'] + $contact_detail[$key]['cost_price'] + $contact_detail[$key]['cost_price_adjust']
 					+$arr_ratio[$key]['special_approve_float_price']+$arr_ratio[$key]['custom_fee_float_price']+$arr_ratio[$key]['gm_price']+$arr_ratio[$key]['skill_price'];
 					$arr_ratio[$key]['float_price_ratio'] = $vvvv['ratio']* 0.01; 
