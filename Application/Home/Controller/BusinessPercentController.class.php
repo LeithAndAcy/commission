@@ -28,6 +28,7 @@ class BusinessPercentController extends Controller {
 	private $db_load_history;
 	private $db_settled_history;
 	private $db_salesman_funds;
+	private $db_variable;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this -> error('登陆超时,请重新登陆。', '/commission', 2);
@@ -57,6 +58,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_load_history = D("LoadHistory");
 		$this -> db_settled_history = D("SettledHistory");
 		$this -> db_salesman_funds = D("SalesmanFunds");
+		$this -> db_variable = D("Variable");
 	}
 
 	public function loadBusinessPercentPage() {
@@ -255,6 +257,7 @@ class BusinessPercentController extends Controller {
 		$all_special_approve_float_price_ratio = $this -> db_special_approve_price_float_ratio -> getAllHandledSpecialApprovePriceFloatRatio();
 		//取所有员工的发货金额综合
 		$all_salesman_delivery_money = $this -> db_contact_main -> getSettlingContactTotalDeliveryMoney();
+		$variables = $this -> db_variable -> getVariables();
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
@@ -442,20 +445,23 @@ class BusinessPercentController extends Controller {
 			}
             //对业务员编码为S开头的业务员的合同并且合同日期的审核日期是2019年7月1日（含2019年7月1日）以后的合同采用的算法；
             if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
-                //超期扣提成比例=超期天数*0.00028 ；
-                $arr_ratio[$key]['delay_ratio'] = $contact_detail[$key]['delay_day'] * 0.00028;
-                //当 最终底价=0：超期扣提成=0;
-                //当 最终底价 < 销售单价：超期扣提成=发货米数 * 销售单价 *超期扣提成比例;
-                //当 最终底价 > 销售单价：超期扣提成=发货米数 * 最终底价 *超期扣提成比例;
-                if($arr_ratio[$key]['end_cost_price'] == 0){
-                    $arr_ratio[$key]['delay_money'] = 0;
-                }elseif($arr_ratio[$key]['end_cost_price'] <= $arr_ratio[$key]['sale_price']){
-                    $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['delivery_quantity'] * $arr_ratio[$key]['sale_price'] * $arr_ratio[$key]['delay_ratio'];
-                }elseif($arr_ratio[$key]['end_cost_price'] > $arr_ratio[$key]['sale_price']){
-                    $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['delivery_quantity'] * $arr_ratio[$key]['end_cost_price'] * $arr_ratio[$key]['delay_ratio'];
-                }
-                if(($arr_ratio[$key]['normal_business'] + $arr_ratio[$key]['special_business']) <= $arr_ratio[$key]['delay_money']){
-                    $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['normal_business'] + $arr_ratio[$key]['special_business'];
+                $date =  date('Y-m-d',strtotime($value['date']));
+				if(strtotime($date) >=  strtotime($variables['S_contact_201906'])){
+                    //超期扣提成比例=超期天数*0.00028 ；
+                    $arr_ratio[$key]['delay_ratio'] = $contact_detail[$key]['delay_day'] * (float)$variables['delay_day_ratio'];
+                    //当 最终底价=0：超期扣提成=0;
+                    //当 最终底价 < 销售单价：超期扣提成=发货米数 * 销售单价 *超期扣提成比例;
+                    //当 最终底价 > 销售单价：超期扣提成=发货米数 * 最终底价 *超期扣提成比例;
+                    if($arr_ratio[$key]['end_cost_price'] == 0){
+                        $arr_ratio[$key]['delay_money'] = 0;
+                    }elseif($arr_ratio[$key]['end_cost_price'] <= $arr_ratio[$key]['sale_price']){
+                        $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['delivery_quantity'] * $arr_ratio[$key]['sale_price'] * $arr_ratio[$key]['delay_ratio'];
+                    }elseif($arr_ratio[$key]['end_cost_price'] > $arr_ratio[$key]['sale_price']){
+                        $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['delivery_quantity'] * $arr_ratio[$key]['end_cost_price'] * $arr_ratio[$key]['delay_ratio'];
+                    }
+                    if(($arr_ratio[$key]['normal_business'] + $arr_ratio[$key]['special_business']) <= $arr_ratio[$key]['delay_money']){
+                        $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['normal_business'] + $arr_ratio[$key]['special_business'];
+                    }
 				}
             }
 		}

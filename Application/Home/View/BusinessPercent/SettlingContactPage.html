@@ -81,6 +81,10 @@
 						<th>底价调整金额(元)</th>
 						<th>最终实际底价(元)</th>
 
+                        <th>超期天数</th>
+						<th>超期扣提成比例</th>
+						<th>超期扣提成</th>
+
 						<th>基本业绩提成(元)</th>
 						<th>回款达标业绩提成(元)</th>
 						<th>基本利润提成(元)</th>
@@ -130,16 +134,25 @@
 							<td>{$vo.sale_expense}</td>
 							<td>{$vo.sale_expense_ratio}%</td>
  							<td>{$vo.end_sale_expense}</td>
- 							
+
+
 							<td>{$vo.normal_business_ratio}%</td>
 							<td>{$vo.special_business_ratio}%</td>
 							<td>{$vo.normal_profit_ratio}%</td>
 							<td>{$vo.normal_profit_discount_ratio}%</td>
+
+
+
 							<!-- <td>{$vo.special_profit_ratio}%</td> -->
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_business_adjust">{$vo.business_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_profit_adjust">{$vo.profit_adjust}%</td>
 							<td id="{$vo.contact_id}_{$vo.inventory_id}_cost_price_adjust">{$vo.cost_price_adjust}</td>
 							<td>{$vo.end_cost_price}</td>
+
+							<td>{$vo.delay_day}</td>
+							<td>{$vo.delay_ratio}%</td>
+							<td>{$vo.delay_money}</td>
+
 							<td>{$vo.normal_business}</td>
 							<td>{$vo.special_business}</td>
 							<td>{$vo.normal_profit}</td>

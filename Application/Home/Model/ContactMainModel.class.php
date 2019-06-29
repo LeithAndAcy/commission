@@ -171,7 +171,7 @@ class ContactMainModel extends Model {
 	}
 	public function setContactSettled($arr_contact_id){
 		$this_month = date('Y-m',strtotime("now"));
-		$str_contact_id;
+		$str_contact_id = '';
 		foreach ($arr_contact_id as $key => $value) {
 			$str_contact_id .= "'".$value."'".',';
 		}
@@ -238,7 +238,7 @@ class ContactMainModel extends Model {
 		// and commission_contact_detail.classification_id = commission_area_price_float_ratio.classification_id;");
 		$res = $this -> query("
 		select commission_contact_main.contact_id,commission_contact_main.customer_id,commission_contact_main.salesman_id,
-		commission_contact_main.cSOCode,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
+		commission_contact_main.cSOCode,commission_contact_main.date,commission_contact_detail.contact_id,commission_contact_detail.inventory_id,
 		commission_contact_detail.gm_ratio,commission_contact_detail.skill_ratio,
 		commission_contact_detail.purchase,commission_contact_detail.classification_id,commission_contact_detail.classification_name,
 		commission_contact_detail.inventory_name,commission_contact_detail.specification,commission_contact_detail.colour,
@@ -292,7 +292,8 @@ class ContactMainModel extends Model {
 		commission_contact_detail.delivery_money,
 		commission_contact_detail.sale_expense,
 		commission_contact_detail.sale_expense_ratio * 100 as sale_expense_ratio,
-		commission_contact_detail.end_sale_expense,commission_contact_detail.exch_rate
+		commission_contact_detail.end_sale_expense,commission_contact_detail.exch_rate,
+		commission_contact_detail.delay_day,commission_contact_detail.delay_ratio * 100 as delay_ratio,commission_contact_detail.delay_money
 		from commission_contact_detail join commission_contact_main on 
 		commission_contact_main.settling=1 and commission_contact_main.settled=1 and commission_contact_main.settlement=1
 		and commission_contact_main.cSOCode = commission_contact_detail.cSOCode

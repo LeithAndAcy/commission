@@ -80,6 +80,7 @@ class ContactDetailModel extends Model {
 				$contact_detail[$i]['special_approve_float_price_ratio'] *= 100;
 				$contact_detail[$i]['gm_ratio'] *= 100;
 				$contact_detail[$i]['skill_ratio'] *= 100;
+                $contact_detail[$i]['delay_ratio'] *= 100;
 				$i++;
 			}
 		}
@@ -101,7 +102,6 @@ class ContactDetailModel extends Model {
 			$data['sale_expense'] = $value['sale_expense'];
 			$data['sale_expense_ratio'] = $value['sale_expense_ratio'];
 			$data['end_sale_expense'] = $value['end_sale_expense'];
-			
 			$data['special_approve_float_price_ratio'] = $value['special_approve_float_price_ratio'];
 			$data['special_approve_float_price'] = $value['special_approve_float_price'];
 			$data['custom_fee_float_price'] = $value['custom_fee_float_price'];
@@ -110,6 +110,8 @@ class ContactDetailModel extends Model {
 			$data['skill_price'] = $value['skill_price'];
 			$data['normal_business'] = $value['normal_business'];
 			$data['special_business'] = $value['special_business'];
+            $data['delay_money'] = $value['delay_money'];
+            $data['delay_ratio'] = $value['delay_ratio'];
 			$data['normal_profit'] = $value['normal_profit'];
 			$data['normal_profit_1'] = $value['normal_profit_1'];
 			$data['normal_profit_2'] = $value['normal_profit_2'];
@@ -164,6 +166,7 @@ class ContactDetailModel extends Model {
 	}
 
 	public function getContactTotalCostPrice($contact_id) {
+        $total_money = 0;
 		$condition = array();
 		$condition['contact_id'] = $contact_id;
 		$res = $this -> where($condition) -> select();

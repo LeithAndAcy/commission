@@ -1470,6 +1470,10 @@ class ExcelController extends Controller {
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AQ') -> setWidth(30);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AR') -> setWidth(30);
 		$objPHPExcel -> getActiveSheet() -> getColumnDimension('AS') -> setWidth(30);
+        $objPHPExcel -> getActiveSheet() -> getColumnDimension('AT') -> setWidth(30);
+        $objPHPExcel -> getActiveSheet() -> getColumnDimension('AU') -> setWidth(30);
+        $objPHPExcel -> getActiveSheet() -> getColumnDimension('AV') -> setWidth(30);
+        $objPHPExcel -> getActiveSheet() -> getColumnDimension('AW') -> setWidth(30);
 		$objPHPExcel -> getActiveSheet() -> getDefaultStyle() -> getFont() -> setSize(12);
 		
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue('A1', '#') -> setCellValue('B1', '合同号') 
@@ -1487,7 +1491,8 @@ class ExcelController extends Controller {
 		-> setCellValue('AJ1', '利润提成调整比例') -> setCellValue('AK1', '底价调整金额(元)') -> setCellValue('AL1', '最终实际底价(元)')
 		-> setCellValue('AM1', '基本业绩提成(元)') -> setCellValue('AN1', '回款达标业绩提成(元)') -> setCellValue('AO1', '基本利润提成(元)')
 		-> setCellValue('AP1', '九折后基本利润提成(元)') -> setCellValue('AQ1', '达标折扣后基本利润提成(元)') -> setCellValue('AR1', '业绩利润提成汇总')
-		-> setCellValue('AS1', '达标利润提成比例折扣')-> setCellValue('AT1', '汇率');
+		-> setCellValue('AS1', '达标利润提成比例折扣')-> setCellValue('AT1', '汇率')
+            -> setCellValue('AU1', '超期天数')-> setCellValue('AV1', '超期扣提成比例')-> setCellValue('AW1', '超期扣提成(元)');
 		$row_id = 0;
 		foreach ($res as $key => $value) {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('A' . ($row_id + 2), $row_id+1);
@@ -1536,6 +1541,9 @@ class ExcelController extends Controller {
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AR' . ($row_id + 2), $value['total_business_profit']);
 			$objPHPExcel -> getActiveSheet(0) -> setCellValue('AS' . ($row_id + 2), $value['normal_profit_discount_ratio']."%");
             $objPHPExcel -> getActiveSheet(0) -> setCellValue('AT' . ($row_id + 2), $value['exch_rate']);
+            $objPHPExcel -> getActiveSheet(0) -> setCellValue('AU' . ($row_id + 2), $value['delay_day']);
+            $objPHPExcel -> getActiveSheet(0) -> setCellValue('AV' . ($row_id + 2), $value['delay_ratio']."%");
+            $objPHPExcel -> getActiveSheet(0) -> setCellValue('AW' . ($row_id + 2), $value['delay_money']);
 			$row_id = $row_id+1;
 		}
 		

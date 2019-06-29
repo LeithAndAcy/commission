@@ -28,6 +28,7 @@ class SourceDataController extends Controller {
 	private $db_salary;
 	private $db_settled_history;
 	private $db_delivery_history;
+	private $db_customer_credit_day;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this->error('登陆超时,请重新登陆。','/commission',2);
@@ -57,6 +58,7 @@ class SourceDataController extends Controller {
 		$this -> db_salary = D("Salary");
 		$this -> db_settled_history = D("SettledHistory");
 		$this -> db_delivery_history = D("DeliveryHistory");
+		$this -> db_customer_credit_day = D("CustomerCreditDay");
 	}
     public function loadSourceDataPage(){
     	\Think\Log::record('测试日志信息');
@@ -296,6 +298,7 @@ class SourceDataController extends Controller {
 		$end_date = date('Y-m-d', strtotime(date('Y-m-01', strtotime($month)) . ' +1 month -1 day'));
 		$all_delivery_detail = $this -> db_U8 -> getDeliveryHistoryByMonth($begin_date,$end_date);
 		$this -> db_delivery_history -> addItems($all_delivery_detail,$begin_date);
+		$customer_credit_days = $this->db_customer_credit_day->getCreditDays();
 		foreach ($all_delivery_detail as $key => $value) {
 			$condition = array();
 			$condition['cSOCode'] = $value['cSOCode'];
@@ -315,6 +318,18 @@ class SourceDataController extends Controller {
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_quantity',$value['delivery_quantity']);
 			$temp_money = round($value['iNatSum'] / $value['sale_quantity'],6) * $value['delivery_quantity'];
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
+
+            //更新超期天数
+			$condition = array();
+            $condition['contact_id'] = $value['contact_id'];
+            if($customer_credit_days['customer_id']){
+                $day = $customer_credit_days['customer_id'];
+            }else{
+                $day =  $customer_credit_days['default'];
+            }
+            $delay_day = (strtotime($end_date) - strtotime($value['delivery_date']))/86400 - $day;
+            $data['delay_day'] = $delay_day > 0? $delay_day:0;
+            $this -> db_contact_detail -> wehre($condition) ->save($data);
 		}
 	}
 	
