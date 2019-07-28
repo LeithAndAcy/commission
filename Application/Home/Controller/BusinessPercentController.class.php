@@ -334,11 +334,11 @@ class BusinessPercentController extends Controller {
 				}
 			}
 			//业务员编号为S开头的合同，最终底价=本币销售单价；,业务员编号为非S开头的合同，最终底价=底价；
-            if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
-				$arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['sale_price'];
-			}else{
-                $arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['cost_price'];
-			}
+//            if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
+//				$arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['sale_price'];
+//			}else{
+//                $arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['cost_price'];
+//			}
 			//计算销售费用单价以及取销售费用比例  sale_expense销售费用单价比例   sale_expense_ratio销售费用比例
 			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'] * ($value['sale_price'] - $value['end_cost_price']);
 			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense_ratio'];
@@ -378,7 +378,17 @@ class BusinessPercentController extends Controller {
 								break;
 							}
 						}
-					} else {
+					} elseif (substr($value['inventory_id'], 0, 1) == "1"){
+                        if (substr($value['inventory_id'], 0, 3) == "10I" || substr($value['inventory_id'], 0, 3) == "10J" || substr($value['inventory_id'], 0, 3) == "10L" || substr($value['inventory_id'], 0, 3) == "10P"){
+                            $temp_special_business_ratio = $vvvvv['ratio'];
+                            break;
+						}else{
+                            if (substr($value['inventory_id'], 0, 8) == $vvvvv['inventory_id']) {
+                                $temp_special_business_ratio = $vvvvv['ratio'];
+                                break;
+                            }
+						}
+					}else {
 						if (substr($value['inventory_id'], 0, 1) == $vvvvv['inventory_id']) {
 							$temp_special_business_ratio = $vvvvv['ratio'];
 							break;
@@ -444,7 +454,7 @@ class BusinessPercentController extends Controller {
 				}
 			}
             //对业务员编码为S开头的业务员的合同并且合同日期的审核日期是2019年7月1日（含2019年7月1日）以后的合同采用的算法；
-            if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
+			if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
                 $date =  date('Y-m-d',strtotime($value['date']));
 				if(strtotime($date) >=  strtotime($variables['S_contact_201906'])){
                     //超期扣提成比例=超期天数*0.00028 ；
@@ -452,15 +462,12 @@ class BusinessPercentController extends Controller {
                     //当 最终底价=0：超期扣提成=0;
                     //当 最终底价 < 销售单价：超期扣提成=发货米数 * 销售单价 *超期扣提成比例;
                     //当 最终底价 > 销售单价：超期扣提成=发货米数 * 最终底价 *超期扣提成比例;
-                    if($arr_ratio[$key]['end_cost_price'] == 0){
+                    if($value['end_cost_price'] == 0){
                         $arr_ratio[$key]['delay_money'] = 0;
-                    }elseif($arr_ratio[$key]['end_cost_price'] <= $arr_ratio[$key]['sale_price']){
-                        $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['delivery_quantity'] * $arr_ratio[$key]['sale_price'] * $arr_ratio[$key]['delay_ratio'];
-                    }elseif($arr_ratio[$key]['end_cost_price'] > $arr_ratio[$key]['sale_price']){
-                        $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['delivery_quantity'] * $arr_ratio[$key]['end_cost_price'] * $arr_ratio[$key]['delay_ratio'];
-                    }
-                    if(($arr_ratio[$key]['normal_business'] + $arr_ratio[$key]['special_business']) <= $arr_ratio[$key]['delay_money']){
-                        $arr_ratio[$key]['delay_money'] = $arr_ratio[$key]['normal_business'] + $arr_ratio[$key]['special_business'];
+                    }elseif($value['end_cost_price'] <= $value['sale_price']){
+                        $arr_ratio[$key]['delay_money'] = $value['delivery_quantity'] * $value['sale_price'] * $arr_ratio[$key]['delay_ratio'];
+                    }elseif($value['end_cost_price'] > $value['sale_price']){
+                        $arr_ratio[$key]['delay_money'] = $value['delivery_quantity'] * $value['end_cost_price'] * $arr_ratio[$key]['delay_ratio'];
                     }
 				}
             }

@@ -320,8 +320,6 @@ class SourceDataController extends Controller {
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
 
             //更新超期天数
-			$condition = array();
-            $condition['contact_id'] = $value['contact_id'];
             if($customer_credit_days['customer_id']){
                 $day = $customer_credit_days['customer_id'];
             }else{
@@ -329,6 +327,7 @@ class SourceDataController extends Controller {
             }
             $delay_day = (strtotime($end_date) - strtotime($value['delivery_date']))/86400 - $day;
             $data['delay_day'] = $delay_day > 0? $delay_day:0;
+            $date['last_delivery_date'] = $value['delivery_date'];
             $this -> db_contact_detail -> wehre($condition) ->save($data);
 		}
 	}
