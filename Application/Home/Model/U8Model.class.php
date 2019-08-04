@@ -164,7 +164,7 @@ class U8Model extends Model {
 		$res = $this -> query("select DispatchList.cPersonCode as salesman_id,DispatchList.cCusCode as customer_id,
 		Person.cPersonName as salesman_name,Customer.cCusName as customer_name,
 		DispatchList.cDefine2 as contact_id,DispatchList.cSOCode,DispatchLists.cDefine22 as coreColour,
-		DispatchLists.cInvCode as inventory_id,DispatchLists.iQuantity as delivery_quantity,DispatchList.dDate as delivery_date,
+		DispatchLists.cInvCode as inventory_id,DispatchLists.iQuantity as delivery_quantity,CONVERT(varchar(19),DispatchList.dDate,120) as delivery_date,
 		Inventory.cInvName as inventory_name,Inventory.cInvStd as specification,
 		DispatchLists.cFree1 as colour,DispatchLists.iQuantity as delivery_quantity,
 		SO_SODetails.iNatSum,SO_SODetails.iQuantity as sale_quantity

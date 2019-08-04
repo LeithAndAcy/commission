@@ -156,7 +156,7 @@ class SourceDataController extends Controller {
 		$this -> db_contact_main->setManualContact($contact_id);
 	}
 	public function loadSettleSummaryPage(){
-		$this -> db_U8 = D("U8");
+        $this -> db_U8 = D("U8");
 		$load_history = $this -> db_load_history -> getLastThreeHistory();
 		$count_settlement_contact = $this -> db_contact_main -> countSettlementContact();
 		$count_settlement_contact_detail = $this -> db_contact_main -> countSettlementContactDetail();
@@ -325,10 +325,11 @@ class SourceDataController extends Controller {
             }else{
                 $day =  $customer_credit_days['default'];
             }
-            $delay_day = (strtotime($end_date) - strtotime($value['delivery_date']))/86400 - $day;
+            $delivery_date = $value['delivery_date'];
+            $delay_day = floor((strtotime($end_date) - strtotime($delivery_date)) / 86400) - $day;
             $data['delay_day'] = $delay_day > 0? $delay_day:0;
-            $date['last_delivery_date'] = $value['delivery_date'];
-            $this -> db_contact_detail -> wehre($condition) ->save($data);
+            $data['last_delivery_date'] = $delivery_date;
+            $this -> db_contact_detail -> where($condition) ->save($data);
 		}
 	}
 	
