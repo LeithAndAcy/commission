@@ -29,6 +29,7 @@ class BusinessPercentController extends Controller {
 	private $db_settled_history;
 	private $db_salesman_funds;
 	private $db_variable;
+    private $db_customer_credit_day;
 	function _initialize() {
 		if (!_checkLogin()) {
 			$this -> error('登陆超时,请重新登陆。', '/commission', 2);
@@ -59,6 +60,7 @@ class BusinessPercentController extends Controller {
 		$this -> db_settled_history = D("SettledHistory");
 		$this -> db_salesman_funds = D("SalesmanFunds");
 		$this -> db_variable = D("Variable");
+        $this -> db_customer_credit_day = D("CustomerCreditDay");
 	}
 
 	public function loadBusinessPercentPage() {
@@ -258,6 +260,8 @@ class BusinessPercentController extends Controller {
 		//取所有员工的发货金额综合
 		$all_salesman_delivery_money = $this -> db_contact_main -> getSettlingContactTotalDeliveryMoney();
 		$variables = $this -> db_variable -> getVariables();
+        $customer_credit_days = $this->db_customer_credit_day->getCreditDays();
+        $last_mont_end_date = date('Y-m-d',strtotime(date('Y-m-1').'-1 day'));
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
 			$salesman_id = $value['salesman_id'];
@@ -457,8 +461,15 @@ class BusinessPercentController extends Controller {
 			if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
                 $date =  date('Y-m-d',strtotime($value['date']));
 				if(strtotime($date) >=  strtotime($variables['S_contact_201906'])){
-                    //超期扣提成比例=超期天数*0.00028 ；
-                    $arr_ratio[$key]['delay_ratio'] = $contact_detail[$key]['delay_day'] * (float)$variables['delay_day_ratio'];
+                    //更新超期天数
+                    if($customer_credit_days[$customer_id]){
+                        $day = $customer_credit_days[$customer_id];
+                    }else{
+                        $day =  $customer_credit_days['default'];
+                    }
+                    $delay_day = floor((strtotime($last_mont_end_date) - strtotime($contact_detail[$key]['last_delivery_date'])) / 86400) - $day;
+                    $arr_ratio[$key]['delay_day'] = $delay_day;
+                    $arr_ratio[$key]['delay_ratio'] = $delay_day * (float)$variables['delay_day_ratio'];
                     //当 最终底价=0：超期扣提成=0;
                     //当 最终底价 < 销售单价：超期扣提成=发货米数 * 销售单价 *超期扣提成比例;
                     //当 最终底价 > 销售单价：超期扣提成=发货米数 * 最终底价 *超期扣提成比例;

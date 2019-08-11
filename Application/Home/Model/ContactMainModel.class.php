@@ -248,7 +248,7 @@ class ContactMainModel extends Model {
 		commission_contact_detail.special_business_ratio,commission_contact_detail.normal_profit_ratio,commission_contact_detail.business_adjust,
 		commission_contact_detail.profit_adjust,commission_contact_detail.cost_price_adjust,commission_contact_detail.normal_business,
 		commission_contact_detail.special_business,commission_contact_detail.normal_profit,commission_contact_detail.end_cost_price,
-		commission_contact_detail.total_business_profit,commission_contact_detail.delay_day,
+		commission_contact_detail.total_business_profit,commission_contact_detail.last_delivery_date,commission_contact_detail.delay_day,
 		commission_customer.customer_name,commission_customer.area_code,
 		commission_customer.area,commission_area_price_float_ratio.ratio
 		from commission_contact_main join commission_contact_detail on 

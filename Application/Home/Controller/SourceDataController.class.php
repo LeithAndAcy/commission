@@ -301,6 +301,7 @@ class SourceDataController extends Controller {
 		$customer_credit_days = $this->db_customer_credit_day->getCreditDays();
 		foreach ($all_delivery_detail as $key => $value) {
 			$condition = array();
+			$coustomer_id = $value['customer_id'];
 			$condition['cSOCode'] = $value['cSOCode'];
 			$condition['inventory_id'] = $value['inventory_id'];
 			$condition['coreColour'] = $value['coreColour'];
@@ -320,8 +321,8 @@ class SourceDataController extends Controller {
 			$this -> db_contact_detail -> where($condition) -> setInc('delivery_money',$temp_money);
 
             //更新超期天数
-            if($customer_credit_days['customer_id']){
-                $day = $customer_credit_days['customer_id'];
+            if($customer_credit_days[$coustomer_id]){
+                $day = $customer_credit_days[$coustomer_id];
             }else{
                 $day =  $customer_credit_days['default'];
             }

@@ -110,6 +110,7 @@ class ContactDetailModel extends Model {
 			$data['skill_price'] = $value['skill_price'];
 			$data['normal_business'] = $value['normal_business'];
 			$data['special_business'] = $value['special_business'];
+            $data['delay_day'] = $value['delay_day'];
             $data['delay_money'] = $value['delay_money'];
             $data['delay_ratio'] = $value['delay_ratio'];
 			$data['normal_profit'] = $value['normal_profit'];
