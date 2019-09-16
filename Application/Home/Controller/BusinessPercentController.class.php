@@ -337,15 +337,18 @@ class BusinessPercentController extends Controller {
 					$arr_ratio[$key]['float_price_ratio'] = 0;
 				}
 			}
-			//业务员编号为S开头的合同，最终底价=本币销售单价；,业务员编号为非S开头的合同，最终底价=底价；
-//            if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
-//				$arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['sale_price'];
-//			}else{
-//                $arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['cost_price'];
-//			}
 			//计算销售费用单价以及取销售费用比例  sale_expense销售费用单价比例   sale_expense_ratio销售费用比例
 			$arr_ratio[$key]['sale_expense'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense'] * ($value['sale_price'] - $value['end_cost_price']);
 			$arr_ratio[$key]['sale_expense_ratio'] = $all_sale_expense[$salesman_id][$value['contact_id']]['sale_expense_ratio'];
+//            //业务员编号为S开头的合同，最终底价=本币销售单价；,业务员编号为非S开头的合同，在指定日期以后的合同,最终底价=底价+销售费用单价；
+//            if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
+//                $arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['sale_price'];
+//            }else{
+//                $date =  date('Y-m-d',strtotime($value['date']));
+//                if(strtotime($date) >=  strtotime($variables['S_contact_201909'])){
+//                    $arr_ratio[$key]['end_cost_price'] = $contact_detail[$key]['cost_price']+$arr_ratio[$key]['sale_expense'];
+//                }
+//            }
 			//没配置比例表的情况
 			if ($price_float_ratio == null) {
 				$arr_ratio[$key]['float_price'] = $area_price_float_ratio * $contact_detail[$key]['cost_price'];
