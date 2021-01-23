@@ -91,6 +91,7 @@ class ContactDetailModel extends Model {
 		$condition = array();
 		$data = array();
 		foreach ($arr_ratio as $key => $value) {
+			\Think\Log::write('updating Settling Ratio'.$value['contact_id'],'ContactDetailModel');
 			$condition['contact_id'] = $value['contact_id'];
 			$condition['inventory_id'] = $value['inventory_id'];
             $condition['delivery_quantity'] = $value['delivery_quantity'];
@@ -126,6 +127,7 @@ class ContactDetailModel extends Model {
             }
             $this -> where($condition) -> save($data);
 		}
+		\Think\Log::write('finish updateSettlingRatio','ContactDetailModel');
 	}
 
 	public function updateSpeicalBusiness($arr_ratio = array()) {

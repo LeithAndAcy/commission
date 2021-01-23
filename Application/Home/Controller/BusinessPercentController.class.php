@@ -264,6 +264,7 @@ class BusinessPercentController extends Controller {
         $last_mont_end_date = date('Y-m-d',strtotime(date('Y-m-1').'-1 day'));
 		$arr_ratio = array();
 		foreach ($contact_detail as $key => $value) {
+			\Think\Log::write('------------------getSettlingRatioAndPrice process ----------------------'.$value['salesman_id'],'BusinessPercentController');
 			$salesman_id = $value['salesman_id'];
 			$customer_id = $value['customer_id'];
 			//取存货类别
@@ -486,6 +487,7 @@ class BusinessPercentController extends Controller {
 				}
             }
 		}
+		\Think\Log::write('------------------ready to db function----------------------','BusinessPercentController');
 		$this -> db_contact_detail -> updateSettlingRatio($arr_ratio);
 	}
 
