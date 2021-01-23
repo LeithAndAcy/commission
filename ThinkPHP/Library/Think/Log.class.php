@@ -96,6 +96,6 @@ class Log {
         }
         if(empty($destination))
             $destination = C('LOG_PATH').date('y_m_d').'.log';     
-        self::$storage->write("{$level}: {$message}", $destination);
+        self::$storage->write(date()."{$level}: {$message}", $destination);
     }
 }
