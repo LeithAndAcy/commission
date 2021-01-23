@@ -462,7 +462,7 @@ class BusinessPercentController extends Controller {
 			}
             //对业务员编码为S开头的业务员的合同并且合同日期的审核日期是2019年7月1日（含2019年7月1日）以后的合同采用的算法；
 			if(substr($value['salesman_id'], 0, 1) == 'S' || substr($value['salesman_id'], 0, 1) == 's'){
-                $date =  date('Y-m-d',strtotime($value['date']));
+			    $date =  date('Y-m-d',strtotime($value['date']));
 				if(strtotime($date) >=  strtotime($variables['S_contact_201906'])){
                     //更新超期天数
                     if($customer_credit_days[$customer_id]){

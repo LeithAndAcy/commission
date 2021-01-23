@@ -9,6 +9,7 @@ class IndexController extends Controller {
 		$this -> db_login = D("Login");
 	}
     public function index(){
+        \Think\Log::record('测试日志信息');
     	$this -> display("index");
 		
 	}

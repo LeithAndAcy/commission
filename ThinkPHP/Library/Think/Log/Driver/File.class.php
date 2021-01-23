@@ -31,10 +31,24 @@ class File {
      * @param string $destination  写入目标
      * @return void
      */
-    public function write($log,$destination='') {
+    // public function write($log,$destination='') {
+    //     $now = date($this->config['log_time_format']);
+    //     if(empty($destination))
+    //         $destination = $this->config['log_path'].date('y_m_d').'.log';
+    //     if(!is_dir($this->config['log_path'])) {
+    //         mkdir($this->config['log_path'],0755,true);
+    //     }        
+    //     //检测日志文件大小，超过配置大小则备份日志文件重新生成
+    //     if(is_file($destination) && floor($this->config['log_file_size']) <= filesize($destination) )
+    //           rename($destination,dirname($destination).'/'.time().'-'.basename($destination));
+    //     error_log("[{$now}] ".$_SERVER['REMOTE_ADDR'].' '.$_SERVER['REQUEST_URI']."\r\n{$log}\r\n", 3,$destination);
+    // }
+     public function write($log,$destination='') {
         $now = date($this->config['log_time_format']);
         if(empty($destination))
             $destination = $this->config['log_path'].date('y_m_d').'.log';
+                if($destination)      
+            $this->config['log_path'] = dirname($destination);
         if(!is_dir($this->config['log_path'])) {
             mkdir($this->config['log_path'],0755,true);
         }        
